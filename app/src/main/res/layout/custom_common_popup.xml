@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_15sdp"
+    android:layout_marginRight="@dimen/_15sdp"
+    android:background="@color/transparent"
+    android:backgroundTint="@color/transparent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/roundcorner_new_white_background"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dip"
+            android:layout_marginBottom="@dimen/margin_3">
+
+            <TextView
+                android:id="@+id/tvTitlePopup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="20dip"
+                android:drawablePadding="10dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
+                android:text="Alert!"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivAlert"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dip"
+                android:background="@drawable/alert_new"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="42dip"
+            android:layout_marginRight="42dip"
+            android:background="@drawable/divideline_one"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginRight="20dip"
+            android:layout_marginBottom="20dip"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:fadingEdgeLength="0dp">
+
+                <TextView
+                    android:id="@+id/tvMessagePopup"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="left"
+                    android:text="Remove data"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
+            </ScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:gravity="center|bottom">
+
+
+            <Button
+                android:id="@+id/btnNoPopup"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/roundcorner_new_grey_color"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/cancel"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_small_14sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnYesPopup"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/roundcorner_new_app_color"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/ok"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_small_14sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

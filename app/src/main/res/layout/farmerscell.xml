@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/acc"
+        android:padding="5dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:text="0"
+            android:id="@+id/txtfcode"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/colourPrimary"
+            android:textSize="25dp"
+            android:background="@drawable/circle"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+        <TextView
+            android:text="First Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtfname"
+            android:textSize="17sp"
+            android:maxLength="30"
+            android:textStyle="bold"
+            android:textColor="@color/colourPrimary"
+            android:gravity="start"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@id/txtfcode"
+            android:layout_toLeftOf="@id/textmytpe"
+            />
+
+        <TextView
+            android:id="@+id/txtmno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtfname"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@id/textactive"
+            android:layout_toRightOf="@id/txtfcode"
+            android:gravity="left"
+            android:maxLength="30"
+            android:text="Mobile No"
+            android:textColor="@color/colourPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <TextView
+            android:text="Mtype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtmytpe"
+            android:textSize="15sp"
+            android:maxLength="30"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/colourPrimary"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            />
+        <TextView
+            android:text="Milk Type :"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textmytpe"
+            android:textSize="15sp"
+            android:maxLength="30"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/colourPrimary"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_toLeftOf="@id/txtmytpe"
+            />
+
+        <TextView
+            android:id="@+id/textactive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textmytpe"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toLeftOf="@id/active"
+            android:gravity="center"
+            android:maxLength="30"
+            android:text="Active"
+            android:textColor="@color/colourPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtmytpe"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+    </RelativeLayout>
+</LinearLayout>
+</layout>

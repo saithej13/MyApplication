@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bordert"
+    android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dip"
+            android:background="@drawable/round_gray_bg"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/tvTitlePopup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="8dp"
+                    android:padding="5dp"
+                    android:text="Rates Entry"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/close"
+                    android:src="@drawable/xclose" />
+
+
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/datepickers"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="5dp">
+                    <LinearLayout
+                        android:id="@+id/lldatenew"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:orientation="horizontal"
+                        android:padding="10dp"
+                        android:background="@color/white"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                >
+                                <TextView
+                                    android:id="@+id/FromDate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="01 Nov 2023"
+                                    android:textColor="@color/black"
+                                    android:singleLine="true"
+                                    android:textSize="14sp"
+                                    android:visibility="gone"
+                                    />
+                                <TextView
+                                    android:id="@+id/tvFromDate"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="7dp"
+                                    android:text="01 Nov 2023"
+                                    android:imeOptions="actionNext"
+                                    android:singleLine="true"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/gray_light"
+                                    android:textSize="14sp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="15dp" />
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:src="@drawable/formkit_date"
+                                    android:layout_marginRight="15dp"
+                                    android:layout_marginLeft="10dp" />
+                            </LinearLayout>
+                            <View
+                                android:layout_width="wrap_content"
+                                android:layout_height="1dp"
+                                android:layout_marginEnd="15dp"
+                                android:layout_marginStart="10dp"
+                                android:background="@color/colourDivider"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="15dp" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/textTo"
+                            android:layout_width="30dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="0dp"
+                            android:text="To"
+                            android:textSize="17sp"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginRight="0dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                >
+                                <TextView
+                                    android:id="@+id/ToDate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="05 Nov 2023"
+                                    android:textColor="@color/black"
+                                    android:singleLine="true"
+                                    android:textSize="14sp"
+                                    android:visibility="gone"
+                                    />
+                                <TextView
+                                    android:id="@+id/tvToDate"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="7dp"
+                                    android:text="05 Nov 2023"
+                                    android:imeOptions="actionNext"
+                                    android:textColor="@color/black"
+                                    android:singleLine="true"
+                                    android:textSize="14sp"
+                                    android:layout_marginRight="15dp"
+                                    android:layout_marginLeft="10dp" />
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:src="@drawable/formkit_date"
+                                    android:layout_marginRight="15dp"
+                                    android:layout_marginLeft="10dp" />
+                            </LinearLayout>
+                            <View
+                                android:layout_width="wrap_content"
+                                android:layout_height="1dp"
+                                android:layout_marginEnd="15dp"
+                                android:layout_marginStart="10dp"
+                                android:background="@color/colourDivider"
+                                android:layout_marginRight="15dp"
+                                android:layout_marginLeft="10dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Milk Type"
+                    android:textColor="@color/black"
+                    />
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="20dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/mtype"
+                        android:padding="10dp"
+                        android:textColor="@color/black"
+                        android:hint="Select Milk Type"
+                        android:singleLine="true"
+                        android:background="@null"
+                        android:layout_marginStart="10dp" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/arrow_d"
+                        android:layout_gravity="end|center"
+                        android:layout_marginRight="10dp" />
+
+
+                </com.google.android.material.card.MaterialCardView>
+                <LinearLayout
+                    android:id="@+id/lltfat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/white"
+                    android:weightSum="2">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:text="Min FAT"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:text="Max FAT"
+                        android:textColor="@color/black"
+                        />
+                </LinearLayout>
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fats"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="5dp">
+                    <LinearLayout
+                        android:id="@+id/llfatsnew"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:orientation="horizontal"
+                        android:padding="10dp"
+                        android:background="@color/white"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                >
+                                <EditText
+                                    android:id="@+id/etfatmin"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="7dp"
+                                    android:hint="Min FAT"
+                                    android:imeOptions="actionNext"
+                                    android:singleLine="true"
+                                    android:inputType="numberDecimal"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/gray_light"
+                                    android:textSize="14sp"
+                                    android:background="@null"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="15dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                >
+                                <EditText
+                                    android:id="@+id/etfatmax"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="7dp"
+                                    android:hint="Max FAT"
+                                    android:imeOptions="actionNext"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/gray_light"
+                                    android:singleLine="true"
+                                    android:inputType="numberDecimal"
+                                    android:textSize="14sp"
+                                    android:background="@null"
+                                    android:layout_marginRight="15dp"
+                                    android:layout_marginLeft="10dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <LinearLayout
+                    android:id="@+id/lltsnf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/white"
+                    android:weightSum="2">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Min SNF"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Max SNF"
+                        android:textColor="@color/black"
+                        />
+                </LinearLayout>
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/snfs"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="5dp">
+                    <LinearLayout
+                        android:id="@+id/llsnfsnew"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:orientation="horizontal"
+                        android:padding="10dp"
+                        android:background="@color/white"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                >
+                                <EditText
+                                    android:id="@+id/etsnfmin"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="7dp"
+                                    android:hint="Min SNF"
+                                    android:imeOptions="actionNext"
+                                    android:singleLine="true"
+                                    android:inputType="numberDecimal"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/gray_light"
+                                    android:textSize="14sp"
+                                    android:background="@null"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="15dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                >
+                                <EditText
+                                    android:id="@+id/etsnfmax"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="7dp"
+                                    android:hint="Max SNF"
+                                    android:imeOptions="actionNext"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/gray_light"
+                                    android:singleLine="true"
+                                    android:inputType="numberDecimal"
+                                    android:textSize="14sp"
+                                    android:background="@null"
+                                    android:layout_marginRight="15dp"
+                                    android:layout_marginLeft="10dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="Rate"
+                    android:textColor="@color/black"
+                    />
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="20dp">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/etRate"
+                        android:padding="10dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/gray_light"
+                        android:hint="Enter Rate"
+                        android:inputType="numberDecimal"
+                        android:textSize="14sp"
+                        android:imeOptions="actionNext"
+                        android:singleLine="true"
+                        android:background="@null"
+                        android:layout_marginStart="10dp" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnOK"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/blue_bottom_left_3dp"
+                    android:gravity="center"
+                    android:text="Submit"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnCancle"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/gray_light_bottom_right_3dp"
+                    android:gravity="center"
+                    android:text="Cancel"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+</layout>
