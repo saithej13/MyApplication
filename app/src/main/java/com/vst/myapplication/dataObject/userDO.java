@@ -1,10 +1,15 @@
 package com.vst.myapplication.dataObject;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-
+@Entity(tableName = "tbluser")
 public class userDO implements Serializable {
+    @PrimaryKey(autoGenerate = true)
+    public int slno;
     @SerializedName("userid")
     public String userid;
     @SerializedName("name")
@@ -17,17 +22,4 @@ public class userDO implements Serializable {
     public int isactive;
     @SerializedName("role")
     public int role;
-
-    public userDO() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
-    }
-
-    public userDO(String userid, String name, String password,String mobileno,int isactive,int role) {
-        this.userid = userid;
-        this.name = name;
-        this.password = password;
-        this.mobileno = mobileno;
-        this.isactive = isactive;
-        this.role = role;
-    }
 }

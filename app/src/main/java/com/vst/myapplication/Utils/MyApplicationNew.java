@@ -12,6 +12,8 @@ public class MyApplicationNew extends MultiDexApplication{
 
     private static Object dataObject = null;
     public static boolean IsLargeData = true;
+
+    public static boolean RoomDB = false;
     public static MyApplicationNew instance;
 
     @Override

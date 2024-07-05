@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.room.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -66,6 +67,8 @@ dependencies {
     implementation ("commons-codec:commons-codec:1.15")
     implementation ("org.apache.httpcomponents:httpclient:4.5.13")
     implementation ("org.apache.httpcomponents:httpclient-win:4.5.13")
+    implementation ("androidx.room:room-runtime:2.5.2")
+    annotationProcessor ("androidx.room:room-compiler:2.5.2")
 //    implementation ("org.codelibs:jodd-http:3.9.0")
 
 }

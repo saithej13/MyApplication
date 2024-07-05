@@ -4,23 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainer;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
 import com.google.android.gms.auth.api.phone.SmsRetriever;
@@ -36,15 +28,13 @@ import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
-import com.vst.myapplication.UI.Dashboard;
-import com.vst.myapplication.UI.Farmers.farmers;
-import com.vst.myapplication.UI.MCollection.milkCollection;
-import com.vst.myapplication.UI.Rates.rates;
-import com.vst.myapplication.UI.Register.register;
-import com.vst.myapplication.UI.Register.register_notice;
+import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NTLMAuthenticator;
 import com.vst.myapplication.Utils.Preference;
+import com.vst.myapplication.Utils.SharedPreferences;
+import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.userDO;
 import com.vst.myapplication.databinding.ActivityMainBinding;
 
@@ -53,24 +43,17 @@ import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.AbstractHttpClient;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.WinHttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.http.client.CredentialsProvider;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
@@ -84,12 +67,17 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     ProjectRepository repository;
     Preference preference;
+    SharedPreferences preferences;
     private String verificationId;
     private FirebaseAuth mAuth;
 
     private FirebaseDatabase database;
     private DatabaseReference usersRef;
     DatabaseReference usersRef2;
+    roomRepository roomrepo;
+
+
+    farmerDO farmerDo;
     //AIzaSyDvRze1B1XKqZqsYvzuDuAZiCH2x_dtezE       keyfirebase
 
     @Override
@@ -97,7 +85,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding =  DataBindingUtil.setContentView(this,R.layout.activity_main);
         repository = new ProjectRepository();
+        roomrepo = new roomRepository(getApplication());
         preference = new Preference(getApplicationContext());
+        preferences = new SharedPreferences();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         database = FirebaseDatabase.getInstance();
@@ -107,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
         preference.saveIntInPreference(Preference.DEVICE_DISPLAY_HEIGHT, displayMetrics.heightPixels);
         preference.commitPreference();
         mAuth = FirebaseAuth.getInstance();
+        SharedPreferences.saveStorage(getBaseContext(),"RoomDB");
+        if(SharedPreferences.getStorage(getBaseContext()).equalsIgnoreCase("RoomDB")){
+            MyApplicationNew.RoomDB = true;
+        }
 //        testfirebasesms();
 //        startSmsRetriever();
         binding.btnCall.setOnClickListener(new View.OnClickListener() {
@@ -114,11 +108,30 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                verifyCode(binding.edtotp.getText().toString().trim());
 //                test3();
+//                tblmilkdata mdata= new tblmilkdata();
+//                mdata.date="2024-03-03";
+//                mdata.farmercode="1";
+//                mdata.farmername="test";
+//                mdata.mtype ="cow";
+//                mdata.quantity = 1.0;
+//                mdata.fat = 3.0;
+//                mdata.snf =8.0;
+//                mdata.rate = 30.0;
+//                mdata.amount = 30.0;
+//                roomrepo.insertmilkdata(mdata);
+
+                if(MyApplicationNew.RoomDB){
+                    Log.d("PRINTDB","ROOMDB");
+                }else {
+                    Log.d("PRINTDB","API");
+                }
+
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
 
-                        saveUser();
+//                        saveUser();
 //                        test11();
 //                        test1();
 //                        test2();
@@ -513,6 +526,7 @@ public static String test1() {
     public void testfirebasesms(){
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
+//                        .setPhoneNumber("+917780293187")
                         .setPhoneNumber("+919705966305")
                         .setTimeout(60L, TimeUnit.SECONDS)
                         .setActivity(this)
@@ -612,7 +626,14 @@ public static String test1() {
 
     private void saveUser() {
         String userId = usersRef2.push().getKey();
-        userDO user = new userDO(userId, "VADLURI SAITEJA", "PASSWORD","9705966305",1,1);
+//        userDO user = new userDO(userId, "VADLURI SAITEJA", "PASSWORD","9705966305",1,1);
+        userDO user = new userDO();
+        user.userid = userId;
+        user.name = "VADLURI SAITEJA";
+        user.password = "PASSWORD";
+        user.mobileno = "9705966305";
+        user.role = 1;
+        user.isactive = 1;
         usersRef2.child(userId).setValue(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

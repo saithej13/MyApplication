@@ -1,6 +1,6 @@
 package com.vst.myapplication.UI.MCollection;
 
-import android.app.DatePickerDialog;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -11,10 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -24,22 +22,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.vst.myapplication.R;
+import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
-import com.vst.myapplication.UI.Farmers.FarmersAdapter;
-import com.vst.myapplication.UI.Rates.RatesAdapter;
-import com.vst.myapplication.UI.Rates.rates_VM;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
+import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NetworkUtils;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
 import com.vst.myapplication.databinding.McollectionBinding;
-import com.vst.myapplication.databinding.RatesBinding;
-import com.vst.myapplication.databinding.RatesEntryPopupBinding;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.List;
 
@@ -56,7 +54,10 @@ public class milkCollection extends BaseFragment {
     milkDO[] milkDOS;
     rateDO[] rateDOs;
 
-    private ProjectRepository repository;
+    ProjectRepository repository;
+    roomRepository roomrepo;
+    public static String prnt="";
+    OutputStream outputStream;
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.mcollection, parent, false);
@@ -105,143 +106,233 @@ public class milkCollection extends BaseFragment {
                 refreshData();
             }
         });
-        binding.farmerid.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!binding.farmerid.getText().toString().isEmpty()&&TextUtils.isDigitsOnly(binding.farmerid.getText())) {
-                    JsonObject jsonObject1 = new JsonObject();
-                    jsonObject1.addProperty("FARMERID",binding.farmerid.getText().toString());
-                    repository.getfarmerbyid(jsonObject1).observe(getViewLifecycleOwner(), new Observer<JsonObject>() {
-                        @Override
-                        public void onChanged(JsonObject jsonObject) {
-                            if (jsonObject != null) {
-                                Log.d("TAG", jsonObject.toString());
-                                Gson gson = new Gson();
-                                farmerDOs = gson.fromJson(jsonObject.getAsJsonArray("Data"), farmerDO[].class);
-                                if (farmerDOs != null) {
-                                    if (farmerDOs.length > 0) {
-                                        binding.fname.setText(farmerDOs[0].FARMERNAME);
-                                        if (farmerDOs[0].MILKTYPE.equals("Both")) {
-                                            restrict_mtype = false;
+        binding.textdate.setText(CalendarUtils.getFormatedDatefromString(CalendarUtils.getDatePattern2()));
+        if(MyApplicationNew.RoomDB){
+            binding.farmerid.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(!binding.farmerid.getText().toString().isEmpty()&&TextUtils.isDigitsOnly(binding.farmerid.getText())) {
+                        milkCollectionVm.getFarmerbycodeRoom(getViewLifecycleOwner(),Integer.parseInt(binding.farmerid.getText().toString())).observe(getViewLifecycleOwner(), new Observer<List<farmerDO>>() {
+                            @Override
+                            public void onChanged(List<farmerDO> tblfarmers) {
+                                if (!tblfarmers.isEmpty()) {
+                                    binding.fname.setText(tblfarmers.get(0).FARMERNAME);
+                                    if(tblfarmers.get(0).MILKTYPE.equals("Both")){
+                                        restrict_mtype = false;
+                                    }
+                                    else {
+                                        restrict_mtype = true;
+                                        binding.textmtypec.setText(tblfarmers.get(0).MILKTYPE);
+                                        if (binding.textmtypec.getText().equals("Cow")) {
+                                            binding.mtypec.setImageResource(R.drawable.ic_cow);
                                         } else {
-                                            restrict_mtype = true;
-                                            binding.textmtypec.setText(farmerDOs[0].MILKTYPE);
-                                            if (binding.textmtypec.getText().equals("Cow")) {
-                                                binding.mtypec.setImageResource(R.drawable.ic_cow);
-                                            } else {
-                                                binding.textmtypec.setText("Buff");
-                                                binding.mtypec.setImageResource(R.drawable.ic_buffalo);
-                                            }
+                                            binding.textmtypec.setText("Buff");
+                                            binding.mtypec.setImageResource(R.drawable.ic_buffalo);
                                         }
-//
-                                    } else {
-                                        farmerDOs = new farmerDO[]{};
-                                        binding.fname.setText("");
                                     }
                                 }
+                                else {
+                                    binding.farmerid.setText("");
+                                    showCustomDialog(getContext(),"Farmer Code does not found!","Please enter correct Farmer Code","OK",null,"");
+                                }
                             }
-                        }
-                    });
-//                    milkCollectionVm.getFarmerbycode(parent.getContext(),Integer.parseInt(binding.farmerid.getText().toString())).observe(parent.getContext(), new Observer<List<tblfarmers>>() {
-//                        @Override
-//                        public void onChanged(List<tblfarmers> tblfarmers) {
-//                            if (!tblfarmers.isEmpty()) {
-//                                fname.setText(tblfarmers.get(0).getFirstname());
-//                                if(tblfarmers.get(0).getMilktype().equals("Both")){
-//                                    restrict_mtype = false;
-//                                }
-//                                else {
-//                                    restrict_mtype = true;
-//                                    textmtypec.setText(tblfarmers.get(0).getMilktype());
-//                                    if (textmtypec.getText().equals("Cow")) {
-//                                        mtypec.setImageResource(R.drawable.ic_cow);
-//                                    } else {
-//                                        textmtypec.setText("Buff");
-//                                        mtypec.setImageResource(R.drawable.ic_buffalo);
-//                                    }
-//                                }
-//                            }
-//                            else {
-//                                binding.farmerid.setText("");
-//                                Toast.makeText(parent.getContext(), "Farmer Code does not found!", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
+                        });
+                    }
+                    else
+                        showCustomDialog(getContext(),"Farmer Code","Please enter Farmer Code","OK",null,"");
                 }
-                else
-                    Toast.makeText(parent.getContext(),"Enter Farmer Code",Toast.LENGTH_SHORT).show();
-            }
-        });
-        binding.textdate.setText(CalendarUtils.getFormatedDatefromString(CalendarUtils.getDatePattern2()));
-        binding.msnf.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            });
+            binding.msnf.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                calc();
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    calc();
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                @Override
+                public void afterTextChanged(Editable s) {
 
-            }
-        });
-        binding.mfat.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+            });
+            binding.mfat.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                calc();
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    calc();
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                @Override
+                public void afterTextChanged(Editable s) {
 
-            }
-        });
-        binding.mqty.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+            });
+            binding.mqty.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                calc();
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    calc();
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                @Override
+                public void afterTextChanged(Editable s) {
 
-            }
-        });
-        binding.save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!binding.farmerid.getText().toString().isEmpty()||!binding.fname.getText().toString().isEmpty()||
-                        !binding.textdate.getText().toString().isEmpty()||!binding.mqty.getText().toString().isEmpty()||
-                        !binding.mfat.getText().toString().isEmpty()||!binding.msnf.getText().toString().isEmpty()||
-                        !binding.rate.getText().toString().isEmpty()||!binding.amt.getText().toString().isEmpty()||
-                        !binding.textshiftm.getText().toString().isEmpty()||!binding.textmtypec.getText().toString().isEmpty()
-                ) {
-                    //                    {
-                    //     "TDATE":"2024-06-29",
-                    //     "SHIFT":"M",
-                    //     "FARMERID":1,
-                    //     "FARMERNAME":"TEST",
-                    //     "MILKTYPE":"COW",
-                    //     "QUANTITY":1.0,
-                    //     "FAT":3.0,
-                    //     "SNF":8.0,
-                    //     "RATE":30.0,
-                    //     "AMOUNT":30.0
-                    // }
+                }
+            });
+            binding.save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!binding.farmerid.getText().toString().isEmpty()||!binding.fname.getText().toString().isEmpty()||
+                            !binding.textdate.getText().toString().isEmpty()||!binding.mqty.getText().toString().isEmpty()||
+                            !binding.mfat.getText().toString().isEmpty()||!binding.msnf.getText().toString().isEmpty()||
+                            !binding.rate.getText().toString().isEmpty()||!binding.amt.getText().toString().isEmpty()||
+                            !binding.textshiftm.getText().toString().isEmpty()||!binding.textmtypec.getText().toString().isEmpty()
+                    ) {
+                        milkDO milkDo = new milkDO();
+                        milkDo.TDATE = binding.textdate.getText().toString();
+                        milkDo.SHIFT = binding.textshiftm.getText().toString();
+                        milkDo.FARMERID = binding.farmerid.getText().toString();
+                        milkDo.FARMERNAME = binding.fname.getText().toString();
+                        milkDo.MILKTYPE = binding.textmtypec.getText().toString();
+                        milkDo.QUANTITY = Double.parseDouble(binding.mqty.getText().toString());
+                        milkDo.FAT = Double.parseDouble(binding.mfat.getText().toString());
+                        milkDo.SNF = Double.parseDouble(binding.msnf.getText().toString());
+                        milkDo.RATE = Double.parseDouble(binding.rate.getText().toString());
+                        milkDo.AMOUNT = Double.parseDouble(binding.amt.getText().toString());
+                        milkCollectionVm.insertMdataRoom(milkDo);
+                        clearfields();
+                        refreshData();
+                        print(milkDo);
+                    }
+                    else {
+                        Toast.makeText(getContext(),"please make sure all the fields are filled up",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        else {
+            if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
+                binding.farmerid.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!binding.farmerid.getText().toString().isEmpty() && TextUtils.isDigitsOnly(binding.farmerid.getText())) {
+                            JsonObject jsonObject1 = new JsonObject();
+                            jsonObject1.addProperty("FARMERID", binding.farmerid.getText().toString());
+                            repository.getfarmerbyid(jsonObject1).observe(getViewLifecycleOwner(), new Observer<JsonObject>() {
+                                @Override
+                                public void onChanged(JsonObject jsonObject) {
+                                    if (jsonObject != null) {
+                                        Log.d("TAG", jsonObject.toString());
+                                        Gson gson = new Gson();
+                                        farmerDOs = gson.fromJson(jsonObject.getAsJsonArray("Data"), farmerDO[].class);
+                                        if (farmerDOs != null) {
+                                            if (farmerDOs.length > 0) {
+                                                binding.fname.setText(farmerDOs[0].FARMERNAME);
+                                                if (farmerDOs[0].MILKTYPE.equals("Both")) {
+                                                    restrict_mtype = false;
+                                                } else {
+                                                    restrict_mtype = true;
+                                                    binding.textmtypec.setText(farmerDOs[0].MILKTYPE);
+                                                    if (binding.textmtypec.getText().equals("Cow")) {
+                                                        binding.mtypec.setImageResource(R.drawable.ic_cow);
+                                                    } else {
+                                                        binding.textmtypec.setText("Buff");
+                                                        binding.mtypec.setImageResource(R.drawable.ic_buffalo);
+                                                    }
+                                                }
+//
+                                            } else {
+                                                farmerDOs = new farmerDO[]{};
+                                                binding.fname.setText("");
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        } else
+                            Toast.makeText(parent.getContext(), "Enter Farmer Code", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                binding.msnf.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        calc();
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                binding.mfat.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        calc();
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                binding.mqty.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        calc();
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                binding.save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!binding.farmerid.getText().toString().isEmpty() || !binding.fname.getText().toString().isEmpty() ||
+                                !binding.textdate.getText().toString().isEmpty() || !binding.mqty.getText().toString().isEmpty() ||
+                                !binding.mfat.getText().toString().isEmpty() || !binding.msnf.getText().toString().isEmpty() ||
+                                !binding.rate.getText().toString().isEmpty() || !binding.amt.getText().toString().isEmpty() ||
+                                !binding.textshiftm.getText().toString().isEmpty() || !binding.textmtypec.getText().toString().isEmpty()
+                        ) {
+                            //                    {
+                            //     "TDATE":"2024-06-29",
+                            //     "SHIFT":"M",
+                            //     "FARMERID":1,
+                            //     "FARMERNAME":"TEST",
+                            //     "MILKTYPE":"COW",
+                            //     "QUANTITY":1.0,
+                            //     "FAT":3.0,
+                            //     "SNF":8.0,
+                            //     "RATE":30.0,
+                            //     "AMOUNT":30.0
+                            // }
 //                    JsonObject jsonObject1 = new JsonObject();
 //                    jsonObject1.addProperty("TDATE",binding.textdate.getText().toString());
 //                    jsonObject1.addProperty("SHIFT",binding.textshiftm.getText().toString());
@@ -253,28 +344,31 @@ public class milkCollection extends BaseFragment {
 //                    jsonObject1.addProperty("SNF",Double.parseDouble(binding.msnf.getText().toString()));
 //                    jsonObject1.addProperty("RATE",Double.parseDouble(binding.rate.getText().toString()));
 //                    jsonObject1.addProperty("AMOUNT",Double.parseDouble(binding.amt.getText().toString()));
-                    milkDO milkDo = new milkDO();
-                    milkDo.TDATE = binding.textdate.getText().toString();
-                    milkDo.SHIFT = binding.textshiftm.getText().toString();
-                    milkDo.FARMERID = binding.farmerid.getText().toString();
-                    milkDo.FARMERNAME = binding.fname.getText().toString();
-                    milkDo.MILKTYPE = binding.textmtypec.getText().toString();
-                    milkDo.QUANTITY = Double.parseDouble(binding.mqty.getText().toString());
-                    milkDo.FAT = Double.parseDouble(binding.mfat.getText().toString());
-                    milkDo.SNF = Double.parseDouble(binding.msnf.getText().toString());
-                    milkDo.RATE = Double.parseDouble(binding.rate.getText().toString());
-                    milkDo.AMOUNT = Double.parseDouble(binding.amt.getText().toString());
-                    milkCollectionVm.insertMdata(milkDo);
-                    clearfields();
-                    refreshData();
-                    //print(mdata);
-                }
-                else {
-                    Toast.makeText(getContext(),"please make sure all the fields are filled up",Toast.LENGTH_SHORT).show();
-                }
+                            milkDO milkDo = new milkDO();
+                            milkDo.TDATE = binding.textdate.getText().toString();
+                            milkDo.SHIFT = binding.textshiftm.getText().toString();
+                            milkDo.FARMERID = binding.farmerid.getText().toString();
+                            milkDo.FARMERNAME = binding.fname.getText().toString();
+                            milkDo.MILKTYPE = binding.textmtypec.getText().toString();
+                            milkDo.QUANTITY = Double.parseDouble(binding.mqty.getText().toString());
+                            milkDo.FAT = Double.parseDouble(binding.mfat.getText().toString());
+                            milkDo.SNF = Double.parseDouble(binding.msnf.getText().toString());
+                            milkDo.RATE = Double.parseDouble(binding.rate.getText().toString());
+                            milkDo.AMOUNT = Double.parseDouble(binding.amt.getText().toString());
+                            milkCollectionVm.insertMdata(milkDo);
+                            clearfields();
+                            refreshData();
+                            print(milkDo);
+                        } else {
+                            Toast.makeText(getContext(), "please make sure all the fields are filled up", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
-        });
-        if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
+            else {
+                showCustomDialog(getContext(),"Network Error","Please check your internet connection","OK",null,"");
+            }
+
 //            repository.getfarmers().observe(this, new Observer<JSONObject>() {
 //            repository.getfarmers().observe(this, new Observer<JsonArray>() {
 //                @Override
@@ -299,7 +393,6 @@ public class milkCollection extends BaseFragment {
 //                    }
 //                }
 //            });
-
 
         }
     }
@@ -339,19 +432,15 @@ public class milkCollection extends BaseFragment {
         }
     }
     public void refreshData(){
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("TDATE",binding.textdate.getText().toString());
-        jsonObject.addProperty("SHIFT",binding.textshiftm.getText().toString());
-        repository.getMData(jsonObject).observe(this, new Observer<JsonObject>() {
-            @Override
-            public void onChanged(JsonObject jsonObject) {
-                if (jsonObject != null) {
-                    Log.d("TAG", jsonObject.toString());
-                    Gson gson = new Gson();
-                    milkDOS = gson.fromJson(jsonObject.getAsJsonArray("Data"),milkDO[].class);
-                    // rateDOs = gson.fromJson(jsonObject.toString(), rateDO[].class);
-                    if (milkDOS != null) {
-                        if (milkDOS.length > 0) {
+        if(MyApplicationNew.RoomDB) {
+            milkCollectionVm.getmilkdata(getViewLifecycleOwner(), binding.textdate.getText().toString(), binding.textshiftm.getText().toString()).observe(getViewLifecycleOwner(), new Observer<List<milkDO>>() {
+                @Override
+                public void onChanged(List<milkDO> milk) {
+                    if (milk != null) {
+                        if (!milk.isEmpty()) {
+                            Gson gson = new Gson();
+                            JsonArray jsonArray = gson.toJsonTree(milk).getAsJsonArray();
+                            milkDOS = gson.fromJson(jsonArray, milkDO[].class);
                             binding.rcvmData.setLayoutManager(new LinearLayoutManager(getContext()));
                             milkCollectionAdapter = new milkCollectionAdapter(getContext(), milkDOS);
                             binding.rcvmData.setAdapter(milkCollectionAdapter);
@@ -365,8 +454,39 @@ public class milkCollection extends BaseFragment {
                         }
                     }
                 }
-            }
-        });
+            });
+
+        }
+        else {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("TDATE", binding.textdate.getText().toString());
+            jsonObject.addProperty("SHIFT", binding.textshiftm.getText().toString());
+            repository.getMData(jsonObject).observe(this, new Observer<JsonObject>() {
+                @Override
+                public void onChanged(JsonObject jsonObject) {
+                    if (jsonObject != null) {
+                        Log.d("TAG", jsonObject.toString());
+                        Gson gson = new Gson();
+                        milkDOS = gson.fromJson(jsonObject.getAsJsonArray("Data"), milkDO[].class);
+                        // rateDOs = gson.fromJson(jsonObject.toString(), rateDO[].class);
+                        if (milkDOS != null) {
+                            if (milkDOS.length > 0) {
+                                binding.rcvmData.setLayoutManager(new LinearLayoutManager(getContext()));
+                                milkCollectionAdapter = new milkCollectionAdapter(getContext(), milkDOS);
+                                binding.rcvmData.setAdapter(milkCollectionAdapter);
+                                binding.rcvmData.setHasFixedSize(true);
+                                getTotal();
+                            } else {
+                                milkDOS = new milkDO[]{};
+                                if (milkCollectionAdapter != null) {
+                                    milkCollectionAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
     public double calc(){
         final double[] amount = {0};
@@ -389,50 +509,84 @@ public class milkCollection extends BaseFragment {
 //                            "FAT":3.0,
 //                            "SNF":8.0
 //                    }
+                if(MyApplicationNew.RoomDB)
+                {
+                    milkCollectionVm.getGetrates(binding.textmtypec.getText().toString(),CalendarUtils.convertDateToFormattedString(binding.textdate.getText().toString()),fat, snf).observe(this, new Observer<List<rateDO>>() {
+                        @Override
+                        public void onChanged(List<rateDO> mdata) {
+                            if (mdata != null && !mdata.isEmpty()) {
+                                if(mdata.get(0).MILKTYPE.equalsIgnoreCase("Cow"))
+                                {
+                                    rate1[0] = (mdata.get(0).RATE / 100);
+                                    snfmax[0] = (mdata.get(0).SNFMAX);
+                                    Log.d("rate[0]", "" + rate1[0]);
+                                    rate1[0] = (fat + snf) * (rate1[0]);
+                                    amount[0] = rate1[0] * qty;
+                                    binding.rate.setText(String.format("%.1f", rate1[0]));
+                                    binding.amt.setText(String.format("%.1f", amount[0]));
+                                }
+                                else {
+                                    rate1[0] = (mdata.get(0).RATE / 100);
+                                    snfmax[0] = (mdata.get(0).SNFMAX);
+                                    Log.d("rate[0]", "" + rate1[0]);
+                                    //(BMRATE)
+                                    rate1[0] = (fat * rate1[0]) - (snfmax[0] - snf);
+                                    amount[0] = rate1[0]*qty;
+                                    binding.rate.setText(String.format("%.1f",rate1[0]));
+                                    binding.amt.setText(String.format("%.1f",amount[0]));
+                                }
+                            }
+                            else {
+                                binding.rate.setText(String.format("%.1f",(rate1[0])));
+                                binding.amt.setText(String.format("%.1f",(amount[0])));
+                            }
+                        }
+                    });
+                }
+                else {
                     JsonObject jsonObject1 = new JsonObject();
-                    jsonObject1.addProperty("MILKTYPE",binding.textmtypec.getText().toString());
-                    jsonObject1.addProperty("TDATE",binding.textdate.getText().toString());
-                    jsonObject1.addProperty("FAT",fat);
-                    jsonObject1.addProperty("SNF",snf);
+                    jsonObject1.addProperty("MILKTYPE", binding.textmtypec.getText().toString());
+                    jsonObject1.addProperty("TDATE", binding.textdate.getText().toString());
+                    jsonObject1.addProperty("FAT", fat);
+                    jsonObject1.addProperty("SNF", snf);
                     repository.getTSrate(jsonObject1).observe(this, new Observer<JsonObject>() {
                         @Override
                         public void onChanged(JsonObject jsonObject) {
                             if (jsonObject != null) {
                                 Log.d("TAG", jsonObject.toString());
                                 Gson gson = new Gson();
-                                rateDOs = gson.fromJson(jsonObject.getAsJsonArray("Data"),rateDO[].class);
+                                rateDOs = gson.fromJson(jsonObject.getAsJsonArray("Data"), rateDO[].class);
                                 if (rateDOs != null) {
                                     if (rateDOs.length > 0) {
 //                                        binding.fname.setText(farmerDOs[0].FARMERNAME);
-                                        if(binding.textmtypec.getText().equals("Cow"))
-                                        {
+                                        if (binding.textmtypec.getText().equals("Cow")) {
                                             rate1[0] = (rateDOs[0].RATE / 100);
                                             snfmax[0] = (rateDOs[0].SNFMAX);
                                             Log.d("rate[0]", "" + rate1[0]);
                                             rate1[0] = (fat + snf) * (rate1[0]);
-                                            amount[0] = rate1[0]*qty;
-                                            binding.rate.setText(String.format("%.1f",rate1[0]));
-                                            binding.amt.setText(String.format("%.1f",amount[0]));
-                                        }
-                                        else {
+                                            amount[0] = rate1[0] * qty;
+                                            binding.rate.setText(String.format("%.1f", rate1[0]));
+                                            binding.amt.setText(String.format("%.1f", amount[0]));
+                                        } else {
                                             rate1[0] = (rateDOs[0].RATE / 100);
                                             snfmax[0] = (rateDOs[0].SNFMAX);
                                             Log.d("rate[0]", "" + rate1[0]);
                                             //(BMRATE)
                                             rate1[0] = (fat * rate1[0]) - (snfmax[0] - snf);
-                                            amount[0] = rate1[0]*qty;
-                                            binding.rate.setText(String.format("%.1f",rate1[0]));
-                                            binding.amt.setText(String.format("%.1f",amount[0]));
+                                            amount[0] = rate1[0] * qty;
+                                            binding.rate.setText(String.format("%.1f", rate1[0]));
+                                            binding.amt.setText(String.format("%.1f", amount[0]));
                                         }
                                     } else {
                                         rateDOs = new rateDO[]{};
-                                        binding.rate.setText(String.format("%.1f",(rate1[0])));
-                                        binding.amt.setText(String.format("%.1f",(amount[0])));
+                                        binding.rate.setText(String.format("%.1f", (rate1[0])));
+                                        binding.amt.setText(String.format("%.1f", (amount[0])));
                                     }
                                 }
                             }
                         }
                     });
+                }
             }
         }
         catch (Exception ex){
@@ -445,5 +599,30 @@ public class milkCollection extends BaseFragment {
     public void onResume() {
         super.onResume();
         refreshData();
+    }
+    public void print(milkDO mdata){
+        prnt = " Date:" + mdata.TDATE + ", Shift:" + mdata.SHIFT + " \n Farmer Code:" + mdata.FARMERID + " \n Name:" + mdata.FARMERNAME + " \n " + mdata.MILKTYPE + " Milk \n Qty:" + mdata.QUANTITY + " \n Fat:" + mdata.FAT + " \n Snf:" + mdata.SNF + " \n Rate:" + mdata.RATE + " \n Amount:" + mdata.AMOUNT + "\n \n \n \n";
+        showCustomDialog(getContext(),"Print","Would you like to Print?","Yes","No","PRINT");
+    }
+    void printData() throws  IOException{
+        try{
+            String msg = prnt;
+            outputStream.write(msg.getBytes());
+            Toast.makeText(getContext(),"Printing Text...",Toast.LENGTH_LONG).show();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onButtonYesClick(String from) throws JSONException {
+        super.onButtonYesClick(from);
+        if (from.equals("PRINT")) {
+            try {
+                printData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

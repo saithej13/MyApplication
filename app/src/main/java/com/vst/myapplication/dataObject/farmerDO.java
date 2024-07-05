@@ -1,9 +1,13 @@
 package com.vst.myapplication.dataObject;
 
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-
+@Entity(tableName = "tblfarmers", indices = {@Index(value = "FARMERID", unique = true)})
 public class farmerDO implements Serializable {
 //    @SerializedName("slno")
 //    public int slno;
@@ -14,6 +18,7 @@ public class farmerDO implements Serializable {
 //        "milktype":"1",
 //        "isactive":"1"
 //}
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("FARMERID")
     public int FARMERID;
     @SerializedName("FARMERNAME")
