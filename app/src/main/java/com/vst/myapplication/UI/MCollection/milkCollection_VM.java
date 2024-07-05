@@ -26,7 +26,7 @@ public class milkCollection_VM extends AndroidViewModel {
     public milkCollection_VM(@NonNull Application application) {
         super(application);
         repository = new ProjectRepository();
-        roomrepo = new roomRepository(application);
+//        roomrepo = new roomRepository(application);
     }
     public MutableLiveData<JsonObject> insertMdata(milkDO milkDo){
         Gson gson = new Gson();

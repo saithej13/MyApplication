@@ -1,0 +1,235 @@
+this is a Test file for saving queries and sp's
+
+USE [DB_2024]
+GO
+
+/****** Object:  Table [dbo].[TBLFARMERS]    Script Date: 05-07-2024 23:50:17 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TBLFARMERS](
+	[SLNO] [int] IDENTITY(1,1) NOT NULL,
+	[FARMERID] [int] NOT NULL,
+	[FARMERNAME] [varchar](250) NULL,
+	[MOBILENO] [varchar](20) NULL,
+	[MILKTYPE] [varchar](20) NULL,
+	[ISACTIVE] [bit] NULL,
+PRIMARY KEY CLUSTERED
+(
+	[SLNO] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+___________________________________________________________________________
+
+
+
+USE [DB_2024]
+GO
+
+/****** Object:  Table [dbo].[TBLGPSTEST]    Script Date: 05-07-2024 23:50:50 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TBLGPSTEST](
+	[SLNO] [int] NOT NULL,
+	[TDATE] [datetime] NULL,
+	[USERID] [varchar](50) NULL,
+	[LAT] [varchar](20) NULL,
+	[LONG] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED
+(
+	[SLNO] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+_______________________________________________________________________________________
+
+USE [DB_2024]
+GO
+
+/****** Object:  Table [dbo].[TBLMILKDATA]    Script Date: 05-07-2024 23:51:06 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TBLMILKDATA](
+	[SLNO] [int] NOT NULL,
+	[TDATE] [datetime] NULL,
+	[SHIFT] [varchar](20) NULL,
+	[FARMERID] [int] NOT NULL,
+	[FARMERNAME] [varchar](250) NULL,
+	[MILKTYPE] [varchar](20) NULL,
+	[QUANTITY] [decimal](18, 2) NULL,
+	[FAT] [decimal](18, 2) NULL,
+	[SNF] [decimal](18, 2) NULL,
+	[RATE] [decimal](18, 2) NULL,
+	[AMOUNT] [decimal](18, 2) NULL,
+	[CRDATE] [datetime] NULL,
+PRIMARY KEY CLUSTERED
+(
+	[SLNO] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+_____________________________________________________________________________________
+
+USE [DB_2024]
+GO
+
+/****** Object:  Table [dbo].[TBLRATES]    Script Date: 05-07-2024 23:51:24 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TBLRATES](
+	[SLNO] [int] NOT NULL,
+	[MILKTYPE] [varchar](20) NULL,
+	[STARTDATE] [datetime] NULL,
+	[ENDDATE] [datetime] NULL,
+	[FATMIN] [decimal](18, 2) NULL,
+	[FATMAX] [decimal](18, 2) NULL,
+	[SNFMIN] [decimal](18, 2) NULL,
+	[SNFMAX] [decimal](18, 2) NULL,
+	[RATE] [decimal](18, 2) NULL,
+PRIMARY KEY CLUSTERED
+(
+	[SLNO] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+____________________________________________________________________________
+
+USE [DB_2024]
+GO
+
+/****** Object:  Table [dbo].[TBLROLEPERMISSIONS]    Script Date: 05-07-2024 23:51:38 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBLROLEPERMISSIONS](
+	[SLNO] [int] IDENTITY(1,1) NOT NULL,
+	[ROLEID] [int] NOT NULL,
+	[CREATE_] [int] NOT NULL,
+	[READ_] [int] NOT NULL,
+	[UPDATE_] [int] NOT NULL,
+	[DELETE_] [int] NOT NULL,
+PRIMARY KEY CLUSTERED
+(
+	[SLNO] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+_______________________________________________________________________________________
+
+USE [DB_2024]
+GO
+
+/****** Object:  Table [dbo].[TBLROLES]    Script Date: 05-07-2024 23:51:54 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TBLROLES](
+	[ROLEID] [int] NULL,
+	[ROLENAME] [varchar](250) NULL
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+________________________________________________________________________________
+
+USE [DB_2024]
+GO
+
+/****** Object:  Table [dbo].[TBLUSERS]    Script Date: 05-07-2024 23:52:10 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TBLUSERS](
+	[USERID] [int] NOT NULL,
+	[USERNAME] [varchar](250) NULL,
+	[PASSWORD] [varchar](max) NULL,
+	[MOBILENO] [varchar](20) NULL,
+	[BRANCHNAME] [varchar](50) NULL,
+	[ADDRESS] [varchar](50) NULL,
+	[DEVICEID] [varchar](250) NULL,
+	[STARTDATE] [datetime] NULL,
+	[ENDDATE] [datetime] NULL,
+	[ISACTIVE] [bit] NULL,
+	[ROLEID] [int] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+

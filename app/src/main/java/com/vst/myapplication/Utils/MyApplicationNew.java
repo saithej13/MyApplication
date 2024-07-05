@@ -1,13 +1,18 @@
 package com.vst.myapplication.Utils;
 import android.content.Context;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.multidex.MultiDexApplication;
+
+import com.vst.myapplication.Room.Database;
+import com.vst.myapplication.Room.RoomService;
 
 import java.util.HashMap;
 
 public class MyApplicationNew extends MultiDexApplication{
     public static String MyLock = "Lock";
     public static Context mContext;
+    public static LifecycleOwner lifecycleOwner;
     public static HashMap<String, Object> hashMap;
 
     private static Object dataObject = null;
@@ -15,14 +20,14 @@ public class MyApplicationNew extends MultiDexApplication{
 
     public static boolean RoomDB = false;
     public static MyApplicationNew instance;
+    private static RoomService roomService;
 
     @Override
     public void onCreate() {
         super.onCreate();
         if (mContext == null)
             mContext = this;
-
-
+        roomService = Database.getInstance().roomService();
     }
 
 
@@ -55,5 +60,11 @@ public class MyApplicationNew extends MultiDexApplication{
 
     public static MyApplicationNew getInstance() {
         return instance;
+    }
+    public static LifecycleOwner getLifecycleOwner() {
+        return lifecycleOwner;
+    }
+    public static RoomService getRoomService() {
+        return roomService;
     }
 }

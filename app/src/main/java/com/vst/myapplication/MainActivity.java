@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
 import com.google.android.gms.auth.api.phone.SmsRetriever;
@@ -30,6 +32,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
+import com.vst.myapplication.UI.Farmers.farmers;
+import com.vst.myapplication.UI.MCollection.milkCollection;
+import com.vst.myapplication.UI.Rates.rates;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NTLMAuthenticator;
 import com.vst.myapplication.Utils.Preference;
@@ -84,8 +89,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding =  DataBindingUtil.setContentView(this,R.layout.activity_main);
+        MyApplicationNew.lifecycleOwner = this;
         repository = new ProjectRepository();
-        roomrepo = new roomRepository(getApplication());
+//        roomrepo = new roomRepository(getApplication());
         preference = new Preference(getApplicationContext());
         preferences = new SharedPreferences();
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -111,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
 //                tblmilkdata mdata= new tblmilkdata();
 //                mdata.date="2024-03-03";
 //                mdata.farmercode="1";
-//                mdata.farmername="test";
+//                mdata.farmername="Tables";
 //                mdata.mtype ="cow";
 //                mdata.quantity = 1.0;
 //                mdata.fat = 3.0;
@@ -130,7 +136,12 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                .add(R.id.frame, new rates(), "")
+                                .addToBackStack("")
+                                .commitAllowingStateLoss();
 //                        saveUser();
 //                        test11();
 //                        test1();
@@ -150,12 +161,7 @@ public class MainActivity extends AppCompatActivity {
 //        .addHeader("soapAction", "urn:microsoft-dynamics-schemas/codeunit/GetTransList:ExportPurchaseReturnList")
 //                .addHeader("Content-Type", "application/xml")
 
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-//                .add(R.id.frame, new register_notice(), "")
-//                .addToBackStack("")
-//                .commitAllowingStateLoss();
+
 
 //        EdgeToEdge.enable(this);
 //        setContentView(R.layout.activity_main);

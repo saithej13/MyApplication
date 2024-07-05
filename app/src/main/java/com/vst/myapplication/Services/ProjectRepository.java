@@ -1,15 +1,29 @@
 package com.vst.myapplication.Services;
 
+import android.app.Application;
+import android.provider.ContactsContract;
 import android.util.Log;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.vst.myapplication.Room.Database;
+import com.vst.myapplication.Room.RoomService;
+import com.vst.myapplication.Room.roomRepository;
+import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.dataObject.farmerDO;
+import com.vst.myapplication.dataObject.rateDO;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -19,6 +33,12 @@ import retrofit2.Response;
 
 public class ProjectRepository {
     Apiclient apiClient = AppModule.getClient().create(Apiclient.class);
+
+    LifecycleOwner lifecycleOwner = MyApplicationNew.getLifecycleOwner();
+    RoomService roomService = Database.getInstance().roomService();
+
+    roomRepository roomrepo;
+
     public MutableLiveData<JsonObject> login(JsonObject payload) {
         Log.d("URL","Login Request-->"+payload);
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
@@ -128,44 +148,78 @@ public class ProjectRepository {
 //  #Rates
 public MutableLiveData<JsonObject> getrates() {
     final MutableLiveData<JsonObject> data = new MutableLiveData<>();
-
-    apiClient.getRates().enqueue(new Callback<JsonObject>() {
-        @Override
-        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-            if (response.isSuccessful()) {
-                JsonObject jsonObject =response.body();
-                Log.d("Log Response", "" + response.body());
+    if(MyApplicationNew.RoomDB){
+        roomService.getrates().observe(lifecycleOwner, new Observer<List<rateDO>>() {
+            @Override
+            public void onChanged(List<rateDO> rateDOS) {
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                String jsonArrayString = gson.toJson(rateDOS);
+                try {
+                    JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+                    jsonObject.add("Data", jsonArray);
+                } catch (JsonSyntaxException e) {
+                    Log.e("Log Response", "Error parsing JSON array", e);
+                    jsonObject.add("Data", new JsonArray());
+                }
+                Log.d("Log Response", "" + jsonObject);
                 data.setValue(jsonObject);
             }
-        }
-
-        @Override
-        public void onFailure(Call<JsonObject> call, Throwable t) {
-            Log.d("Log", "getRATES payload Failed-->" + t.getMessage());
-            data.setValue(null);
-        }
-    });
-    return data;
-}
-    public MutableLiveData<JsonObject> InsertRate(JsonObject payload) {
-        Log.d("URL","getFarmerbycode Request-->"+payload);
-        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
-
-        apiClient.InsertRate(payload).enqueue(new Callback<JsonObject>() {
+        });
+    }
+    else {
+        apiClient.getRates().enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("URL", "INSERTRATE Request-->" + payload);
                 if (response.isSuccessful()) {
-                    data.setValue(response.body());
+                    JsonObject jsonObject =response.body();
+                    Log.d("Log Response", "" + response.body());
+                    data.setValue(jsonObject);
                 }
             }
-
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("Log", "INSERTRATE payload Failed-->" + t.getMessage());
+                Log.d("Log", "getRATES payload Failed-->" + t.getMessage());
                 data.setValue(null);
             }
         });
+    }
+    return data;
+}
+    public MutableLiveData<JsonObject> InsertRate(rateDO rateDO) {
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB)
+        {
+            Log.d("STARTDATE",""+rateDO.STARTDATE);
+            Log.d("ENDDATE",""+rateDO.ENDDATE);
+            Log.d("FATMIN",""+rateDO.FATMIN);
+            Log.d("FATMAX",""+rateDO.FATMAX);
+            Log.d("SNFMIN",""+rateDO.SNFMIN);
+            Log.d("SNFMAX",""+rateDO.SNFMAX);
+            Log.d("RATE",""+rateDO.RATE);
+
+                roomrepo.insertrates(rateDO);
+        }
+        else {
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(rateDO);
+            JsonObject payload = new JsonParser().parse(jsonString).getAsJsonObject();
+            Log.d("URL", "getFarmerbycode Request-->" + payload);
+            apiClient.InsertRate(payload).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    Log.d("URL", "INSERTRATE Request-->" + payload);
+                    if (response.isSuccessful()) {
+                        data.setValue(response.body());
+                    }
+                }
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.d("Log", "INSERTRATE payload Failed-->" + t.getMessage());
+                    data.setValue(null);
+                }
+            });
+        }
         return data;
     }
 

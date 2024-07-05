@@ -22,13 +22,10 @@ public class rates_VM extends AndroidViewModel {
     public rates_VM(@NonNull Application application) {
         super(application);
         repository = new ProjectRepository();
-        roomrepo = new roomRepository(application);
+//        roomrepo = new roomRepository(application);
     }
     public MutableLiveData<JsonObject> insertRate(rateDO rateDo){
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(rateDo);
-        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        return repository.InsertRate(jsonObject);
+        return repository.InsertRate(rateDo);
     }
 
 }

@@ -8,6 +8,8 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.google.gson.JsonObject;
+import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -15,11 +17,11 @@ import com.vst.myapplication.dataObject.rateDO;
 import java.util.List;
 
 public class roomRepository {
-    private RoomService roomService;
-
-
-    public roomRepository(Application application){
-        Database database = Database.getInstance(application);
+//    RoomService roomService = Database.getInstance().roomService();
+//RoomService roomService = MyApplicationNew.getRoomService();
+RoomService roomService;
+    public roomRepository(){
+        Database database = Database.getInstance();
         roomService = database.roomService();
     }
     public void insertfarmers(farmerDO farmers){
@@ -160,6 +162,11 @@ public class roomRepository {
     }
     private static class InsertRatesAsyncTask extends AsyncTask<rateDO,Void,Void> {
         RoomService roomService;
+//        private MutableLiveData<JsonObject> data;
+//        private InsertRatesAsyncTask(RoomService roomService, MutableLiveData<JsonObject> data){
+//            this.roomService = roomService;
+//            this.data = data;
+//        }
         private InsertRatesAsyncTask(RoomService roomService){
             this.roomService = roomService;
         }
@@ -168,5 +175,11 @@ public class roomRepository {
             roomService.insertRates(rates[0]);
             return null;
         }
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            JsonObject successResponse = new JsonObject();
+//            successResponse.addProperty("success", true);
+//            data.setValue(successResponse);
+//        }
     }
 }
