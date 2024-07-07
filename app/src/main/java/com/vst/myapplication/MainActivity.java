@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -32,12 +30,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
-import com.vst.myapplication.UI.Farmers.farmers;
-import com.vst.myapplication.UI.MCollection.milkCollection;
-import com.vst.myapplication.UI.Rates.rates;
+import com.vst.myapplication.UI.Login.Login;
+import com.vst.myapplication.UI.Payments.payment;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NTLMAuthenticator;
-import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.Utils.SharedPreferences;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.userDO;
@@ -53,6 +49,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -71,8 +68,6 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     ProjectRepository repository;
-    Preference preference;
-    SharedPreferences preferences;
     private String verificationId;
     private FirebaseAuth mAuth;
 
@@ -92,26 +87,32 @@ public class MainActivity extends AppCompatActivity {
         MyApplicationNew.lifecycleOwner = this;
         repository = new ProjectRepository();
 //        roomrepo = new roomRepository(getApplication());
-        preference = new Preference(getApplicationContext());
-        preferences = new SharedPreferences();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         database = FirebaseDatabase.getInstance();
         usersRef = database.getReference();
         usersRef2 = usersRef.child("users");
-        preference.saveIntInPreference(Preference.DEVICE_DISPLAY_WIDTH, displayMetrics.widthPixels);
-        preference.saveIntInPreference(Preference.DEVICE_DISPLAY_HEIGHT, displayMetrics.heightPixels);
-        preference.commitPreference();
         mAuth = FirebaseAuth.getInstance();
         SharedPreferences.saveStorage(getBaseContext(),"RoomDB");
         if(SharedPreferences.getStorage(getBaseContext()).equalsIgnoreCase("RoomDB")){
             MyApplicationNew.RoomDB = true;
         }
+//        binding.dashboard.setOnClickListener(view -> {
+//
+//        });
+//        binding.menu.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 //        testfirebasesms();
 //        startSmsRetriever();
+        movetoLogin();
+
         binding.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, payment.class);
+                startActivity(intent);
 //                verifyCode(binding.edtotp.getText().toString().trim());
 //                test3();
 //                tblmilkdata mdata= new tblmilkdata();
@@ -132,16 +133,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("PRINTDB","API");
                 }
 
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .add(R.id.frame, new rates(), "")
-                                .addToBackStack("")
-                                .commitAllowingStateLoss();
+
 //                        saveUser();
 //                        test11();
 //                        test1();
@@ -170,16 +165,6 @@ public class MainActivity extends AppCompatActivity {
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 //            return insets;
 //        });
-    }
-    private void switchFragment(Fragment fragment) {
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-//
-            }
-        });
     }
 //    public static String test1() {
 //        String userName = "GSAUser";
@@ -651,6 +636,19 @@ public static String test1() {
                         }
                     }
                 });
+    }
+    public void movetoLogin(){
+        Bundle mBundle = new Bundle();
+        mBundle.putBoolean("isTitle", true);
+        Login loginFragment = new Login();
+        loginFragment.setArguments(mBundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .add(R.id.frame, loginFragment, "")
+                .addToBackStack("")
+                .commitAllowingStateLoss();
+
     }
 
 }

@@ -10,9 +10,11 @@ import androidx.lifecycle.Observer;
 
 import com.google.gson.JsonObject;
 import com.vst.myapplication.Utils.MyApplicationNew;
+import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
+import com.vst.myapplication.dataObject.ratedetailsDO;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ RoomService roomService;
     public void insertfarmers(farmerDO farmers){
         new InsertFarmersAsyncTask(roomService).execute(farmers);
     }
-    public void insertrates(rateDO rates){
+    public void insertrates(RateAndDetails rates){
         new InsertRatesAsyncTask(roomService).execute(rates);
     }
     public void insertmilkdata(milkDO mdata){
@@ -84,13 +86,13 @@ RoomService roomService;
     public MutableLiveData<List<rateDO>> getValidateFat(LifecycleOwner lifecycleOwner,String mtype,double fatmin,double fatmax) {
         Log.d("URL", "GetValidateRate Request-->");
         final MutableLiveData<List<rateDO>> data = new MutableLiveData<>();
-        roomService.validateFat(mtype,fatmin,fatmax).observe(lifecycleOwner, new Observer<List<rateDO>>() {
-            @Override
-            public void onChanged(List<rateDO> orderSummeries) {
-                data.setValue(orderSummeries);
-                Log.d("value", "body " + data.getValue());
-            }
-        });
+//        roomService.validateFat(mtype,fatmin,fatmax).observe(lifecycleOwner, new Observer<List<rateDO>>() {
+//            @Override
+//            public void onChanged(List<rateDO> orderSummeries) {
+//                data.setValue(orderSummeries);
+//                Log.d("value", "body " + data.getValue());
+//            }
+//        });
         return data;
     }
     //GetFarmerbycodeAsyncTask
@@ -127,13 +129,13 @@ RoomService roomService;
         Log.d("URL", "GetMilkData Request-->" );
         final MutableLiveData<List<rateDO>> data = new MutableLiveData<>();
 
-        roomService.gettsrate(mtype,tdate,fat,snf).observeForever(new Observer<List<rateDO>>() {
-            @Override
-            public void onChanged(List<rateDO> orderSummeries) {
-                data.setValue(orderSummeries);
-                Log.d("value", "body " + data.getValue());
-            }
-        });
+//        roomService.gettsrate(mtype,tdate,fat,snf).observeForever(new Observer<List<rateDO>>() {
+//            @Override
+//            public void onChanged(List<rateDO> orderSummeries) {
+//                data.setValue(orderSummeries);
+//                Log.d("value", "body " + data.getValue());
+//            }
+//        });
 
         return data;
     }
@@ -160,7 +162,7 @@ RoomService roomService;
             return null;
         }
     }
-    private static class InsertRatesAsyncTask extends AsyncTask<rateDO,Void,Void> {
+    private static class InsertRatesAsyncTask extends AsyncTask<RateAndDetails,Void,Void> {
         RoomService roomService;
 //        private MutableLiveData<JsonObject> data;
 //        private InsertRatesAsyncTask(RoomService roomService, MutableLiveData<JsonObject> data){
@@ -171,8 +173,17 @@ RoomService roomService;
             this.roomService = roomService;
         }
         @Override
-        protected Void doInBackground(rateDO... rates) {
-            roomService.insertRates(rates[0]);
+        protected Void doInBackground(RateAndDetails... rateAndDetailsArray) {
+            RateAndDetails rateAndDetails = rateAndDetailsArray[0];
+//            roomService.insertRates(rates[0]);
+            long slNo = roomService.insertRates(rateAndDetails.rate);
+//            rateAndDetails.rateDetails.SLNO = (int) slNo;
+//            roomService.insertRatesdetails(rateAndDetails.rateDetails);
+            for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
+                rateDetails.SLNO = (int) slNo;
+                roomService.insertRatesdetails(rateDetails);
+            }
+
             return null;
         }
 //        @Override

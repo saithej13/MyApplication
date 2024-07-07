@@ -91,6 +91,7 @@ public class CalendarUtils {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_STD_PATTERN, Locale.ENGLISH);
         dateStr = sdf.format(date);
+        Log.d("DashboardDAte",""+dateStr);
         return dateStr;
     }
     public static String getDatePattern2()
@@ -207,6 +208,51 @@ public class CalendarUtils {
         }
         return formatedDate;
     }
+    public static String getFormatedDatefromString3(String strDate)
+    {
+        //present format        tdate 06 Jul 2024 shift E
+        //required format     tdate "2024-07-06" shift "E"
+        //
+        String formatedDate  = "N/A";
+        if(!TextUtils.isEmpty(strDate))
+        {
+            try
+            {
+                formatedDate = strDate;
+                LogUtils.errorLog(strDate, strDate);
+
+                if(strDate.contains(" "))
+                    strDate = strDate.replace(" ", "-");
+
+                if(strDate.contains("T"))
+                {
+                    String arrDate[]= strDate.split("T")[0].split("-");
+                    formatedDate = arrDate[2]+" "+getMonthFromString(arrDate[1])+" "+arrDate[0];
+                }
+                else
+                {
+                    String arrDate[]= strDate.split("-");
+                    String s = String.valueOf(getMonthFromString(arrDate[1]));
+                    if(s.length()==1)
+                    {
+                        formatedDate = arrDate[2]+"-0"+getMonthFromString(arrDate[1])+"-"+arrDate[0];
+                    }
+                    else
+                    {
+                        formatedDate = arrDate[2]+"-"+getMonthFromString(arrDate[1])+"-"+arrDate[0];
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                formatedDate =null;
+            }
+        }
+        Log.d("formatedDate",""+formatedDate);
+        return formatedDate;
+    }
     public static String getMonthFromNumber(int intMonth)
     {
         String strMonth = "";
@@ -240,6 +286,40 @@ public class CalendarUtils {
         }
 
         return strMonth;
+    }
+    public static int getMonthFromString(String Month)
+    {
+        int intMonth=0;
+
+        switch(Month)
+        {
+            case "Jan":
+                intMonth = 1;break;
+            case "Feb":
+                intMonth = 2;break;
+            case "Mar":
+                intMonth = 3;break;
+            case "Apr":
+                intMonth = 4;break;
+            case "May":
+                intMonth = 5;break;
+            case "Jun":
+                intMonth = 6;break;
+            case "Jul":
+                intMonth = 7;break;
+            case "Aug":
+                intMonth = 8;break;
+            case "Sep":
+                intMonth = 9;break;
+            case "Oct":
+                intMonth = 10;break;
+            case "Nov":
+                intMonth = 11;break;
+            case "Dec":
+                intMonth = 12;break;
+        }
+
+        return intMonth;
     }
     public static String getTodaydate()
     {

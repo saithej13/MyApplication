@@ -1,7 +1,10 @@
 package com.vst.myapplication.Utils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 
 import android.content.Context;
@@ -10,10 +13,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.vst.myapplication.R;
 import com.vst.myapplication.MainActivity;
-import com.vst.myapplication.Utils.Preference;
+import com.vst.myapplication.UI.Dashboard.Dashboard1;
+import com.vst.myapplication.UI.Dashboard.DashboardFragment;
+import com.vst.myapplication.UI.Dashboard.graphFragment;
+import com.vst.myapplication.UI.menu.menuFragment;
 
 import org.json.JSONException;
 
@@ -39,8 +47,88 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         homeActivity = (MainActivity) requireActivity();
+        ImageView ivdashboard = requireActivity().findViewById(R.id.dashboard);
+        ImageView ivmenu = requireActivity().findViewById(R.id.menu);
+        ImageView ivprofile = requireActivity().findViewById(R.id.profile);
+        ivdashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (BaseFragment.this instanceof Dashboard1) {
+
+                    } else {
+                        Dashboard1 dashboardFragment = new Dashboard1();
+                        FragmentManager fragmentManager = getParentFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                .add(R.id.frame, dashboardFragment, "")
+                                .addToBackStack("")
+                                .commitAllowingStateLoss();
+                        ivdashboard.setImageResource(R.drawable.dashboardb);
+                        ivmenu.setImageResource(R.drawable.menub);
+                        ivprofile.setImageResource(R.drawable.profile);
+                        ivdashboard.setImageResource(R.drawable.dashboardc);
+
+                    }
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
+        ivmenu.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (BaseFragment.this instanceof menuFragment) {
+
+                    } else {
+                        menuFragment menuFragment = new menuFragment();
+                        FragmentManager fragmentManager = getParentFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                .add(R.id.frame, menuFragment, "")
+                                .addToBackStack("")
+                                .commitAllowingStateLoss();
+                        ivdashboard.setImageResource(R.drawable.dashboardb);
+                        ivmenu.setImageResource(R.drawable.menub);
+                        ivprofile.setImageResource(R.drawable.profile);
+                        ivmenu.setImageResource(R.drawable.menuc);
+                    }
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LinearLayout llbottomnav = requireActivity().findViewById(R.id.llbottomnav);
+                        if(BaseFragment.this instanceof Dashboard1
+                                || BaseFragment.this instanceof menuFragment
+                        || BaseFragment.this instanceof DashboardFragment
+                        || BaseFragment.this instanceof graphFragment)
+                        {
+//                            setBottomNavigation(true);
+                            llbottomnav.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            llbottomnav.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 
     public abstract View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner);
@@ -224,5 +312,6 @@ public abstract class BaseFragment extends Fragment {
 
     public void onButtonNoClick(String from) {
     }
+
 
 }

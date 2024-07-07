@@ -34,15 +34,19 @@ import com.vst.myapplication.UI.Farmers.famers_VM;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.rateDO;
+import com.vst.myapplication.dataObject.ratedetailsDO;
 import com.vst.myapplication.databinding.FarmerEntryPopupBinding;
 import com.vst.myapplication.databinding.FarmersBinding;
 import com.vst.myapplication.databinding.RatesBinding;
 import com.vst.myapplication.databinding.RatesEntryPopupBinding;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class rates extends BaseFragment {
     private Dialog dialog;
@@ -84,25 +88,13 @@ public class rates extends BaseFragment {
                         Log.d("TAG", jsonObject.toString());
                         Gson gson = new Gson();
                         rateDOs = gson.fromJson(jsonObject.getAsJsonArray("Data"),rateDO[].class);
-                       // rateDOs = gson.fromJson(jsonObject.toString(), rateDO[].class);
                         if (rateDOs != null) {
-//                            Arrays.sort(farmerDOs, new Comparator<farmerDOs>() {
-//                                @Override
-//                                public int compare(farmerDOs order1, farmerDOs order2) {
-//                                    return order2.getOrderDate().compareTo(order1.getOrderDate());
-//                                }
-//                            });
                             if (rateDOs.length > 0) {
-//                                tvNoData.setVisibility(View.GONE);
-//                                layoutViewPager.setVisibility(View.VISIBLE);
-                                //setupTabs(orders);
                                 binding.rcvrates.setLayoutManager(new LinearLayoutManager(parent.getContext()));
                                 ratesAdapter = new RatesAdapter(parent.getContext(), rateDOs);
                                 binding.rcvrates.setAdapter(ratesAdapter);
                                 binding.rcvrates.setHasFixedSize(true);
                             } else {
-//                                tvNoData.setVisibility(View.VISIBLE);
-//                                layoutViewPager.setVisibility(View.GONE);
                                 rateDOs = new rateDO[]{};
                                 if (ratesAdapter != null) {
                                     ratesAdapter.notifyDataSetChanged();
@@ -113,8 +105,6 @@ public class rates extends BaseFragment {
                 }
             });
 
-//        farmersVM.getFarmerdata();
-//        farmersAdapter.setFarmers();
             binding.fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -122,10 +112,6 @@ public class rates extends BaseFragment {
                         ratesEntryPopupBinding = DataBindingUtil.inflate(inflater, R.layout.rates_entry_popup, parent, false);
                         dialog = new Dialog(parent.getContext(), R.style.Dialog);
                         dialog.setContentView(ratesEntryPopupBinding.getRoot());
-                        FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        DatabaseReference myRef = database.getReference("tbltest");
-                        myRef.setValue("Hello, World!");
-                        addQuoteToDB("quotetest","authortest");
                         ratesEntryPopupBinding.tvFromDate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -196,20 +182,42 @@ public class rates extends BaseFragment {
                         ratesEntryPopupBinding.btnOK.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if (!TextUtils.isEmpty(ratesEntryPopupBinding.tvFromDate.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.tvToDate.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.mtype.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etfatmin.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etfatmax.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etsnfmin.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etsnfmax.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etRate.getText().toString())) {
-                                    rateDO rateDo = new rateDO();
-                                    rateDo.STARTDATE= ratesEntryPopupBinding.tvFromDate.getText().toString();
-                                    rateDo.ENDDATE= ratesEntryPopupBinding.tvToDate.getText().toString();
-                                    rateDo.MILKTYPE = ratesEntryPopupBinding.mtype.getText().toString();
-                                    rateDo.FATMIN = Double.parseDouble(ratesEntryPopupBinding.etfatmin.getText().toString());
-                                    rateDo.FATMAX = Double.parseDouble(ratesEntryPopupBinding.etfatmax.getText().toString());
-                                    rateDo.SNFMIN = Double.parseDouble(ratesEntryPopupBinding.etsnfmin.getText().toString());
-                                    rateDo.SNFMAX = Double.parseDouble(ratesEntryPopupBinding.etsnfmax.getText().toString());
-                                    rateDo.RATE = Double.parseDouble(ratesEntryPopupBinding.etRate.getText().toString());
-                                    ratesVm.insertRate(rateDo);
-                                } else {
-                                    Toast.makeText(getContext(), "please fill all the fields", Toast.LENGTH_SHORT).show();
-                                }
+                                rateDO rateDo = new rateDO();
+                                rateDo.STARTDATE= "2024-01-01";
+                                rateDo.ENDDATE= "2024-12-31";
+                                rateDo.MILKTYPE = "Cow";
+                                rateDo.BCODE = "1";
+                                ratedetailsDO ratedetailsDo = new ratedetailsDO();
+                                ratedetailsDo.FATMIN = 3.0;
+                                ratedetailsDo.FATMAX = 6.0;
+                                ratedetailsDo.SNFMIN = 8.0;
+                                ratedetailsDo.SNFMAX = 8.5;
+                                ratedetailsDo.RATE = 320.0;
+                                ratedetailsDO ratedetailsDo1 = new ratedetailsDO();
+                                ratedetailsDo1.FATMIN = 2.5;
+                                ratedetailsDo1.FATMAX = 2.9;
+                                ratedetailsDo1.SNFMIN = 8.0;
+                                ratedetailsDo1.SNFMAX = 8.5;
+                                ratedetailsDo1.RATE = 200.0;
+                                List<ratedetailsDO> ratedetailsList = new ArrayList<>();
+                                ratedetailsList.add(ratedetailsDo);
+                                ratedetailsList.add(ratedetailsDo1);
+                                RateAndDetails rateAndDetails = new RateAndDetails(rateDo,ratedetailsList);
+                                ratesVm.insertRate(rateAndDetails);
+//                                if (!TextUtils.isEmpty(ratesEntryPopupBinding.tvFromDate.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.tvToDate.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.mtype.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etfatmin.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etfatmax.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etsnfmin.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etsnfmax.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etRate.getText().toString())) {
+//                                    rateDO rateDo = new rateDO();
+//                                    rateDo.STARTDATE= ratesEntryPopupBinding.tvFromDate.getText().toString();
+//                                    rateDo.ENDDATE= ratesEntryPopupBinding.tvToDate.getText().toString();
+//                                    rateDo.MILKTYPE = ratesEntryPopupBinding.mtype.getText().toString();
+//                                    rateDo.FATMIN = Double.parseDouble(ratesEntryPopupBinding.etfatmin.getText().toString());
+//                                    rateDo.FATMAX = Double.parseDouble(ratesEntryPopupBinding.etfatmax.getText().toString());
+//                                    rateDo.SNFMIN = Double.parseDouble(ratesEntryPopupBinding.etsnfmin.getText().toString());
+//                                    rateDo.SNFMAX = Double.parseDouble(ratesEntryPopupBinding.etsnfmax.getText().toString());
+//                                    rateDo.RATE = Double.parseDouble(ratesEntryPopupBinding.etRate.getText().toString());
+//                                    ratesVm.insertRate(rateDo);
+//                                } else {
+//                                    Toast.makeText(getContext(), "please fill all the fields", Toast.LENGTH_SHORT).show();
+//                                }
                             }
                         });
                         ratesEntryPopupBinding.btnCancle.setOnClickListener(new View.OnClickListener() {
@@ -223,26 +231,5 @@ public class rates extends BaseFragment {
                 }
             });
         }
-    }
-    private void addQuoteToDB(String quote, String author) {
-        HashMap<String, Object> quoteHashmap = new HashMap<>();
-        quoteHashmap.put("quote",quote);
-        quoteHashmap.put("author",author);
-
-        //instantiate database connection
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference quotesRef = database.getReference("quotes");
-
-        String key = quotesRef.push().getKey();
-        quoteHashmap.put("key",key);
-
-        quotesRef.child(key).setValue(quoteHashmap).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(getContext(), "Added", Toast.LENGTH_SHORT).show();
-//
-            }
-        });
-
     }
 }

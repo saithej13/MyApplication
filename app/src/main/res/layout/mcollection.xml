@@ -31,7 +31,7 @@
                     android:id="@+id/textdate"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:gravity="left"
                     android:layout_toRightOf="@id/datepickericon"
                     android:textSize="20sp"
@@ -61,7 +61,7 @@
                 android:text="slno"
                 android:visibility="invisible"
                 android:gravity="center"
-                android:textColor="@color/colourPrimary"
+                android:textColor="@color/app_color"
                 android:layout_alignParentLeft="true"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -74,7 +74,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="mno"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:visibility="invisible" />
@@ -98,7 +98,7 @@
                         android:gravity="center_horizontal"
                         android:layout_gravity="center"
                         android:text="M"
-                        android:textColor="@color/colourPrimary"
+                        android:textColor="@color/app_color"
                         android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -124,7 +124,7 @@
                         android:gravity="center_horizontal"
                         android:text="Cow"
                         android:layout_gravity="center"
-                        android:textColor="@color/colourPrimary"
+                        android:textColor="@color/app_color"
                         android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -142,14 +142,15 @@
                 android:id="@+id/farmerid"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:textColor="@color/colourPrimary"
-                android:hint="Farmer ID"
-                android:textColorHint="@color/colourPrimary"
+                android:textColor="@color/app_color"
+                android:hint="ID"
+                android:textColorHint="@color/app_color"
                 android:inputType="number"
                 android:maxLength="3"
                 android:layout_weight="0.4"
                 android:gravity="center"
                 android:textStyle="bold"
+                android:textSize="@dimen/sp30"
                 android:imeOptions="actionNext"
                 android:background="@drawable/border"
                 />
@@ -162,9 +163,9 @@
                 android:gravity="center_horizontal"
                 android:hint="Farmer Name"
                 android:layout_weight="1.6"
-                android:textColorHint="@color/colourPrimary"
-                android:textColor="@color/colourPrimary"
-                android:textSize="30sp"
+                android:textColorHint="@color/app_color"
+                android:textColor="@color/app_color"
+                android:textSize="@dimen/sp30"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -187,8 +188,8 @@
                 android:inputType="numberDecimal"
                 android:layout_weight="1"
                 android:maxLength="6"
-                android:textColor="@color/colourPrimary"
-                android:textColorHint="@color/colourPrimary"
+                android:textColor="@color/app_color"
+                android:textColorHint="@color/app_color"
                 app:layout_constraintHorizontal_weight="0.8" />
 
             <EditText
@@ -202,8 +203,8 @@
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
                 android:maxLength="4"
-                android:textColor="@color/colourPrimary"
-                android:textColorHint="@color/colourPrimary"
+                android:textColor="@color/app_color"
+                android:textColorHint="@color/app_color"
                 app:layout_constraintHorizontal_weight="0.2" />
 
             <EditText
@@ -217,8 +218,8 @@
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
                 android:maxLength="3"
-                android:textColor="@color/colourPrimary"
-                android:textColorHint="@color/colourPrimary" />
+                android:textColor="@color/app_color"
+                android:textColorHint="@color/app_color" />
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -234,7 +235,7 @@
                     android:gravity="center"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:text="0.0"
                     />
                 <TextView
@@ -243,7 +244,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="Rate"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="15sp"
                     />
             </LinearLayout>
@@ -262,7 +263,7 @@
                     android:gravity="center"
                     android:textStyle="bold"
                     android:text="0.0"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="20sp"
                     />
                 <TextView
@@ -271,7 +272,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="Amount"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="15sp"
                     />
             </LinearLayout>
@@ -323,7 +324,7 @@
                     android:maxLength="30"
                     android:text="Qty  :"
                     android:textStyle="bold"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="14sp"
                     tools:ignore="RtlHardcoded" />
                 <TextView
@@ -334,7 +335,7 @@
                     android:gravity="center"
                     android:maxLength="30"
                     android:text="0.0"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="16sp"
                     tools:ignore="RtlHardcoded" />
             </LinearLayout>
@@ -355,7 +356,7 @@
                     android:gravity="center"
                     android:text="FAT% :"
                     android:textStyle="bold"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="14sp"
                     android:layout_marginStart="0dp"
                     tools:ignore="RtlHardcoded" />
@@ -367,7 +368,7 @@
                     android:gravity="center"
                     android:maxLength="3"
                     android:text="0.0"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="16sp"
                     tools:ignore="RtlHardcoded" />
             </LinearLayout>
@@ -387,7 +388,7 @@
                     android:gravity="center"
                     android:maxLength="7"
                     android:text="SNF% :"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="14sp"
                     android:layout_marginStart="0dp"
                     tools:ignore="RtlHardcoded" />
@@ -399,7 +400,7 @@
                     android:gravity="center"
                     android:maxLength="3"
                     android:text="0.0"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="16sp"
                     tools:ignore="RtlHardcoded" />
             </LinearLayout>
@@ -420,7 +421,7 @@
                     android:gravity="center"
                     android:maxLength="30"
                     android:text="Amt :"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     tools:ignore="RtlHardcoded" />
@@ -432,7 +433,7 @@
                     android:gravity="center"
                     android:maxLength="30"
                     android:text="0.0"
-                    android:textColor="@color/colourPrimary"
+                    android:textColor="@color/app_color"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     tools:ignore="RtlHardcoded" />
@@ -451,7 +452,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:background="@color/colourPrimary"
+                android:background="@color/app_color"
                 android:text="Save"/>
         </LinearLayout>
     </RelativeLayout>

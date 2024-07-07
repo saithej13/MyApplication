@@ -2,29 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:visible="true"
-        android:id="@+id/bottom_sheet_milk"
-        android:icon="@drawable/ic_milkimage"
-        android:title="@string/milk"
+        android:id="@+id/dashboard"
+        android:icon="@drawable/dashboardc"
+        android:title="@string/dashboard"
         />
     <item
-        android:id="@+id/navigation_order"
-        android:icon="@drawable/ic_orders"
-        android:title="@string/orders"
+        android:id="@+id/menu_c"
+        android:icon="@drawable/menuc"
+        android:title="@string/menu"
         android:visible="true"/>
-
-
-
-    <item
-        android:id="@+id/navigation_statement"
-        android:icon="@drawable/mini_statement"
-        android:title="@string/mini_statement"
-        android:visible="true" />
-
-
-    <item
-        android:id="@+id/navigation_products"
-        android:visible="true"
-        android:icon="@drawable/ic_diary_products"
-        android:title="@string/products" />
-
 </menu>

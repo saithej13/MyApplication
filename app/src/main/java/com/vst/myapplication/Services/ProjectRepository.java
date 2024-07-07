@@ -16,8 +16,11 @@ import com.google.gson.JsonSyntaxException;
 import com.vst.myapplication.Room.Database;
 import com.vst.myapplication.Room.RoomService;
 import com.vst.myapplication.Room.roomRepository;
+import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.MyApplicationNew;
+import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.farmerDO;
+import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
 
 import org.json.JSONArray;
@@ -37,7 +40,7 @@ public class ProjectRepository {
     LifecycleOwner lifecycleOwner = MyApplicationNew.getLifecycleOwner();
     RoomService roomService = Database.getInstance().roomService();
 
-    roomRepository roomrepo;
+    roomRepository roomrepo = new roomRepository();
 
     public MutableLiveData<JsonObject> login(JsonObject payload) {
         Log.d("URL","Login Request-->"+payload);
@@ -186,19 +189,11 @@ public MutableLiveData<JsonObject> getrates() {
     }
     return data;
 }
-    public MutableLiveData<JsonObject> InsertRate(rateDO rateDO) {
+    public MutableLiveData<JsonObject> InsertRate(RateAndDetails rateDO) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB)
         {
-            Log.d("STARTDATE",""+rateDO.STARTDATE);
-            Log.d("ENDDATE",""+rateDO.ENDDATE);
-            Log.d("FATMIN",""+rateDO.FATMIN);
-            Log.d("FATMAX",""+rateDO.FATMAX);
-            Log.d("SNFMIN",""+rateDO.SNFMIN);
-            Log.d("SNFMAX",""+rateDO.SNFMAX);
-            Log.d("RATE",""+rateDO.RATE);
-
-                roomrepo.insertrates(rateDO);
+            roomrepo.insertrates(rateDO);
         }
         else {
             Gson gson = new Gson();
@@ -247,47 +242,86 @@ public MutableLiveData<JsonObject> getrates() {
         });
         return data;
     }
-    public MutableLiveData<JsonObject> getMData(JsonObject payload) {
+    public MutableLiveData<JsonObject> getMData(LifecycleOwner owner,JsonObject payload) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
-
-        apiClient.getMData(payload).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    JsonObject jsonObject =response.body();
-                    Log.d("Log Response", "" + response.body());
+        if(MyApplicationNew.RoomDB){
+            String TDATE = payload.get("TDATE").getAsString();
+            String SHIFT = payload.get("SHIFT").getAsString();
+            roomService.getmilkdata(TDATE,SHIFT).observe(owner,new Observer<List<milkDO>>() {
+                @Override
+                public void onChanged(List<milkDO> orderSummeries) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    String jsonArrayString = gson.toJson(orderSummeries);
+                    try {
+                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+                        jsonObject.add("Data", jsonArray);
+                    } catch (JsonSyntaxException e) {
+                        Log.e("Log Response", "Error parsing JSON array", e);
+                        jsonObject.add("Data", new JsonArray());
+                    }
+                    Log.d("Log Response", "" + jsonObject);
                     data.setValue(jsonObject);
                 }
-            }
+            });
+//            roomrepo.getmilkdata(owner,payload.get("TDATE").toString(),payload.get("SHIFT").toString()).observe(lifecycleOwner, new Observer<List<milkDO>>() {
+//                @Override
+//                public void onChanged(List<milkDO> milkDOS) {
+//                    Gson gson = new Gson();
+//                    JsonObject jsonObject = new JsonObject();
+//                    String jsonArrayString = gson.toJson(milkDOS);
+//                    try {
+//                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+//                        jsonObject.add("Data", jsonArray);
+//                    } catch (JsonSyntaxException e) {
+//                        Log.e("Log Response", "Error parsing JSON array", e);
+//                        jsonObject.add("Data", new JsonArray());
+//                    }
+//                    Log.d("Log Response", "" + jsonObject);
+//                    data.setValue(jsonObject);
+//                }
+//            });
+        }
+        else {
+            apiClient.getMData(payload).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        Log.d("Log Response", "" + response.body());
+                        data.setValue(jsonObject);
+                    }
+                }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
-                data.setValue(null);
-            }
-        });
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
+                    data.setValue(null);
+                }
+            });
+        }
         return data;
     }
 
     public MutableLiveData<JsonObject> getUser(JsonObject payload) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
-
-        apiClient.getuser(payload).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    JsonObject jsonObject =response.body();
-                    Log.d("Log Response", "" + response.body());
-                    data.setValue(jsonObject);
+            apiClient.getuser(payload).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        Log.d("Log Response", "" + response.body());
+                        data.setValue(jsonObject);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
-                data.setValue(null);
-            }
-        });
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
+                    data.setValue(null);
+                }
+            });
+
         return data;
     }
     public MutableLiveData<String> getTransList(RequestBody payload) {

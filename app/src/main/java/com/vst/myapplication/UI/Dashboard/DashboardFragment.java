@@ -1,4 +1,4 @@
-package com.vst.myapplication.UI;
+package com.vst.myapplication.UI.Dashboard;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -6,43 +6,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Services.ProjectRepository;
-import com.vst.myapplication.UI.MCollection.milkCollectionAdapter;
-import com.vst.myapplication.UI.Rates.rates_VM;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.dataObject.milkDO;
-import com.vst.myapplication.databinding.ActivityMainBinding;
-import com.vst.myapplication.databinding.Dashboard1Binding;
+import com.vst.myapplication.databinding.DashboradfragmentBinding;
 
 import java.util.Calendar;
 
-public class Dashboard extends BaseFragment {
-    Dashboard1Binding binding;
-    String shift="M";
+public class DashboardFragment extends BaseFragment {
+    DashboradfragmentBinding binding;
+    ProjectRepository repository;
     milkDO[] milkDOS;
-    private ProjectRepository repository;
-
+    String shift="M";
 
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.dashboard1, parent, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.dashboradfragment, parent, false);
         repository = new ProjectRepository();
         binding.setLifecycleOwner(viewLifecycleOwner);
-        setupUI(inflater,parent,viewLifecycleOwner);
+        setupUI(inflater,parent,viewLifecycleOwner,savedInstanceState);
         return binding.getRoot();
     }
-    private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
+    private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner,Bundle savedInstanceState) {
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         if (hour < 16) {
@@ -63,7 +56,7 @@ public class Dashboard extends BaseFragment {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("TDATE", CalendarUtils.getDatePattern3());
         jsonObject.addProperty("SHIFT",shift);
-        repository.getMData(jsonObject).observe(this, new Observer<JsonObject>() {
+        repository.getMData(getViewLifecycleOwner(),jsonObject).observe(this, new Observer<JsonObject>() {
             @Override
             public void onChanged(JsonObject jsonObject) {
                 if (jsonObject != null) {
@@ -102,18 +95,6 @@ public class Dashboard extends BaseFragment {
                             binding.txtavgfat.setText(String.valueOf(0));
                             binding.txtavgsnf.setText(String.valueOf(0));
                         }
-//                        if (milkDOS.length > 0) {
-//                            binding.rcvmData.setLayoutManager(new LinearLayoutManager(getContext()));
-//                            milkCollectionAdapter = new milkCollectionAdapter(getContext(), milkDOS);
-//                            binding.rcvmData.setAdapter(milkCollectionAdapter);
-//                            binding.rcvmData.setHasFixedSize(true);
-//                            getTotal();
-//                        } else {
-//                            milkDOS = new milkDO[]{};
-//                            if (milkCollectionAdapter != null) {
-//                                milkCollectionAdapter.notifyDataSetChanged();
-//                            }
-//                        }
                     }
                 }
             }

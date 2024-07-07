@@ -55,6 +55,7 @@ FarmerEntryPopupBinding farmerEntrybinding;
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.farmers, parent, false);
         repository = new ProjectRepository();
+        roomrepo = new roomRepository();
         farmersVM = new ViewModelProvider(this ).get(famers_VM.class);
         binding.setLifecycleOwner(viewLifecycleOwner);
         setupUI(inflater,parent,viewLifecycleOwner);
@@ -183,7 +184,7 @@ FarmerEntryPopupBinding farmerEntrybinding;
                                 farmerDo.MILKTYPE = farmerEntrybinding.mtype.getText().toString();
                                 farmerDo.MOBILENO = farmerEntrybinding.mobileno.getText().toString();
                                 farmersVM.insertFarmer(farmerDo);
-                                Toast.makeText(parent.getContext(), "Farmer Added!", Toast.LENGTH_SHORT).show();
+                                showCustomDialog(getContext(),"Success","Farmer Added!","OK",null,"");
                                 farmerEntrybinding.code.setText("");
                                 farmerEntrybinding.fname.setText("");
                                 farmerEntrybinding.mtype.setText("");
@@ -204,7 +205,7 @@ FarmerEntryPopupBinding farmerEntrybinding;
 //                                    }
 //                                });
                             } else {
-                                Toast.makeText(getContext(), "please fill all the fields", Toast.LENGTH_SHORT).show();
+                                showCustomDialog(getContext(),"Error","please make sure all the fields are filled up","OK",null,"");
                             }
                         }
                     });

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+    <include
+        android:id="@+id/llOverView"
+        layout="@layout/ratedetailscardcell"/>
+    <LinearLayout
+        android:id="@+id/layoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#AFBDFF"
+        android:layout_below="@id/navigate"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp10"
+        android:weightSum="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fat"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvfatsnfmin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp5"
+                        android:text="@string/fatsnfmin"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp14"
+                        android:layout_weight="1"
+                        app:fontFamily="@font/montserrat_medium" />
+                    <TextView
+                        android:id="@+id/tvfatsnfmax"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp5"
+                        android:text="@string/fatsnfmax"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp14"
+                        android:layout_weight="1"
+                        app:fontFamily="@font/montserrat_medium" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@color/borderlinecolor" />
+
+            <TextView
+                android:id="@+id/tvrate"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/rate"
+                android:textColor="@color/app_color"
+                android:textStyle="bold"
+                android:textSize="@dimen/sp14"
+                app:fontFamily="@font/montserrat_medium" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@color/borderlinecolor" />
+
+            <TextView
+                android:id="@+id/tvedit"
+                android:layout_width="@dimen/dp60"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:text="@string/action"
+                android:textSize="@dimen/sp14"
+                android:textStyle="bold"
+                android:padding="5dp"
+                app:fontFamily="@font/montserrat_medium" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orderDetailsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnSave"
+        />
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:text="SAVE"
+                android:padding="10dp"
+                android:gravity="center"
+                android:background="@color/app_color"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:fontFamily="@font/montserrat_semibold"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dp20"
+                android:layout_marginBottom="@dimen/dp20"
+                android:background="@color/app_color"
+                android:layout_above="@+id/btnSave"
+                android:src="@drawable/baseline_add_24"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>
+</layout>

@@ -69,6 +69,8 @@ dependencies {
     implementation ("org.apache.httpcomponents:httpclient-win:4.5.13")
     implementation ("androidx.room:room-runtime:2.5.2")
     annotationProcessor ("androidx.room:room-compiler:2.5.2")
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+    implementation ("com.razorpay:checkout:1.6.38")
 //    implementation ("org.codelibs:jodd-http:3.9.0")
 
 }

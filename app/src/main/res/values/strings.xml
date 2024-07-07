@@ -61,6 +61,28 @@
     <string name="enterconfirmpassword">Confirm Password</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="menu">Menu</string>
+    <string name="full_screen">Full Screen</string>
+    <string name="switch_to_valuehiend">switch to valuehiend</string>
+    <string name="switch_to_volume">switch to volume</string>
+    <string name="Location">Location</string>
+    <string name="settings">Settings</string>
+    <string name="startdate">Start Date</string>
+    <string name="enddate">End Date</string>
+    <string name="fatmin">FAT MIN</string>
+    <string name="fatmax">FAT MAX</string>
+    <string name="snfmin">SNF MIN</string>
+    <string name="snfmax">SNF MAX</string>
+    <string name="fatsnfmin">FAT &amp; SNF MIN</string>
+    <string name="fatsnfmax">FAT &amp; SNF MAX</string>
+    <string name="rate">Rate</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="action">Action</string>
+
+
+
 
 
 </resources>

@@ -18,10 +18,11 @@ import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.rateDO;
 import com.vst.myapplication.databinding.FarmerscellBinding;
+import com.vst.myapplication.databinding.RatedetailscardcellBinding;
 import com.vst.myapplication.databinding.RatescellBinding;
 
 public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> implements Filterable {
-    RatescellBinding binding;
+    RatedetailscardcellBinding binding;
     Context context;
     private rateDO[] mData;
     private LayoutInflater inflater;
@@ -37,7 +38,7 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
     @NonNull
     @Override
     public RatesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.ratescell, parent, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.ratedetailscardcell, parent, false);
         return new RatesAdapter.ViewHolder(binding.getRoot());
     }
 
@@ -46,14 +47,9 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
         rateDO rate = mData[position];
         if (rate != null) {
             ((TextView) holder.itemView.findViewById(R.id.txtbcode)).setText("1");
-            ((TextView) holder.itemView.findViewById(R.id.txtfatmax)).setText(String.valueOf(rate.FATMAX));
-            ((TextView) holder.itemView.findViewById(R.id.txtfatmin)).setText(String.valueOf(rate.FATMIN));
             ((TextView) holder.itemView.findViewById(R.id.txtfdate)).setText(CalendarUtils.getFormatedDatefromString(String.valueOf(rate.STARTDATE)));
             ((TextView) holder.itemView.findViewById(R.id.txttdate)).setText(CalendarUtils.getFormatedDatefromString(String.valueOf(rate.ENDDATE)));
-            ((TextView) holder.itemView.findViewById(R.id.txtsnfmax)).setText(String.valueOf(rate.SNFMAX));
-            ((TextView) holder.itemView.findViewById(R.id.txtsnfmin)).setText(String.valueOf(rate.SNFMIN));
             ((TextView) holder.itemView.findViewById(R.id.txtmtype)).setText(String.valueOf(rate.MILKTYPE));
-            ((TextView) holder.itemView.findViewById(R.id.txttsrate)).setText(String.valueOf(rate.RATE));
         }
     }
 

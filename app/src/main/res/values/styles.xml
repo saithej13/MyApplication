@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="GraphUIComponents" parent="@android:style/TextAppearance">
+        <item name="android:layout_width">350dp</item>
+    </style>
+    <style name="headersdesign" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">@font/montserrat_semibold</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+    <style name="bottomdesign_new" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">@font/montserrat_bold</item>
+        <item name="android:textSize">11dp</item>
+    </style>
+    <style name="bottomdesign" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">@font/montserrat_semibold</item>
+        <item name="android:textSize">11dp</item>
+    </style>
+</resources>

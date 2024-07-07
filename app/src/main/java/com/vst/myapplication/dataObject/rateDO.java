@@ -17,14 +17,6 @@ public class rateDO implements Serializable {
     public String STARTDATE;
     @SerializedName("ENDDATE")
     public String ENDDATE;
-    @SerializedName("FATMIN")
-    public double FATMIN;
-    @SerializedName("FATMAX")
-    public double FATMAX;
-    @SerializedName("SNFMIN")
-    public double SNFMIN;
-    @SerializedName("SNFMAX")
-    public double SNFMAX;
-    @SerializedName("RATE")
-    public double RATE;
+    @SerializedName("BCODE")
+    public String BCODE;
 }

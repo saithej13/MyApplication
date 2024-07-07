@@ -27,7 +27,7 @@ public class famers_VM extends AndroidViewModel {
     public famers_VM(@NonNull Application application) {
         super(application);
         repository = new ProjectRepository();
-//        roomrepo = new roomRepository(application);
+        roomrepo = new roomRepository();
     }
     public MutableLiveData<JsonObject> insertFarmer(farmerDO farmerDo){
         boolean result = false;

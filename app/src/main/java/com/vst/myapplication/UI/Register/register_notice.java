@@ -1,28 +1,17 @@
 package com.vst.myapplication.UI.Register;
 
-import static android.content.Context.TELEPHONY_SERVICE;
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.os.Bundle;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 
-import com.google.gson.JsonObject;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Services.ProjectRepository;
-import com.vst.myapplication.UI.Dashboard;
-import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.UI.Login.forgetpassword;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.databinding.RegisterNoticeBinding;

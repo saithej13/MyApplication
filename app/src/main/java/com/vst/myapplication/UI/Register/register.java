@@ -11,22 +11,17 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Services.ProjectRepository;
-import com.vst.myapplication.UI.Dashboard;
 import com.vst.myapplication.UI.Login.verifyotp;
-import com.vst.myapplication.UI.Rates.rates_VM;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.databinding.RegisterBinding;
-import com.vst.myapplication.databinding.RegisterNoticeBinding;
 
 import java.util.concurrent.TimeUnit;
 

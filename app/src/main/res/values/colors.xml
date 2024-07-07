@@ -19,8 +19,9 @@
     <color name="transparent">#00000000</color>
     <color name="app_backColor">#F9FBFF</color>
     <color name="button_color">#1c52a2</color>
-
-
+    <color name="bottom_color">#44005BBA</color>
+    <color name="borderlinecolor">#A8A9AB</color>
+    <color name="winit_blue">#005BAA</color>
 
 
     <color name="gray_bg">#f2f2f2</color>

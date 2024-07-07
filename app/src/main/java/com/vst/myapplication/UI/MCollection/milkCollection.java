@@ -138,8 +138,8 @@ public class milkCollection extends BaseFragment {
                             }
                         });
                     }
-                    else
-                        showCustomDialog(getContext(),"Farmer Code","Please enter Farmer Code","OK",null,"");
+//                    else
+//                        showCustomDialog(getContext(),"Farmer Code","Please enter Farmer Code","OK",null,"");
                 }
             });
             binding.msnf.addTextChangedListener(new TextWatcher() {
@@ -193,14 +193,14 @@ public class milkCollection extends BaseFragment {
             binding.save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!binding.farmerid.getText().toString().isEmpty()||!binding.fname.getText().toString().isEmpty()||
-                            !binding.textdate.getText().toString().isEmpty()||!binding.mqty.getText().toString().isEmpty()||
-                            !binding.mfat.getText().toString().isEmpty()||!binding.msnf.getText().toString().isEmpty()||
-                            !binding.rate.getText().toString().isEmpty()||!binding.amt.getText().toString().isEmpty()||
-                            !binding.textshiftm.getText().toString().isEmpty()||!binding.textmtypec.getText().toString().isEmpty()
+                    if(!binding.farmerid.getText().toString().isEmpty()&&!binding.fname.getText().toString().isEmpty()&&
+                            !binding.textdate.getText().toString().isEmpty()&&!binding.mqty.getText().toString().isEmpty()&&
+                            !binding.mfat.getText().toString().isEmpty()&&!binding.msnf.getText().toString().isEmpty()&&
+                            !binding.rate.getText().toString().isEmpty()&&!binding.amt.getText().toString().isEmpty()&&
+                            !binding.textshiftm.getText().toString().isEmpty()&&!binding.textmtypec.getText().toString().isEmpty()
                     ) {
                         milkDO milkDo = new milkDO();
-                        milkDo.TDATE = binding.textdate.getText().toString();
+                        milkDo.TDATE = CalendarUtils.getFormatedDatefromString3(binding.textdate.getText().toString());
                         milkDo.SHIFT = binding.textshiftm.getText().toString();
                         milkDo.FARMERID = binding.farmerid.getText().toString();
                         milkDo.FARMERNAME = binding.fname.getText().toString();
@@ -216,7 +216,7 @@ public class milkCollection extends BaseFragment {
                         print(milkDo);
                     }
                     else {
-                        Toast.makeText(getContext(),"please make sure all the fields are filled up",Toast.LENGTH_SHORT).show();
+                        showCustomDialog(getContext(),"Error","please make sure all the fields are filled up","OK",null,"");
                     }
                 }
             });
@@ -432,36 +432,10 @@ public class milkCollection extends BaseFragment {
         }
     }
     public void refreshData(){
-        if(MyApplicationNew.RoomDB) {
-            milkCollectionVm.getmilkdata(getViewLifecycleOwner(), binding.textdate.getText().toString(), binding.textshiftm.getText().toString()).observe(getViewLifecycleOwner(), new Observer<List<milkDO>>() {
-                @Override
-                public void onChanged(List<milkDO> milk) {
-                    if (milk != null) {
-                        if (!milk.isEmpty()) {
-                            Gson gson = new Gson();
-                            JsonArray jsonArray = gson.toJsonTree(milk).getAsJsonArray();
-                            milkDOS = gson.fromJson(jsonArray, milkDO[].class);
-                            binding.rcvmData.setLayoutManager(new LinearLayoutManager(getContext()));
-                            milkCollectionAdapter = new milkCollectionAdapter(getContext(), milkDOS);
-                            binding.rcvmData.setAdapter(milkCollectionAdapter);
-                            binding.rcvmData.setHasFixedSize(true);
-                            getTotal();
-                        } else {
-                            milkDOS = new milkDO[]{};
-                            if (milkCollectionAdapter != null) {
-                                milkCollectionAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
-            });
-
-        }
-        else {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("TDATE", binding.textdate.getText().toString());
+            jsonObject.addProperty("TDATE", CalendarUtils.getFormatedDatefromString3(binding.textdate.getText().toString()));
             jsonObject.addProperty("SHIFT", binding.textshiftm.getText().toString());
-            repository.getMData(jsonObject).observe(this, new Observer<JsonObject>() {
+            repository.getMData(getViewLifecycleOwner(),jsonObject).observe(this, new Observer<JsonObject>() {
                 @Override
                 public void onChanged(JsonObject jsonObject) {
                     if (jsonObject != null) {
@@ -486,7 +460,6 @@ public class milkCollection extends BaseFragment {
                     }
                 }
             });
-        }
     }
     public double calc(){
         final double[] amount = {0};
@@ -517,8 +490,8 @@ public class milkCollection extends BaseFragment {
                             if (mdata != null && !mdata.isEmpty()) {
                                 if(mdata.get(0).MILKTYPE.equalsIgnoreCase("Cow"))
                                 {
-                                    rate1[0] = (mdata.get(0).RATE / 100);
-                                    snfmax[0] = (mdata.get(0).SNFMAX);
+//                                    rate1[0] = (mdata.get(0).RATE / 100);
+//                                    snfmax[0] = (mdata.get(0).SNFMAX);
                                     Log.d("rate[0]", "" + rate1[0]);
                                     rate1[0] = (fat + snf) * (rate1[0]);
                                     amount[0] = rate1[0] * qty;
@@ -526,8 +499,8 @@ public class milkCollection extends BaseFragment {
                                     binding.amt.setText(String.format("%.1f", amount[0]));
                                 }
                                 else {
-                                    rate1[0] = (mdata.get(0).RATE / 100);
-                                    snfmax[0] = (mdata.get(0).SNFMAX);
+//                                    rate1[0] = (mdata.get(0).RATE / 100);
+//                                    snfmax[0] = (mdata.get(0).SNFMAX);
                                     Log.d("rate[0]", "" + rate1[0]);
                                     //(BMRATE)
                                     rate1[0] = (fat * rate1[0]) - (snfmax[0] - snf);
@@ -560,16 +533,16 @@ public class milkCollection extends BaseFragment {
                                     if (rateDOs.length > 0) {
 //                                        binding.fname.setText(farmerDOs[0].FARMERNAME);
                                         if (binding.textmtypec.getText().equals("Cow")) {
-                                            rate1[0] = (rateDOs[0].RATE / 100);
-                                            snfmax[0] = (rateDOs[0].SNFMAX);
+//                                            rate1[0] = (rateDOs[0].RATE / 100);
+//                                            snfmax[0] = (rateDOs[0].SNFMAX);
                                             Log.d("rate[0]", "" + rate1[0]);
                                             rate1[0] = (fat + snf) * (rate1[0]);
                                             amount[0] = rate1[0] * qty;
                                             binding.rate.setText(String.format("%.1f", rate1[0]));
                                             binding.amt.setText(String.format("%.1f", amount[0]));
                                         } else {
-                                            rate1[0] = (rateDOs[0].RATE / 100);
-                                            snfmax[0] = (rateDOs[0].SNFMAX);
+//                                            rate1[0] = (rateDOs[0].RATE / 100);
+//                                            snfmax[0] = (rateDOs[0].SNFMAX);
                                             Log.d("rate[0]", "" + rate1[0]);
                                             //(BMRATE)
                                             rate1[0] = (fat * rate1[0]) - (snfmax[0] - snf);
