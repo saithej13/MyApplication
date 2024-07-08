@@ -15,7 +15,7 @@ import com.vst.myapplication.dataObject.rateDO;
 import com.vst.myapplication.dataObject.ratedetailsDO;
 import com.vst.myapplication.dataObject.userDO;
 
-@androidx.room.Database(entities = {farmerDO.class,   milkDO.class, rateDO.class, ratedetailsDO.class, userDO.class},version = 2,exportSchema = false)
+@androidx.room.Database(entities = {farmerDO.class,   milkDO.class, rateDO.class, ratedetailsDO.class, userDO.class},version = 1,exportSchema = false)
 public abstract class Database extends RoomDatabase {
     private static Database instance;
     public abstract RoomService roomService();

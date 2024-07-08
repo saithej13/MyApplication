@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
@@ -15,9 +16,8 @@
         android:id="@+id/layoutTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/dp10"
         android:background="#AFBDFF"
-        android:layout_below="@id/navigate"
         android:orientation="horizontal"
         android:padding="@dimen/dp10"
         android:weightSum="1">
@@ -29,7 +29,7 @@
             android:weightSum="1">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -49,15 +49,16 @@
                         android:textSize="@dimen/sp14"
                         android:layout_weight="1"
                         app:fontFamily="@font/montserrat_medium" />
+
                     <TextView
                         android:id="@+id/tvfatsnfmax"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="128dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:padding="@dimen/dp5"
                         android:text="@string/fatsnfmax"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp14"
-                        android:layout_weight="1"
                         app:fontFamily="@font/montserrat_medium" />
                 </LinearLayout>
 
@@ -108,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/orderDetailsRecyclerView"
+        android:id="@+id/rcvRatedetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btnSave"
@@ -118,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true"
-                android:text="SAVE"
+                android:text="@string/save"
                 android:padding="10dp"
                 android:gravity="center"
                 android:background="@color/app_color"

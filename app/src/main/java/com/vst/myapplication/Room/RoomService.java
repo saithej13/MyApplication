@@ -8,8 +8,10 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
+import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -61,8 +63,9 @@ public interface RoomService {
     @Query("SELECT * FROM tblfarmers")
     LiveData<List<farmerDO>> getfarmers();
 
-    @Query("SELECT * FROM tblrates")
-    LiveData<List<rateDO>> getrates();
+    @Transaction
+    @Query("SELECT * FROM tblrates r inner join tblratesdetails rd on r.SLNO=rd.SLNO")
+    LiveData<List<RateAndDetails>> getrates();
 
     @Query("SELECT * FROM tblfarmers WHERE FARMERID = :code")
     LiveData<List<farmerDO>> getFarmerByCode(int code);

@@ -68,13 +68,13 @@ RoomService roomService;
 //
 //        return data;
 //    }
-    public MutableLiveData<List<rateDO>> getratesData(LifecycleOwner lifecycleOwner) {
+    public MutableLiveData<List<RateAndDetails>> getratesData(LifecycleOwner lifecycleOwner) {
         Log.d("URL", "GetFarmersFarmers Request-->");
-        final MutableLiveData<List<rateDO>> data = new MutableLiveData<>();
+        final MutableLiveData<List<RateAndDetails>> data = new MutableLiveData<>();
 
-        roomService.getrates().observe(lifecycleOwner, new Observer<List<rateDO>>() {
+        roomService.getrates().observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
             @Override
-            public void onChanged(List<rateDO> orderSummeries) {
+            public void onChanged(List<RateAndDetails> orderSummeries) {
                 data.setValue(orderSummeries);
                 Log.d("value", "body " + data.getValue());
             }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.vst.myapplication.R;
 import com.vst.myapplication.UI.Farmers.FarmersAdapter;
 import com.vst.myapplication.Utils.CalendarUtils;
+import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.rateDO;
 import com.vst.myapplication.databinding.FarmerscellBinding;
@@ -24,13 +25,13 @@ import com.vst.myapplication.databinding.RatescellBinding;
 public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> implements Filterable {
     RatedetailscardcellBinding binding;
     Context context;
-    private rateDO[] mData;
+    private RateAndDetails[] mData;
     private LayoutInflater inflater;
     @Override
     public Filter getFilter() {
         return null;
     }
-    public RatesAdapter(Context context,rateDO[] data) {
+    public RatesAdapter(Context context, RateAndDetails[] data) {
         this.inflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -44,12 +45,12 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull RatesAdapter.ViewHolder holder, int position) {
-        rateDO rate = mData[position];
+        RateAndDetails rate = mData[position];
         if (rate != null) {
             ((TextView) holder.itemView.findViewById(R.id.txtbcode)).setText("1");
-            ((TextView) holder.itemView.findViewById(R.id.txtfdate)).setText(CalendarUtils.getFormatedDatefromString(String.valueOf(rate.STARTDATE)));
-            ((TextView) holder.itemView.findViewById(R.id.txttdate)).setText(CalendarUtils.getFormatedDatefromString(String.valueOf(rate.ENDDATE)));
-            ((TextView) holder.itemView.findViewById(R.id.txtmtype)).setText(String.valueOf(rate.MILKTYPE));
+            ((TextView) holder.itemView.findViewById(R.id.txtfdate)).setText(CalendarUtils.getFormatedDatefromString(String.valueOf(rate.rate.STARTDATE)));
+            ((TextView) holder.itemView.findViewById(R.id.txttdate)).setText(CalendarUtils.getFormatedDatefromString(String.valueOf(rate.rate.ENDDATE)));
+            ((TextView) holder.itemView.findViewById(R.id.txtmtype)).setText(String.valueOf(rate.rate.MILKTYPE));
         }
     }
 

@@ -152,9 +152,9 @@ public class ProjectRepository {
 public MutableLiveData<JsonObject> getrates() {
     final MutableLiveData<JsonObject> data = new MutableLiveData<>();
     if(MyApplicationNew.RoomDB){
-        roomService.getrates().observe(lifecycleOwner, new Observer<List<rateDO>>() {
+        roomService.getrates().observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
             @Override
-            public void onChanged(List<rateDO> rateDOS) {
+            public void onChanged(List<RateAndDetails> rateDOS) {
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 String jsonArrayString = gson.toJson(rateDOS);
