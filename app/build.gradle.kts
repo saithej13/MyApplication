@@ -73,4 +73,8 @@ dependencies {
     implementation ("com.razorpay:checkout:1.6.38")
 //    implementation ("org.codelibs:jodd-http:3.9.0")
 
+
+
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")//for charts by kush
+
 }
