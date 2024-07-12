@@ -164,33 +164,46 @@ RoomService roomService;
     }
     private static class InsertRatesAsyncTask extends AsyncTask<RateAndDetails,Void,Void> {
         RoomService roomService;
-//        private MutableLiveData<JsonObject> data;
-//        private InsertRatesAsyncTask(RoomService roomService, MutableLiveData<JsonObject> data){
-//            this.roomService = roomService;
-//            this.data = data;
-//        }
         private InsertRatesAsyncTask(RoomService roomService){
             this.roomService = roomService;
         }
         @Override
         protected Void doInBackground(RateAndDetails... rateAndDetailsArray) {
+//            RateAndDetails rateAndDetails = rateAndDetailsArray[0];
+//            long slNo = roomService.insertRates(rateAndDetails.rate);
+//            for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
+//                rateDetails.SLNO = (int) slNo;
+//                roomService.insertRatesdetails(rateDetails);
+//            }
+//
+//            return null;
             RateAndDetails rateAndDetails = rateAndDetailsArray[0];
-//            roomService.insertRates(rates[0]);
+            if (rateAndDetails == null) {
+                Log.e("InsertRatesAsyncTask", "rateAndDetails is null");
+                return null;
+            }
+
+            if (rateAndDetails.rate == null) {
+                Log.e("InsertRatesAsyncTask", "rateAndDetails.rate is null");
+                return null;
+            }
+
             long slNo = roomService.insertRates(rateAndDetails.rate);
-//            rateAndDetails.rateDetails.SLNO = (int) slNo;
-//            roomService.insertRatesdetails(rateAndDetails.rateDetails);
+            if (rateAndDetails.rateDetailsList == null) {
+                Log.e("InsertRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
+                return null;
+            }
+
             for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
+                if (rateDetails == null) {
+                    Log.e("InsertRatesAsyncTask", "rateDetails is null");
+                    continue;
+                }
                 rateDetails.SLNO = (int) slNo;
                 roomService.insertRatesdetails(rateDetails);
             }
 
             return null;
         }
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            JsonObject successResponse = new JsonObject();
-//            successResponse.addProperty("success", true);
-//            data.setValue(successResponse);
-//        }
     }
 }

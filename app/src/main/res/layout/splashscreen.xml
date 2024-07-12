@@ -11,6 +11,13 @@
         android:layout_centerInParent="true"
         android:contentDescription="@string/app_name"
         android:src="@drawable/milk" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnscan"
+        android:visibility="gone"
+        android:text="scan"
+        />
     <ProgressBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

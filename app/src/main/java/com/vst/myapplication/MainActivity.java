@@ -1,5 +1,6 @@
 package com.vst.myapplication;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,11 @@ import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.zxing.ResultPoint;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.CaptureManager;
+import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.Login.Login;
@@ -56,6 +62,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
@@ -75,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference usersRef;
     DatabaseReference usersRef2;
     roomRepository roomrepo;
+    private CaptureManager capture;
+    private DecoratedBarcodeView barcodeScannerView;
 
 
     farmerDO farmerDo;
@@ -86,6 +95,24 @@ public class MainActivity extends AppCompatActivity {
         binding =  DataBindingUtil.setContentView(this,R.layout.activity_main);
         MyApplicationNew.lifecycleOwner = this;
         repository = new ProjectRepository();
+//        barcodeScannerView = findViewById(R.id.zxing_barcode_scanner);
+//        capture = new CaptureManager(this, barcodeScannerView);
+//        capture.initializeFromIntent(getIntent(), savedInstanceState);
+//        capture.decode();
+//        barcodeScannerView.setStatusText("Place a QR code inside the viewfinder rectangle to scan it.");
+//        barcodeScannerView.decodeContinuous(new BarcodeCallback() {
+//            @Override
+//            public void barcodeResult(BarcodeResult result) {
+//                Intent resultIntent = new Intent();
+//                resultIntent.putExtra("SCAN_RESULT", result.getText());
+//                setResult(Activity.RESULT_OK, resultIntent);
+//                finish();
+//            }
+//
+//            @Override
+//            public void possibleResultPoints(List<ResultPoint> resultPoints) {
+//            }
+//        });
 //        roomrepo = new roomRepository(getApplication());
         database = FirebaseDatabase.getInstance();
         usersRef = database.getReference();
@@ -612,7 +639,8 @@ public static String test1() {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(smsBroadcastReceiver);
+//        unregisterReceiver(smsBroadcastReceiver);
+//        capture.onDestroy();
     }
 
     private void saveUser() {
@@ -649,6 +677,23 @@ public static String test1() {
                 .addToBackStack("")
                 .commitAllowingStateLoss();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        capture.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        capture.onPause();
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+//        capture.onSaveInstanceState(outState);
     }
 
 }

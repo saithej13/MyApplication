@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -18,10 +21,19 @@ public class Splashscreen extends AppCompatActivity {
 SplashscreenBinding binding;
     Preference preference;
     SharedPreferences preferences;
+    private static final int REQUEST_CODE_SCAN = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.splashscreen);
+//        binding.btnscan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Splashscreen.this, MainActivity.class);
+//                startActivityForResult(intent, REQUEST_CODE_SCAN);
+//            }
+//        });
+
         preference = new Preference(getApplicationContext());
         preferences = new SharedPreferences();
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -34,5 +46,17 @@ SplashscreenBinding binding;
                 startActivity(intent1);
             finish();
         }, 2000);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
+            if (data != null) {
+                String result = data.getStringExtra("SCAN_RESULT");
+                Log.d("PRINTBYSCAN",""+result);
+                // Handle the scanned result
+            }
+        }
     }
 }
