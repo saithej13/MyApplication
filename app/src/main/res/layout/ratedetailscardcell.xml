@@ -78,6 +78,11 @@
                         />
 
                 </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_child"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:paddingStart ="@dimen/dp5"

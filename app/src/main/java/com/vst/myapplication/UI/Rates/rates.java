@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-public class rates extends BaseFragment {
+public class rates extends BaseFragment implements RatesAdapter.ItemClickListener{
     private Dialog dialog;
     boolean active=true;
     RatesBinding binding;
@@ -78,7 +78,7 @@ public class rates extends BaseFragment {
     }
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         // Implement any additional UI setup here
-        ratesAdapter = new RatesAdapter(parent.getContext(), null);
+        ratesAdapter = new RatesAdapter(parent.getContext(), null,getActivity());
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference myRef = database.getReference("tbltest");
 //        myRef.setValue("Hello, World!");
@@ -95,7 +95,7 @@ public class rates extends BaseFragment {
                         if (rateAndDetails != null) {
                             if (rateAndDetails.length > 0) {
                                 binding.rcvrates.setLayoutManager(new LinearLayoutManager(parent.getContext()));
-                                ratesAdapter = new RatesAdapter(parent.getContext(), rateAndDetails);
+                                ratesAdapter = new RatesAdapter(parent.getContext(), rateAndDetails,getActivity());
                                 binding.rcvrates.setAdapter(ratesAdapter);
                                 binding.rcvrates.setHasFixedSize(true);
                             } else {
@@ -250,5 +250,10 @@ public class rates extends BaseFragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Log.d("TAG", "onItemClick"+position);
     }
 }

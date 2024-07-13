@@ -67,6 +67,10 @@ public interface RoomService {
     @Query("SELECT * FROM tblrates r inner join tblratesdetails rd on r.SLNO=rd.SLNO")
     LiveData<List<RateAndDetails>> getrates();
 
+    @Transaction
+    @Query("SELECT * FROM tblrates r inner join tblratesdetails rd on r.SLNO=rd.SLNO where r.SLNO=:slno")
+    LiveData<List<RateAndDetails>> getratesbyslno(String slno);
+
     @Query("SELECT * FROM tblfarmers WHERE FARMERID = :code")
     LiveData<List<farmerDO>> getFarmerByCode(int code);
 

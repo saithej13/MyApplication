@@ -189,6 +189,47 @@ public MutableLiveData<JsonObject> getrates() {
     }
     return data;
 }
+    public MutableLiveData<JsonObject> getratebyslno(JsonObject payload) {
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB){
+            String SLNO = payload.get("SLNO").getAsString();
+            roomService.getratesbyslno(SLNO).observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
+                @Override
+                public void onChanged(List<RateAndDetails> rateDOS) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    String jsonArrayString = gson.toJson(rateDOS);
+                    try {
+                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+                        jsonObject.add("Data", jsonArray);
+                    } catch (JsonSyntaxException e) {
+                        Log.e("Log Response", "Error parsing JSON array", e);
+                        jsonObject.add("Data", new JsonArray());
+                    }
+                    Log.d("Log Response", "" + jsonObject);
+                    data.setValue(jsonObject);
+                }
+            });
+        }
+        else {
+            apiClient.getRates().enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject =response.body();
+                        Log.d("Log Response", "" + response.body());
+                        data.setValue(jsonObject);
+                    }
+                }
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.d("Log", "getRATES payload Failed-->" + t.getMessage());
+                    data.setValue(null);
+                }
+            });
+        }
+        return data;
+    }
     public MutableLiveData<JsonObject> InsertRate(RateAndDetails rateDO) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB)
