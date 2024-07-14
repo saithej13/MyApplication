@@ -73,6 +73,9 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
         repository = new ProjectRepository();
         ratesVm = new ViewModelProvider(this ).get(rates_VM.class);
         binding.setLifecycleOwner(viewLifecycleOwner);
+        rateAndDetails = new RateAndDetails[]{};
+        ratesAdapter = new RatesAdapter(getContext(),rateAndDetails,getActivity());
+        ratesAdapter.setClickListener(this);
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }

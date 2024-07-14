@@ -1,5 +1,7 @@
 package com.vst.myapplication.UI.Rates;
 
+import static java.security.AccessController.getContext;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +19,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vst.myapplication.R;
@@ -29,16 +33,18 @@ import com.vst.myapplication.databinding.FarmerscellBinding;
 import com.vst.myapplication.databinding.RatedetailscardcellBinding;
 import com.vst.myapplication.databinding.RatescellBinding;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> implements Filterable {
     RatedetailscardcellBinding binding;
-    Context context;
     private RateAndDetails[] mData;
     private LayoutInflater inflater;
     private int expandedPosition = -1;
     private ItemClickListener mClickListener;
     private FragmentActivity fragmentActivity;
+    Vector<rateDO> vecratedo;
     Vector<ratedetailsDO> vecratedetailsdo;
     @Override
     public Filter getFilter() {
@@ -61,8 +67,9 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull RatesAdapter.ViewHolder holder, int position) {
         RateAndDetails rate = mData[position];
         if (rate != null) {
-            vecratedetailsdo = new Vector<>();
+//            vecratedetailsdo = new Vector<>(rate.rateDetailsList);
             vecratedetailsdo.addAll(rate.rateDetailsList);
+            Log.d("vecratedetailsdo.SIZE",""+vecratedetailsdo.size());
 //            ((TextView) holder.itemView.findViewById(R.id.txtbcode)).setText("1");
             ((ImageView) holder.itemView.findViewById(R.id.dropdownmilktype)).setVisibility(View.GONE);
             ((TextView) holder.itemView.findViewById(R.id.tvstartdate)).setText(String.valueOf(rate.rate.STARTDATE));
@@ -91,29 +98,62 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
                     //delete rate based on slno
                 }
             });
-            Log.d("expandedPosition",""+expandedPosition);
-            Log.d("position",""+position);
-            if (expandedPosition == position){
-                if (holder.itemView.findViewById(R.id.rcv_child).getVisibility() == View.VISIBLE){
-                    holder.itemView.findViewById(R.id.rcv_child).setVisibility(View.GONE);
-                } else{
-                    holder.itemView.findViewById(R.id.rcv_child).setVisibility(View.VISIBLE);
-                    ((RecyclerView) holder.itemView.findViewById(R.id.rcv_child)).setAdapter(new ratedetailsAdapter(context,vecratedetailsdo ,fragmentActivity));
+
+            binding.llmain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("view is clicked","view is clicked");
+                    Log.d("expandedPosition",""+expandedPosition);
+                    Log.d("position",""+position);
+                    if (vecratedetailsdo != null && vecratedetailsdo.size() > 0) {
+                        expandedPosition = expandedPosition == position ? -1 : position;
+                        notifyDataSetChanged();
+                    }
                 }
-            }else {
-                holder.itemView.findViewById(R.id.rcv_child).setVisibility(View.GONE);
+            });
+            boolean isExpanded = expandedPosition == position;
+            binding.rcvChild.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+
+            if (isExpanded) {
+                Log.d("expanded","expanded");
+                RatesChildAdapter ratedetailsAdapter = new RatesChildAdapter(fragmentActivity, vecratedetailsdo);
+                binding.rcvChild.setLayoutManager(new LinearLayoutManager(fragmentActivity));
+                binding.rcvChild.setAdapter(ratedetailsAdapter);
+                binding.rcvChild.setHasFixedSize(true);
             }
+//            ((LinearLayout) holder.itemView.findViewById(R.id.llmain)).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Log.d("expandedPosition",""+expandedPosition);
+//                    Log.d("position",""+position);
+//                    if (vecratedetailsdo != null && vecratedetailsdo.size() > 0) {
+//                        expandedPosition = position;
+////                        RatesChildAdapter myRecyclerViewAdapter = new RatesChildAdapter(v.getContext(),vecratedetailsdo );
+////                        LinearLayoutManager llm = new LinearLayoutManager(context);
+////                        llm.setOrientation(LinearLayoutManager.VERTICAL);
+////                        ((RecyclerView) holder.itemView.findViewById(R.id.rcv_child)).setLayoutManager(llm);
+////                        ((RecyclerView) holder.itemView.findViewById(R.id.rcv_child)).setAdapter(myRecyclerViewAdapter);
+//
+////                        myRecyclerViewAdapter.notifyDataSetChanged();
+//                        vecratedetailsdo.clear();
+//                        vecratedetailsdo.add(rate.rateDetailsList.get(position));
+//                        RatesChildAdapter ratedetailsadapter = new RatesChildAdapter(fragmentActivity,vecratedetailsdo);
+//                        binding.rcvChild.setLayoutManager(new LinearLayoutManager(fragmentActivity));
+//                        binding.rcvChild.setAdapter(ratedetailsadapter);
+//                        binding.rcvChild.setHasFixedSize(true);
+//
+//                    }
+//                }
+//            });
         }
     }
 
     @Override
     public int getItemCount() {
         if(mData!=null && mData.length>0) {
-            //textview hide
             return mData.length;
         }
         else {
-            //textview gone
             return 0;
         }
     }

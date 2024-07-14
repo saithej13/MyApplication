@@ -66,7 +66,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
         binding.setLifecycleOwner(viewLifecycleOwner);
         ratesVm = new ViewModelProvider(this ).get(rates_VM.class);
         vecratedetailsdo = new Vector<ratedetailsDO>();
-        ratedetailsadapter = new ratedetailsAdapter(getContext(),vecratedetailsdo,getActivity());
+        ratedetailsadapter = new ratedetailsAdapter(getContext(),vecratedetailsdo,getActivity(),this);
         ratedetailsadapter.setClickListener(this);
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
@@ -94,7 +94,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
             binding.llOverView.tvenddate.setText(rateDo.ENDDATE);
             binding.llOverView.tvmilktype.setText(rateDo.MILKTYPE);
             vecratedetailsdo.add(rateDo.ratedetailsDO);
-            ratedetailsAdapter ratedetailsadapter = new ratedetailsAdapter(getContext(),vecratedetailsdo,getActivity());
+            ratedetailsAdapter ratedetailsadapter = new ratedetailsAdapter(getContext(),vecratedetailsdo,getActivity(),this);
             binding.rcvRatedetails.setLayoutManager(new LinearLayoutManager(parent.getContext()));
 //            ratesAdapter = new RatesAdapter(parent.getContext(), rateAndDetails);
             binding.rcvRatedetails.setAdapter(ratedetailsadapter);
@@ -234,7 +234,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                                 vecratedetailsdo.add(ratedetailsDo);
                             }
                             if(vecratedetailsdo.size()>0){
-                                ratedetailsAdapter ratedetailsadapter = new ratedetailsAdapter(getContext(),vecratedetailsdo,getActivity());
+                                ratedetailsAdapter ratedetailsadapter = new ratedetailsAdapter(getContext(),vecratedetailsdo,getActivity(),ratedetails.this);
                                 binding.rcvRatedetails.setLayoutManager(new LinearLayoutManager(getContext()));
                                 binding.rcvRatedetails.setAdapter(ratedetailsadapter);
                                 binding.rcvRatedetails.setHasFixedSize(true);
