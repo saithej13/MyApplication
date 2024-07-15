@@ -13,6 +13,8 @@ public class RateAndDetails {
             entityColumn = "SLNO"
     )
     public List<ratedetailsDO> rateDetailsList;
+    public RateAndDetails() {
+    }
 
     public RateAndDetails(rateDO rate, List<ratedetailsDO> rateDetailsList) {
         this.rate = rate;

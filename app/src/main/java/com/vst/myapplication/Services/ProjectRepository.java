@@ -22,11 +22,15 @@ import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
+import com.vst.myapplication.dataObject.ratedetailsDO;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -160,7 +164,60 @@ public MutableLiveData<JsonObject> getrates() {
                 String jsonArrayString = gson.toJson(rateDOS);
                 try {
                     JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
-                    jsonObject.add("Data", jsonArray);
+                    Map<Integer, RateAndDetails> rateAndDetailsMap = new HashMap<>();
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        JsonObject rateObject = jsonArray.get(i).getAsJsonObject();
+                        JsonObject rate = rateObject.getAsJsonObject("rate");
+                        int slno = rate.get("SLNO").getAsInt();
+                        RateAndDetails rateAndDetails = rateAndDetailsMap.get(slno);
+
+                        if (rateAndDetails == null) {
+                            rateAndDetails = new RateAndDetails();
+                            rateAndDetails.rate = new rateDO();
+                            rateAndDetails.rate.ENDDATE = rate.get("ENDDATE").getAsString();
+                            rateAndDetails.rate.MILKTYPE = rate.get("MILKTYPE").getAsString();
+                            rateAndDetails.rate.SLNO = slno;
+                            rateAndDetails.rate.STARTDATE = rate.get("STARTDATE").getAsString();
+                            rateAndDetails.rateDetailsList = new ArrayList<>();
+
+                            rateAndDetailsMap.put(slno, rateAndDetails);
+                        }
+
+                        JsonArray rateDetailsArray = rateObject.getAsJsonArray("rateDetailsList");
+                        for (int j = 0; j < rateDetailsArray.size(); j++) {
+                            JsonObject rateDetail = rateDetailsArray.get(j).getAsJsonObject();
+                            ratedetailsDO rateDetailDO = new ratedetailsDO();
+                            rateDetailDO.DETAILID = rateDetail.get("DETAILID").getAsInt();
+                            rateDetailDO.FATMAX = rateDetail.get("FATMAX").getAsDouble();
+                            rateDetailDO.FATMIN = rateDetail.get("FATMIN").getAsDouble();
+                            rateDetailDO.RATE = rateDetail.get("RATE").getAsDouble();
+                            rateDetailDO.SNFMAX = rateDetail.get("SNFMAX").getAsDouble();
+                            rateDetailDO.SNFMIN = rateDetail.get("SNFMIN").getAsDouble();
+
+                            // Check for existing DETAILID in rateDetailsList for the current SLNO
+                            boolean isDuplicate = false;
+                            for (ratedetailsDO existingDetail : rateAndDetails.rateDetailsList) {
+                                if (existingDetail.DETAILID == rateDetailDO.DETAILID && existingDetail.SLNO == rateDetailDO.SLNO) {
+                                    isDuplicate = true;
+                                    break;
+                                }
+                            }
+
+                            // Add only if not a duplicate
+                            if (!isDuplicate) {
+                                rateAndDetails.rateDetailsList.add(rateDetailDO);
+                            }
+                        }
+                    }
+                    JsonArray finalJsonArray = new JsonArray();
+                    for (RateAndDetails rateAndDetails : rateAndDetailsMap.values()) {
+                        JsonObject rateAndDetailsObject = new JsonObject();
+                        rateAndDetailsObject.add("rate", gson.toJsonTree(rateAndDetails.rate));
+                        rateAndDetailsObject.add("rateDetailsList", gson.toJsonTree(rateAndDetails.rateDetailsList));
+                        finalJsonArray.add(rateAndDetailsObject);
+                    }
+                    jsonObject.add("Data", finalJsonArray);
+                    Log.d("PRINTjsonArray",""+finalJsonArray);
                 } catch (JsonSyntaxException e) {
                     Log.e("Log Response", "Error parsing JSON array", e);
                     jsonObject.add("Data", new JsonArray());

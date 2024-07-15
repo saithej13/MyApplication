@@ -1,71 +1,52 @@
 package com.vst.myapplication.UI.Rates;
 
-import static android.provider.Settings.Global.getString;
-import static java.security.AccessController.getContext;
-
-import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vst.myapplication.R;
-import com.vst.myapplication.Utils.CalendarUtils;
-import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.ratedetailsDO;
 import com.vst.myapplication.databinding.RatedetailsBinding;
-import com.vst.myapplication.databinding.RatesEntryPopupBinding;
 
+import java.util.List;
 import java.util.Vector;
 
-public class ratedetailsAdapter extends RecyclerView.Adapter<ratedetailsAdapter.ViewHolder> implements Filterable {
-    private LayoutInflater inflater;
-    View borderLine;
-    RatedetailsBinding binding;
-    private ItemClickListener mClickListener;
-    Vector<ratedetailsDO> mData;
-    RatesEntryPopupBinding ratesEntryPopupBinding;
-    private FragmentActivity fragmentActivity;
-    @Override
-    public Filter getFilter() {
-        return null;
-    }
-    public ratedetailsAdapter(Context context, Vector<ratedetailsDO> data,FragmentActivity fragmentActivity,ItemClickListener mClickListener) {
-        this.inflater = LayoutInflater.from(context);
-        this.mData = data;
-        this.fragmentActivity = fragmentActivity;
-        this.mClickListener = mClickListener;
-    }
+public class RatesChildAdapter extends RecyclerView.Adapter<RatesChildAdapter.SubViewHolder>{
 
+    RatedetailsBinding binding;
+    Vector<ratedetailsDO> vecratedetailsdo;
+    private LayoutInflater inflater;
+    private Context context;
+    public RatesChildAdapter(Context context, Vector<ratedetailsDO> data) {
+        this.inflater = LayoutInflater.from(context);
+        this.vecratedetailsdo = data;
+    }
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SubViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         binding = DataBindingUtil.inflate(inflater, R.layout.ratedetails, parent, false);
-        return new ratedetailsAdapter.ViewHolder(binding.getRoot());
+        return new RatesChildAdapter.SubViewHolder(binding.getRoot());
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SubViewHolder holder, int position) {
         if(position% 2 == 0){
             holder.itemView.findViewById(R.id.llitems).setBackgroundResource(R.color.white);
         }else {
             holder.itemView.findViewById(R.id.llitems).setBackgroundResource(R.color.cardbgcolor3);
         }
-        if(position==mData.size()-1){
+        if(position==vecratedetailsdo.size()-1){
             holder.itemView.findViewById(R.id.borderLine).setVisibility(View.VISIBLE);
         }
-        ratedetailsDO rate = mData.get(position);
+        ratedetailsDO rate = vecratedetailsdo.get(position);
         if (rate != null) {
 //            ((TextView) holder.itemView.findViewById(R.id.txtbcode)).setText("1");
             ((TextView) holder.itemView.findViewById(R.id.tvfatmin)).setText("FATMIN : "+String.valueOf(rate.FATMIN));
@@ -77,7 +58,7 @@ public class ratedetailsAdapter extends RecyclerView.Adapter<ratedetailsAdapter.
                 @Override
                 public void onClick(View v) {
                     Log.d("AdapterPosition",""+holder.getAdapterPosition());
-                    if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
+//                    if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
                 }
             });
         }
@@ -85,9 +66,9 @@ public class ratedetailsAdapter extends RecyclerView.Adapter<ratedetailsAdapter.
 
     @Override
     public int getItemCount() {
-        if(mData!=null && mData.size()>0) {
+        if(vecratedetailsdo!=null && vecratedetailsdo.size()>0) {
             //textview hide
-            return mData.size();
+            return vecratedetailsdo.size();
         }
         else {
             //textview gone
@@ -95,20 +76,10 @@ public class ratedetailsAdapter extends RecyclerView.Adapter<ratedetailsAdapter.
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public ViewHolder(@NonNull View itemView) {
+    public class SubViewHolder extends RecyclerView.ViewHolder {
+
+        public SubViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
         }
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-        }
-    }
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
     }
 }
