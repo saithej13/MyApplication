@@ -32,4 +32,7 @@
     <color name="gray_light">#808080</color>
     <color name="text_color_light">#808080</color>
     <color name="toolbar_red">#f13c43</color>
+
+    <color name="bg_delete_button">#7F7F7F</color> <!-- gray -->
+
 </resources>

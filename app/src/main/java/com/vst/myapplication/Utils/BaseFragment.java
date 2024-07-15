@@ -2,12 +2,14 @@ package com.vst.myapplication.Utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,37 +45,18 @@ public abstract class BaseFragment extends Fragment {
         View view = provideYourFragmentView(inflater, parent, savedInstanseState,getViewLifecycleOwner());
         return view;
     }
-
+    ImageView ivdashboard,ivmenu,ivprofile;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         homeActivity = (MainActivity) requireActivity();
-        ImageView ivdashboard = requireActivity().findViewById(R.id.dashboard);
-        ImageView ivmenu = requireActivity().findViewById(R.id.menu);
-        ImageView ivprofile = requireActivity().findViewById(R.id.profile);
+        ivdashboard = requireActivity().findViewById(R.id.dashboard);
+        ivmenu = requireActivity().findViewById(R.id.menu);
+        ivprofile = requireActivity().findViewById(R.id.profile);
         ivdashboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (BaseFragment.this instanceof Dashboard1) {
-
-                    } else {
-                        Dashboard1 dashboardFragment = new Dashboard1();
-                        FragmentManager fragmentManager = getParentFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .add(R.id.frame, dashboardFragment, "")
-                                .addToBackStack("")
-                                .commitAllowingStateLoss();
-                        ivdashboard.setImageResource(R.drawable.dashboardb);
-                        ivmenu.setImageResource(R.drawable.menub);
-                        ivprofile.setImageResource(R.drawable.profile);
-                        ivdashboard.setImageResource(R.drawable.dashboardc);
-
-                    }
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
+                loadMenuOne();
             }
         });
         ivmenu.setOnClickListener(new View.OnClickListener() {
@@ -89,10 +72,10 @@ public abstract class BaseFragment extends Fragment {
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                                 .add(R.id.frame, menuFragment, "")
-                                .addToBackStack("")
+//                                .addToBackStack("")
                                 .commitAllowingStateLoss();
                         ivdashboard.setImageResource(R.drawable.dashboardb);
-                        ivmenu.setImageResource(R.drawable.menub);
+//                        ivmenu.setImageResource(R.drawable.menub);
                         ivprofile.setImageResource(R.drawable.profile);
                         ivmenu.setImageResource(R.drawable.menuc);
                     }
@@ -102,6 +85,30 @@ public abstract class BaseFragment extends Fragment {
             }
         });
 
+    }
+
+    public void loadMenuOne(){
+        try {
+            if (BaseFragment.this instanceof DashboardFragment) {
+//                        clickLogOut();
+            } else {
+//                        Dashboard1 dashboardFragment = new Dashboard1();
+                DashboardFragment dashboardFragment = new DashboardFragment();
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .add(R.id.frame, dashboardFragment, "")
+//                                .addToBackStack("")
+                        .commitAllowingStateLoss();
+//                        ivdashboard.setImageResource(R.drawable.dashboardb);
+                ivdashboard.setImageResource(R.drawable.dashboardc);
+                ivmenu.setImageResource(R.drawable.menub);
+                ivprofile.setImageResource(R.drawable.profile);
+//                        updateImageViews();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Override
@@ -116,8 +123,8 @@ public abstract class BaseFragment extends Fragment {
                         LinearLayout llbottomnav = requireActivity().findViewById(R.id.llbottomnav);
                         if(BaseFragment.this instanceof Dashboard1
                                 || BaseFragment.this instanceof menuFragment
-                        || BaseFragment.this instanceof DashboardFragment
-                        || BaseFragment.this instanceof graphFragment)
+                                || BaseFragment.this instanceof DashboardFragment
+                                || BaseFragment.this instanceof graphFragment)
                         {
 //                            setBottomNavigation(true);
                             llbottomnav.setVisibility(View.VISIBLE);
@@ -200,8 +207,8 @@ public abstract class BaseFragment extends Fragment {
             customDialog.setCancelable(isCancelable);
             TextView tvTitle = (TextView) view.findViewById(R.id.tvTitlePopup);
             TextView tvMessage = (TextView) view.findViewById(R.id.tvMessagePopup);
-            Button btnYes = (Button) view.findViewById(R.id.btnYesPopup);
-            Button btnNo = (Button) view.findViewById(R.id.btnNoPopup);
+            AppCompatButton btnYes =  view.findViewById(R.id.btnYesPopup);
+            AppCompatButton btnNo =  view.findViewById(R.id.btnNoPopup);
 
             tvTitle.setTypeface(AppConstants.Montserrat_SemiBold);
             tvMessage.setTypeface(AppConstants.Montserrat_Regular);

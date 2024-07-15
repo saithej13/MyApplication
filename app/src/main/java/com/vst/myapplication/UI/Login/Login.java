@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.Dashboard.Dashboard1;
+import com.vst.myapplication.UI.Dashboard.DashboardFragment;
 import com.vst.myapplication.UI.Register.register_notice;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.databinding.LoginBinding;
@@ -43,7 +44,8 @@ public class Login extends BaseFragment {
                 FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .replace(R.id.frame, new Dashboard1(), "")
+//                        .replace(R.id.frame, new Dashboard1(), "")
+                        .replace(R.id.frame, new DashboardFragment(), "")
                         .commitAllowingStateLoss();
 //                if(NetworkUtils.isNetworkAvailable(getContext())) {
 //                    JsonObject payload = new JsonObject();

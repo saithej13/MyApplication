@@ -6,7 +6,6 @@
         android:background="@color/white">
 
         <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/over_ATQ"
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:layout_margin="0dp"

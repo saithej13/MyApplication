@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding =  DataBindingUtil.setContentView(this,R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         MyApplicationNew.lifecycleOwner = this;
         repository = new ProjectRepository();
 //        barcodeScannerView = findViewById(R.id.zxing_barcode_scanner);
@@ -118,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
         usersRef = database.getReference();
         usersRef2 = usersRef.child("users");
         mAuth = FirebaseAuth.getInstance();
-        SharedPreferences.saveStorage(getBaseContext(),"RoomDB");
-        if(SharedPreferences.getStorage(getBaseContext()).equalsIgnoreCase("RoomDB")){
+        SharedPreferences.saveStorage(getBaseContext(), "RoomDB");
+        if (SharedPreferences.getStorage(getBaseContext()).equalsIgnoreCase("RoomDB")) {
             MyApplicationNew.RoomDB = true;
         }
 //        binding.dashboard.setOnClickListener(view -> {
@@ -154,10 +154,10 @@ public class MainActivity extends AppCompatActivity {
 //                mdata.amount = 30.0;
 //                roomrepo.insertmilkdata(mdata);
 
-                if(MyApplicationNew.RoomDB){
-                    Log.d("PRINTDB","ROOMDB");
-                }else {
-                    Log.d("PRINTDB","API");
+                if (MyApplicationNew.RoomDB) {
+                    Log.d("PRINTDB", "ROOMDB");
+                } else {
+                    Log.d("PRINTDB", "API");
                 }
 
                 new Thread(new Runnable() {
@@ -184,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
 //                .addHeader("Content-Type", "application/xml")
 
 
-
 //        EdgeToEdge.enable(this);
 //        setContentView(R.layout.activity_main);
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -193,7 +192,8 @@ public class MainActivity extends AppCompatActivity {
 //            return insets;
 //        });
     }
-//    public static String test1() {
+
+    //    public static String test1() {
 //        String userName = "GSAUser";
 //        String password = "G$@!ntPdt*&^%";
 //        String domain = "gagroup.local";
@@ -290,61 +290,61 @@ public class MainActivity extends AppCompatActivity {
 //            Log.e("NTLMAuthTask", "Error during NTLM authentication", e);
 //        }
 //    }
-public static String test1() {
-    try {
-        String userName = "GSAUser";
-        String password = "G$@!ntPdt*&^%";
-        String domain = "gagroup.local";
+    public static String test1() {
+        try {
+            String userName = "GSAUser";
+            String password = "G$@!ntPdt*&^%";
+            String domain = "gagroup.local";
 
-        HttpClient httpclient = new DefaultHttpClient();
-        NTCredentials creds = new NTCredentials(userName, password, "", domain);
-        Log.d("creds",""+creds);
-        ((AbstractHttpClient) httpclient).getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+            HttpClient httpclient = new DefaultHttpClient();
+            NTCredentials creds = new NTCredentials(userName, password, "", domain);
+            Log.d("creds", "" + creds);
+            ((AbstractHttpClient) httpclient).getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
 
-        HttpPost httppost = new HttpPost("http://10.10.0.104:7017/Grandiose_UAT00/WS/Grandiose%20Stores/Codeunit/GetTransList");
+            HttpPost httppost = new HttpPost("http://10.10.0.104:7017/Grandiose_UAT00/WS/Grandiose%20Stores/Codeunit/GetTransList");
 
-        String  soapRequest = "<Soap:Envelope xmlns:Soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                "   <Soap:Body>\n" +
-                "      <ExportPurchaseReturnList xmlns=\"urn:microsoft-dynamics-schemas/codeunit/GetTransList\">\n" +
-                "         <docType>PR</docType>\n" +
-                "         <docDT>2024-03-03</docDT>\n" +
-                "         <locCode>DBVHS</locCode>\n" +
-                "         <exportPurchaseReturnlistXML>\n" +
-                "            <PurchaseHeader xmlns=\"urn:microsoft-dynamics-nav/xmlports/x50068\">\n" +
-                "               <Type></Type>\n" +
-                "               <DocNo></DocNo>\n" +
-                "               <HeaderLocation></HeaderLocation>\n" +
-                "               <VendorNo></VendorNo>\n" +
-                "               <PostingDate></PostingDate>\n" +
-                "               <ExtDocNo></ExtDocNo>\n" +
-                "            </PurchaseHeader>\n" +
-                "         </exportPurchaseReturnlistXML>\n" +
-                "      </ExportPurchaseReturnList>\n" +
-                "   </Soap:Body>\n" +
-                "</Soap:Envelope>";
-        String SOAP_ACTION = "urn:microsoft-dynamics-schemas/codeunit/GetTransList:ExportPurchaseReturnList";
+            String soapRequest = "<Soap:Envelope xmlns:Soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                    "   <Soap:Body>\n" +
+                    "      <ExportPurchaseReturnList xmlns=\"urn:microsoft-dynamics-schemas/codeunit/GetTransList\">\n" +
+                    "         <docType>PR</docType>\n" +
+                    "         <docDT>2024-03-03</docDT>\n" +
+                    "         <locCode>DBVHS</locCode>\n" +
+                    "         <exportPurchaseReturnlistXML>\n" +
+                    "            <PurchaseHeader xmlns=\"urn:microsoft-dynamics-nav/xmlports/x50068\">\n" +
+                    "               <Type></Type>\n" +
+                    "               <DocNo></DocNo>\n" +
+                    "               <HeaderLocation></HeaderLocation>\n" +
+                    "               <VendorNo></VendorNo>\n" +
+                    "               <PostingDate></PostingDate>\n" +
+                    "               <ExtDocNo></ExtDocNo>\n" +
+                    "            </PurchaseHeader>\n" +
+                    "         </exportPurchaseReturnlistXML>\n" +
+                    "      </ExportPurchaseReturnList>\n" +
+                    "   </Soap:Body>\n" +
+                    "</Soap:Envelope>";
+            String SOAP_ACTION = "urn:microsoft-dynamics-schemas/codeunit/GetTransList:ExportPurchaseReturnList";
 
-        StringEntity input = new StringEntity(soapRequest, "UTF-8");
-        input.setContentType("text/xml");
-        httppost.setEntity(input);
-        httppost.setHeader("soapAction",SOAP_ACTION);
+            StringEntity input = new StringEntity(soapRequest, "UTF-8");
+            input.setContentType("text/xml");
+            httppost.setEntity(input);
+            httppost.setHeader("soapAction", SOAP_ACTION);
 
-        HttpResponse response = httpclient.execute(httppost);
-        HttpEntity entity = response.getEntity();
+            HttpResponse response = httpclient.execute(httppost);
+            HttpEntity entity = response.getEntity();
 
-        if (entity != null) {
-            String s = EntityUtils.toString(entity);
-            Log.d("response",""+s);
+            if (entity != null) {
+                String s = EntityUtils.toString(entity);
+                Log.d("response", "" + s);
 //            return EntityUtils.toString(entity);
+            }
+        } catch (
+                Exception e) {
+            Log.e("NTLMAuthTask", "Error during NTLM authentication", e);
         }
-    } catch (
-            Exception e) {
-        Log.e("NTLMAuthTask", "Error during NTLM authentication", e);
+        return null;
     }
-    return null;
-}
-    public   void test12()
-    {
+
+    public void test12() {
 
         String userName = "GSAUser";
         String password = "G$@!ntPdt*&^%";
@@ -398,17 +398,18 @@ public static String test1() {
             e.printStackTrace();
         }
     }
+
     public static String test2() {
         String userName = "GSAUser";
         String password = "G$@!ntPdt*&^%";
         String domain = "gagroup.local";
         NTCredentials creds = new NTCredentials(userName, password, "", domain);
-        Log.d("creds",""+creds);
+        Log.d("creds", "" + creds);
         OkHttpClient client = new OkHttpClient.Builder()
-                .authenticator(new NTLMAuthenticator("",userName,password,domain))
+                .authenticator(new NTLMAuthenticator("", userName, password, domain))
                 .build();
 
-        String  soapRequest = "<Soap:Envelope xmlns:Soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+        String soapRequest = "<Soap:Envelope xmlns:Soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "   <Soap:Body>\n" +
                 "      <ExportPurchaseReturnList xmlns=\"urn:microsoft-dynamics-schemas/codeunit/GetTransList\">\n" +
                 "         <docType>PR</docType>\n" +
@@ -442,14 +443,15 @@ public static String test1() {
 
             // Handle response
             String s = response.body().toString();
-            Log.d("response",""+s);
+            Log.d("response", "" + s);
             return response.body().string();
         } catch (IOException e) {
             Log.e("NTLMAuthTask", "Error during NTLM authentication", e);
         }
         return null;
     }
-    public void test3(){
+
+    public void test3() {
         try {
             String soapRequest = "<Soap:Envelope xmlns:Soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                     "   <Soap:Body>\n" +
@@ -478,8 +480,7 @@ public static String test1() {
                     Log.d("reponseretro", "" + s);
                 }
             });
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             Log.e("NTLMAuthTask", "Error during NTLM authentication", ex);
         }
     }
@@ -541,7 +542,7 @@ public static String test1() {
 //        }
 //    }
 
-    public void testfirebasesms(){
+    public void testfirebasesms() {
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
 //                        .setPhoneNumber("+917780293187")
@@ -552,6 +553,7 @@ public static String test1() {
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
+
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
@@ -576,10 +578,12 @@ public static String test1() {
             // Move to the next screen to enter the OTP
         }
     };
+
     private void verifyCode(String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithCredential(credential);
     }
+
     private void signInWithCredential(PhoneAuthCredential credential) {
         FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -594,6 +598,7 @@ public static String test1() {
                     }
                 });
     }
+
     private void startSmsRetriever() {
         SmsRetrieverClient client = SmsRetriever.getClient(this);
         Task<Void> task = client.startSmsRetriever();
@@ -608,6 +613,7 @@ public static String test1() {
             }
         });
     }
+
     private final BroadcastReceiver smsBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -665,7 +671,8 @@ public static String test1() {
                     }
                 });
     }
-    public void movetoLogin(){
+
+    public void movetoLogin() {
         Bundle mBundle = new Bundle();
         mBundle.putBoolean("isTitle", true);
         Login loginFragment = new Login();
@@ -690,6 +697,7 @@ public static String test1() {
         super.onPause();
 //        capture.onPause();
     }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

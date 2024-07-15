@@ -84,5 +84,8 @@
 
 
 
-
+    <string name="warning">Warning !</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="do_you_want_to_logout">Are you sure you want to logout?</string>
 </resources>
