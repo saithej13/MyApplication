@@ -22,12 +22,17 @@ import java.util.Vector;
 public class RatesChildAdapter extends RecyclerView.Adapter<RatesChildAdapter.SubViewHolder>{
 
     RatedetailsBinding binding;
-    Vector<ratedetailsDO> vecratedetailsdo;
+//    Vector<ratedetailsDO> vecratedetailsdo;
+    List<ratedetailsDO> Listratedetailsdo;
     private LayoutInflater inflater;
     private Context context;
-    public RatesChildAdapter(Context context, Vector<ratedetailsDO> data) {
+//    public RatesChildAdapter(Context context, Vector<ratedetailsDO> data) {
+//        this.inflater = LayoutInflater.from(context);
+//        this.vecratedetailsdo = data;
+//    }
+    public RatesChildAdapter(Context context, List<ratedetailsDO> data) {
         this.inflater = LayoutInflater.from(context);
-        this.vecratedetailsdo = data;
+        this.Listratedetailsdo = data;
     }
     @NonNull
     @Override
@@ -38,15 +43,18 @@ public class RatesChildAdapter extends RecyclerView.Adapter<RatesChildAdapter.Su
 
     @Override
     public void onBindViewHolder(@NonNull SubViewHolder holder, int position) {
-        if(position% 2 == 0){
+        if(position==0){
+            holder.itemView.findViewById(R.id.borderLinestart).setVisibility(View.VISIBLE);
+        }
+        else if(position% 2 == 0){
             holder.itemView.findViewById(R.id.llitems).setBackgroundResource(R.color.white);
         }else {
             holder.itemView.findViewById(R.id.llitems).setBackgroundResource(R.color.cardbgcolor3);
         }
-        if(position==vecratedetailsdo.size()-1){
+        if(position==Listratedetailsdo.size()-1){
             holder.itemView.findViewById(R.id.borderLine).setVisibility(View.VISIBLE);
         }
-        ratedetailsDO rate = vecratedetailsdo.get(position);
+        ratedetailsDO rate = Listratedetailsdo.get(position);
         if (rate != null) {
 //            ((TextView) holder.itemView.findViewById(R.id.txtbcode)).setText("1");
             ((TextView) holder.itemView.findViewById(R.id.tvfatmin)).setText("FATMIN : "+String.valueOf(rate.FATMIN));
@@ -66,9 +74,9 @@ public class RatesChildAdapter extends RecyclerView.Adapter<RatesChildAdapter.Su
 
     @Override
     public int getItemCount() {
-        if(vecratedetailsdo!=null && vecratedetailsdo.size()>0) {
+        if(Listratedetailsdo!=null && !Listratedetailsdo.isEmpty()) {
             //textview hide
-            return vecratedetailsdo.size();
+            return Listratedetailsdo.size();
         }
         else {
             //textview gone

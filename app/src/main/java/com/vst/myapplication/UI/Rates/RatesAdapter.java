@@ -33,7 +33,9 @@ import com.vst.myapplication.databinding.FarmerscellBinding;
 import com.vst.myapplication.databinding.RatedetailscardcellBinding;
 import com.vst.myapplication.databinding.RatescellBinding;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -45,7 +47,10 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
     private ItemClickListener mClickListener;
     private FragmentActivity fragmentActivity;
     Vector<rateDO> vecratedo;
-    Vector<ratedetailsDO> vecratedetailsdo;
+    ratedetailsDO ratedetailsDo = new ratedetailsDO();
+    Vector<ratedetailsDO> vecratedetailsdo = new Vector<>();
+    HashMap<Integer,ratedetailsDO> hashMap=new HashMap<>();
+    List<ratedetailsDO> rateDetailsList = new ArrayList<>();
     @Override
     public Filter getFilter() {
         return null;
@@ -66,11 +71,13 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull RatesAdapter.ViewHolder holder, int position) {
         RateAndDetails rate = mData[position];
+        rateDetailsList = mData[position].rateDetailsList;
         if (rate != null) {
+//            List<ratedetailsDO> itemslistItems=rate.rateDetailsList;
+//            hashMap.put(position,rate.rateDetailsList.get(position));
 //            vecratedetailsdo = new Vector<>(rate.rateDetailsList);
-            vecratedetailsdo.addAll(rate.rateDetailsList);
-            Log.d("vecratedetailsdo.SIZE",""+vecratedetailsdo.size());
-//            ((TextView) holder.itemView.findViewById(R.id.txtbcode)).setText("1");
+            vecratedetailsdo.clear();
+            vecratedetailsdo.add(rate.rateDetailsList.get(position));
             ((ImageView) holder.itemView.findViewById(R.id.dropdownmilktype)).setVisibility(View.GONE);
             ((TextView) holder.itemView.findViewById(R.id.tvstartdate)).setText(String.valueOf(rate.rate.STARTDATE));
             ((TextView) holder.itemView.findViewById(R.id.tvenddate)).setText(String.valueOf(rate.rate.ENDDATE));
@@ -105,9 +112,9 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
                     Log.d("view is clicked","view is clicked");
                     Log.d("expandedPosition",""+expandedPosition);
                     Log.d("position",""+position);
-                    if (vecratedetailsdo != null && vecratedetailsdo.size() > 0) {
+                    if (rateDetailsList != null && !rateDetailsList.isEmpty()) {
                         expandedPosition = expandedPosition == position ? -1 : position;
-                        notifyDataSetChanged();
+                        notifyItemChanged(position);
                     }
                 }
             });
@@ -116,7 +123,7 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
 
             if (isExpanded) {
                 Log.d("expanded","expanded");
-                RatesChildAdapter ratedetailsAdapter = new RatesChildAdapter(fragmentActivity, vecratedetailsdo);
+                RatesChildAdapter ratedetailsAdapter = new RatesChildAdapter(fragmentActivity, rateDetailsList);
                 binding.rcvChild.setLayoutManager(new LinearLayoutManager(fragmentActivity));
                 binding.rcvChild.setAdapter(ratedetailsAdapter);
                 binding.rcvChild.setHasFixedSize(true);
@@ -150,12 +157,7 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        if(mData!=null && mData.length>0) {
-            return mData.length;
-        }
-        else {
-            return 0;
-        }
+        return mData == null ? 0 : mData.length;
     }
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ViewHolder(@NonNull View itemView) {
