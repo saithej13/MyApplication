@@ -1,5 +1,6 @@
 package com.vst.myapplication.Utils;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
@@ -23,6 +24,7 @@ import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.UI.Dashboard.Dashboard1;
 import com.vst.myapplication.UI.Dashboard.DashboardFragment;
 import com.vst.myapplication.UI.Dashboard.graphFragment;
+import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.UI.menu.menuFragment;
 
 import org.json.JSONException;
@@ -35,7 +37,7 @@ public abstract class BaseFragment extends Fragment {
     Preference preference =  new Preference(MyApplicationNew.mContext);
     Button btnYes;
     Button btnNo;
-
+    public BaseFragment() {}
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -47,6 +49,7 @@ public abstract class BaseFragment extends Fragment {
         return view;
     }
     ImageView ivdashboard,ivmenu,ivprofile;
+    LinearLayout llbottomnav;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -54,6 +57,10 @@ public abstract class BaseFragment extends Fragment {
         ivdashboard = requireActivity().findViewById(R.id.dashboard);
         ivmenu = requireActivity().findViewById(R.id.menu);
         ivprofile = requireActivity().findViewById(R.id.profile);
+        llbottomnav = requireActivity().findViewById(R.id.llbottomnav);
+        setbottomNavigation();
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), onBackPressedCallback);
+
         ivdashboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +68,6 @@ public abstract class BaseFragment extends Fragment {
             }
         });
         ivmenu.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 try {
@@ -87,7 +93,24 @@ public abstract class BaseFragment extends Fragment {
         });
 
     }
-
+    private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            Fragment f = requireActivity().getSupportFragmentManager().findFragmentById(R.id.frame) ;
+            if(f instanceof DashboardFragment){
+                showCustomDialog(getContext(), getResources().getString(R.string.warning), getResources().getString(R.string.do_you_want_to_logout), getResources().getString(R.string.Yes), getResources().getString(R.string.No), "logout");
+            }
+            /*else if(f instanceof Login){
+//                MainActivity a=new MainActivity();
+//                a.finish();
+                requireActivity().getSupportFragmentManager().popBackStack();
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }*/
+            /*else{
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }*/
+        }
+    };
     public void loadMenuOne(){
         try {
             if (BaseFragment.this instanceof DashboardFragment) {
@@ -115,28 +138,31 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        LinearLayout llbottomnav = requireActivity().findViewById(R.id.llbottomnav);
-                        if(BaseFragment.this instanceof Dashboard1
-                                || BaseFragment.this instanceof menuFragment
-                                || BaseFragment.this instanceof DashboardFragment
-                                || BaseFragment.this instanceof graphFragment)
-                        {
-//                            setBottomNavigation(true);
-                            llbottomnav.setVisibility(View.VISIBLE);
-                        }
-                        else {
-                            llbottomnav.setVisibility(View.GONE);
-                        }
+
                     }
                 });
             }
         }).start();
+    }
+    public void setbottomNavigation(){
+        if(BaseFragment.this instanceof Dashboard1
+                || BaseFragment.this instanceof menuFragment
+                || BaseFragment.this instanceof DashboardFragment
+                || BaseFragment.this instanceof graphFragment)
+        {
+//                            setBottomNavigation(true);
+            llbottomnav.setVisibility(View.VISIBLE);
+        }
+        else {
+            llbottomnav.setVisibility(View.GONE);
+        }
     }
 
     public abstract View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner);

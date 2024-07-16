@@ -1,5 +1,6 @@
 package com.vst.myapplication.UI.Dashboard;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
@@ -28,10 +30,12 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.CustomGraphDesign.DoubleBarChart;
 import com.vst.myapplication.UI.Login.Login;
+import com.vst.myapplication.UI.Login.LoginNew;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.dataObject.milkDO;
@@ -92,25 +96,22 @@ public class DashboardFragment extends BaseFragment {
     public void onButtonYesClick(String from) throws JSONException {
         super.onButtonYesClick(from);
         if (from.equals("logout")) {
-            FragmentManager fragmentManager = getParentFragmentManager();
+           /* FragmentManager fragmentManager = getParentFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .add(R.id.frame, new Login(), "")
-                    .commitAllowingStateLoss();
+                    .addToBackStack("")
+                    .commitAllowingStateLoss();*/
+            Intent intent = new Intent(getActivity(), LoginNew.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
     }
     @Override
     public void onResume() {
         super.onResume();
         refreshData();
-//        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
-    private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
-        @Override
-        public void handleOnBackPressed() {
-            showCustomDialog(getContext(), getResources().getString(R.string.warning), getResources().getString(R.string.do_you_want_to_logout), getResources().getString(R.string.Yes), getResources().getString(R.string.No), "logout");
-        }
-    };
 
     public void refreshData(){
         JsonObject jsonObject = new JsonObject();

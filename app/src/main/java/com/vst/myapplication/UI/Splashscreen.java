@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.R;
+import com.vst.myapplication.UI.Login.LoginNew;
 import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.databinding.SplashscreenBinding;
 import com.vst.myapplication.Utils.AppConstants;
@@ -48,7 +49,8 @@ public class Splashscreen extends AppCompatActivity {
 
         preference.commitPreference();
         new Handler().postDelayed(() -> {
-            Intent intent1 = new Intent(Splashscreen.this, MainActivity.class);
+//            Intent intent1 = new Intent(Splashscreen.this, MainActivity.class);
+            Intent intent1 = new Intent(Splashscreen.this, LoginNew.class);
             startActivity(intent1);
             finish();
         }, 2000);

@@ -5,14 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
 import com.google.android.gms.auth.api.phone.SmsRetriever;
@@ -32,8 +38,12 @@ import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
+import com.vst.myapplication.UI.Dashboard.DashboardFragment;
 import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.UI.Payments.payment;
+import com.vst.myapplication.Utils.AppConstants;
+import com.vst.myapplication.Utils.BaseFragment;
+import com.vst.myapplication.Utils.CustomDialog;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NTLMAuthenticator;
 import com.vst.myapplication.Utils.Preference;
@@ -51,6 +61,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -130,8 +141,9 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //        testfirebasesms();
 //        startSmsRetriever();
-        movetoLogin();
 
+//        movetoLogin();//by kush
+        movetoDashBoard();
         binding.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,8 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 }).start();
             }
         });
-
-
 //
 //
 //        connection.setRequestProperty("Authorization",credential);
@@ -190,103 +200,6 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
-    //    public static String test1() {
-//        String userName = "GSAUser";
-//        String password = "G$@!ntPdt*&^%";
-//        String domain = "gagroup.local";
-//
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .authenticator(new NTLMAuthenticator(userName, password, domain))
-//                .build();
-////	NTCredentials creds = new NTCredentials(userName, password, "", domain);
-////	((AbstractHttpClientConnection) client).getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
-////	((AbstractHttpClient) client).getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
-//
-//        String soapRequest = "<Soap:Envelope xmlns:Soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-//                "   <Soap:Body>\n" +
-//                "      <ExportPurchaseReturnList xmlns=\"urn:microsoft-dynamics-schemas/codeunit/GetTransList\">\n" +
-//                "         <docType>PR</docType>\n" +
-//                "         <docDT>2024-03-03</docDT>\n" +
-//                "         <locCode>DBVHS</locCode>\n" +
-//                "         <exportPurchaseReturnlistXML>\n" +
-//                "            <PurchaseHeader xmlns=\"urn:microsoft-dynamics-nav/xmlports/x50068\">\n" +
-//                "               <Type></Type>\n" +
-//                "               <DocNo></DocNo>\n" +
-//                "               <HeaderLocation></HeaderLocation>\n" +
-//                "               <VendorNo></VendorNo>\n" +
-//                "               <PostingDate></PostingDate>\n" +
-//                "               <ExtDocNo></ExtDocNo>\n" +
-//                "            </PurchaseHeader>\n" +
-//                "         </exportPurchaseReturnlistXML>\n" +
-//                "      </ExportPurchaseReturnList>\n" +
-//                "   </Soap:Body>\n" +
-//                "</Soap:Envelope>";
-//        String SOAP_ACTION = "urn:microsoft-dynamics-schemas/codeunit/GetTransList:ExportPurchaseReturnList";
-//
-//        RequestBody body = RequestBody.create(soapRequest, MediaType.parse("text/xml; charset=utf-8"));
-//        Request request = new Request.Builder()
-//                .url("http://10.10.0.104:7017/Grandiose_UAT00/WS/Grandiose%20Stores/Codeunit/GetTransList")
-//                .post(body)
-//                .addHeader("Content-Type", "text/xml; charset=utf-8")
-//                .addHeader("soapAction", SOAP_ACTION)
-//                .build();
-//
-//        try (Response response = client.newCall(request).execute()) {
-//            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-//
-//            // Handle response
-//            Log.d("reponse",""+response.body().toString());
-//            return response.body().string();
-//
-//        } catch (IOException e) {
-//            Log.e("NTLMAuthTask", "Error during NTLM authentication", e);
-//        }
-//        return null;
-//    }
-//    public void test2(){
-//        try {
-//            String userName = "GSAUser";
-//            String password = "G$@!ntPdt*&^%";
-//            String domain = "gagroup.local";
-//            String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-//            Log.d("DeviceID", "Device ID: " + deviceId);
-//            String request = "\r\n<soapenv:Envelope " +
-//                    "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"" +
-//                    " xmlns:get=\"urn:microsoft-dynamics-schemas/codeunit/GetTransList\" " +
-//                    "xmlns:x50=\"urn:microsoft-dynamics-nav/xmlports/x50068\">\r\n   " +
-//                    "<soapenv:Header/>\r\n   " +
-//                    "<soapenv:Body>\r\n  " +
-//                    "    <get:ExportPurchaseReturnList>\r\n " +
-//                    "        <get:docType>PR</get:docType>\r\n  " +
-//                    "       <get:docDT>2024-03-03</get:docDT>\r\n  " +
-//                    "       <get:locCode>DBVHS</get:locCode>\r\n " +
-//                    "        <get:exportPurchaseReturnlistXML>\r\n   " +
-//                    "         <x50:PurchaseHeader>\r\n " +
-//                    "              <x50:Type></x50:Type>\r\n  " +
-//                    "             <x50:DocNo></x50:DocNo>\r\n   " +
-//                    "            <x50:HeaderLocation></x50:HeaderLocation>\r\n  " +
-//                    "             <x50:VendorNo></x50:VendorNo>\r\n    " +
-//                    "           <x50:PostingDate></x50:PostingDate>\r\n  " +
-//                    "             <x50:ExtDocNo></x50:ExtDocNo>\r\n   " +
-//                    "         </x50:PurchaseHeader>\r\n     " +
-//                    "    </get:exportPurchaseReturnlistXML>\r\n   " +
-//                    "   </get:ExportPurchaseReturnList>\r\n " +
-//                    "  </soapenv:Body>\r\n" +
-//                    "</soapenv:Envelope>";
-//
-//            String request2 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:get=\"urn:microsoft-dynamics-schemas/codeunit/GetTransList\" xmlns:x50=\"urn:microsoft-dynamics-nav/xmlports/x50068\">\r\n   <soapenv:Body>\r\n      <get:ExportPurchaseReturnList>\r\n         <get:docType>PR</get:docType>\r\n         <get:docDT>2024-03-03</get:docDT>\r\n         <get:locCode>DBVHS</get:locCode>\r\n         <get:exportPurchaseReturnlistXML>\r\n            <x50:PurchaseHeader>\r\n               <x50:Type></x50:Type>\r\n               <x50:DocNo></x50:DocNo>\r\n               <x50:HeaderLocation></x50:HeaderLocation>\r\n               <x50:VendorNo></x50:VendorNo>\r\n               <x50:PostingDate></x50:PostingDate>\r\n               <x50:ExtDocNo></x50:ExtDocNo>\r\n            </x50:PurchaseHeader>\r\n         </get:exportPurchaseReturnlistXML>\r\n      </get:ExportPurchaseReturnList>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>";
-//            RequestBody body = RequestBody.create(request2, MediaType.parse("text/xml; charset=utf-8"));
-//            repository.getTransList(body).observe(this, new Observer<String>() {
-//                @Override
-//                public void onChanged(String s) {
-//                    Log.d("PRINTBYSAI_NTLM",""+s);
-//                }
-//            });
-//        } catch (
-//                Exception e) {
-//            Log.e("NTLMAuthTask", "Error during NTLM authentication", e);
-//        }
-//    }
     public static String test1() {
         try {
             String userName = "GSAUser";
@@ -340,6 +253,17 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        Fragment f = getSupportFragmentManager().findFragmentById(R.id.frame) ;
+//        if(f instanceof DashboardFragment){
+//            showCustomDialog(this, getResources().getString(R.string.warning), getResources().getString(R.string.do_you_want_to_logout), getResources().getString(R.string.Yes), getResources().getString(R.string.No), "logout");
+//        }else{
+//            super.onBackPressed();
+//        }
+//
+//    }
 
     public void test12() {
 
@@ -481,63 +405,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e("NTLMAuthTask", "Error during NTLM authentication", ex);
         }
     }
-//    public void test4(){
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .connectTimeout(10, TimeUnit.SECONDS) // Set connection timeout
-//                .build();
-//
-//        String url = "http://10.10.0.104:7017"; // Replace with your server URL
-//
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .build();
-//
-//        try {
-//            Response response = client.newCall(request).execute();
-//            if (response.isSuccessful()) {
-//                System.out.println("Request successful");
-//                System.out.println(response.body().string());
-//            } else {
-//                System.out.println("Request failed: " + response.code() + " - " + response.message());
-//            }
-//        } catch (IOException e) {
-//            System.err.println("Failed to make request: " + e.getMessage());
-//        }
-//    }
-//    public void test5(){
-//        String url = "https://your-server-url";
-//        String username = "your-username";
-//        String password = "your-password";
-//        String domain = "your-domain";
-//        String workstation = "your-workstation";
-//
-//        // Create NT credentials
-//        NTCredentials ntCredentials = new NTCredentials(username, password, workstation, domain);
-//
-//        // Create the HttpClient with NTLM credentials
-//        try (CloseableHttpClient httpClient = WinHttpClients.custom()
-//                .setDefaultCredentialsProvider(credentialsProvider -> {
-////                    credentialsProvider.setCredentials(new AuthScope(null, -1), ntCredentials);
-//                    credentialsProvider.setCredentials(AuthScope.ANY, ntCredentials);
-//                })
-//                .build()) {
-//
-//            // Create the HTTP GET request
-//            HttpGet httpGet = new HttpGet(url);
-//
-//            // Execute the request
-//            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
-//                if (response.getCode() == 200) {
-//                    String responseBody = EntityUtils.toString(response.getEntity());
-//                    System.out.println("Response: " + responseBody);
-//                } else {
-//                    System.out.println("Error: " + response.get);
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void testfirebasesms() {
         PhoneAuthOptions options =
@@ -682,6 +549,19 @@ public class MainActivity extends AppCompatActivity {
                 .commitAllowingStateLoss();
 
     }
+    public void movetoDashBoard() {
+        Bundle mBundle = new Bundle();
+        mBundle.putBoolean("isTitle", true);
+        Login loginFragment = new Login();
+        loginFragment.setArguments(mBundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .add(R.id.frame,new DashboardFragment(), "")
+                .addToBackStack("")
+                .commitAllowingStateLoss();
+
+    }
 
     @Override
     protected void onResume() {
@@ -700,5 +580,163 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 //        capture.onSaveInstanceState(outState);
     }
+
+    //    public static String test1() {
+//        String userName = "GSAUser";
+//        String password = "G$@!ntPdt*&^%";
+//        String domain = "gagroup.local";
+//
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .authenticator(new NTLMAuthenticator(userName, password, domain))
+//                .build();
+////	NTCredentials creds = new NTCredentials(userName, password, "", domain);
+////	((AbstractHttpClientConnection) client).getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+////	((AbstractHttpClient) client).getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+//
+//        String soapRequest = "<Soap:Envelope xmlns:Soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+//                "   <Soap:Body>\n" +
+//                "      <ExportPurchaseReturnList xmlns=\"urn:microsoft-dynamics-schemas/codeunit/GetTransList\">\n" +
+//                "         <docType>PR</docType>\n" +
+//                "         <docDT>2024-03-03</docDT>\n" +
+//                "         <locCode>DBVHS</locCode>\n" +
+//                "         <exportPurchaseReturnlistXML>\n" +
+//                "            <PurchaseHeader xmlns=\"urn:microsoft-dynamics-nav/xmlports/x50068\">\n" +
+//                "               <Type></Type>\n" +
+//                "               <DocNo></DocNo>\n" +
+//                "               <HeaderLocation></HeaderLocation>\n" +
+//                "               <VendorNo></VendorNo>\n" +
+//                "               <PostingDate></PostingDate>\n" +
+//                "               <ExtDocNo></ExtDocNo>\n" +
+//                "            </PurchaseHeader>\n" +
+//                "         </exportPurchaseReturnlistXML>\n" +
+//                "      </ExportPurchaseReturnList>\n" +
+//                "   </Soap:Body>\n" +
+//                "</Soap:Envelope>";
+//        String SOAP_ACTION = "urn:microsoft-dynamics-schemas/codeunit/GetTransList:ExportPurchaseReturnList";
+//
+//        RequestBody body = RequestBody.create(soapRequest, MediaType.parse("text/xml; charset=utf-8"));
+//        Request request = new Request.Builder()
+//                .url("http://10.10.0.104:7017/Grandiose_UAT00/WS/Grandiose%20Stores/Codeunit/GetTransList")
+//                .post(body)
+//                .addHeader("Content-Type", "text/xml; charset=utf-8")
+//                .addHeader("soapAction", SOAP_ACTION)
+//                .build();
+//
+//        try (Response response = client.newCall(request).execute()) {
+//            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+//
+//            // Handle response
+//            Log.d("reponse",""+response.body().toString());
+//            return response.body().string();
+//
+//        } catch (IOException e) {
+//            Log.e("NTLMAuthTask", "Error during NTLM authentication", e);
+//        }
+//        return null;
+//    }
+//    public void test2(){
+//        try {
+//            String userName = "GSAUser";
+//            String password = "G$@!ntPdt*&^%";
+//            String domain = "gagroup.local";
+//            String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+//            Log.d("DeviceID", "Device ID: " + deviceId);
+//            String request = "\r\n<soapenv:Envelope " +
+//                    "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"" +
+//                    " xmlns:get=\"urn:microsoft-dynamics-schemas/codeunit/GetTransList\" " +
+//                    "xmlns:x50=\"urn:microsoft-dynamics-nav/xmlports/x50068\">\r\n   " +
+//                    "<soapenv:Header/>\r\n   " +
+//                    "<soapenv:Body>\r\n  " +
+//                    "    <get:ExportPurchaseReturnList>\r\n " +
+//                    "        <get:docType>PR</get:docType>\r\n  " +
+//                    "       <get:docDT>2024-03-03</get:docDT>\r\n  " +
+//                    "       <get:locCode>DBVHS</get:locCode>\r\n " +
+//                    "        <get:exportPurchaseReturnlistXML>\r\n   " +
+//                    "         <x50:PurchaseHeader>\r\n " +
+//                    "              <x50:Type></x50:Type>\r\n  " +
+//                    "             <x50:DocNo></x50:DocNo>\r\n   " +
+//                    "            <x50:HeaderLocation></x50:HeaderLocation>\r\n  " +
+//                    "             <x50:VendorNo></x50:VendorNo>\r\n    " +
+//                    "           <x50:PostingDate></x50:PostingDate>\r\n  " +
+//                    "             <x50:ExtDocNo></x50:ExtDocNo>\r\n   " +
+//                    "         </x50:PurchaseHeader>\r\n     " +
+//                    "    </get:exportPurchaseReturnlistXML>\r\n   " +
+//                    "   </get:ExportPurchaseReturnList>\r\n " +
+//                    "  </soapenv:Body>\r\n" +
+//                    "</soapenv:Envelope>";
+//
+//            String request2 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:get=\"urn:microsoft-dynamics-schemas/codeunit/GetTransList\" xmlns:x50=\"urn:microsoft-dynamics-nav/xmlports/x50068\">\r\n   <soapenv:Body>\r\n      <get:ExportPurchaseReturnList>\r\n         <get:docType>PR</get:docType>\r\n         <get:docDT>2024-03-03</get:docDT>\r\n         <get:locCode>DBVHS</get:locCode>\r\n         <get:exportPurchaseReturnlistXML>\r\n            <x50:PurchaseHeader>\r\n               <x50:Type></x50:Type>\r\n               <x50:DocNo></x50:DocNo>\r\n               <x50:HeaderLocation></x50:HeaderLocation>\r\n               <x50:VendorNo></x50:VendorNo>\r\n               <x50:PostingDate></x50:PostingDate>\r\n               <x50:ExtDocNo></x50:ExtDocNo>\r\n            </x50:PurchaseHeader>\r\n         </get:exportPurchaseReturnlistXML>\r\n      </get:ExportPurchaseReturnList>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>";
+//            RequestBody body = RequestBody.create(request2, MediaType.parse("text/xml; charset=utf-8"));
+//            repository.getTransList(body).observe(this, new Observer<String>() {
+//                @Override
+//                public void onChanged(String s) {
+//                    Log.d("PRINTBYSAI_NTLM",""+s);
+//                }
+//            });
+//        } catch (
+//                Exception e) {
+//            Log.e("NTLMAuthTask", "Error during NTLM authentication", e);
+//        }
+//    }
+
+
+    //    public void test4(){
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .connectTimeout(10, TimeUnit.SECONDS) // Set connection timeout
+//                .build();
+//
+//        String url = "http://10.10.0.104:7017"; // Replace with your server URL
+//
+//        Request request = new Request.Builder()
+//                .url(url)
+//                .build();
+//
+//        try {
+//            Response response = client.newCall(request).execute();
+//            if (response.isSuccessful()) {
+//                System.out.println("Request successful");
+//                System.out.println(response.body().string());
+//            } else {
+//                System.out.println("Request failed: " + response.code() + " - " + response.message());
+//            }
+//        } catch (IOException e) {
+//            System.err.println("Failed to make request: " + e.getMessage());
+//        }
+//    }
+//    public void test5(){
+//        String url = "https://your-server-url";
+//        String username = "your-username";
+//        String password = "your-password";
+//        String domain = "your-domain";
+//        String workstation = "your-workstation";
+//
+//        // Create NT credentials
+//        NTCredentials ntCredentials = new NTCredentials(username, password, workstation, domain);
+//
+//        // Create the HttpClient with NTLM credentials
+//        try (CloseableHttpClient httpClient = WinHttpClients.custom()
+//                .setDefaultCredentialsProvider(credentialsProvider -> {
+////                    credentialsProvider.setCredentials(new AuthScope(null, -1), ntCredentials);
+//                    credentialsProvider.setCredentials(AuthScope.ANY, ntCredentials);
+//                })
+//                .build()) {
+//
+//            // Create the HTTP GET request
+//            HttpGet httpGet = new HttpGet(url);
+//
+//            // Execute the request
+//            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+//                if (response.getCode() == 200) {
+//                    String responseBody = EntityUtils.toString(response.getEntity());
+//                    System.out.println("Response: " + responseBody);
+//                } else {
+//                    System.out.println("Error: " + response.get);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
 
 }

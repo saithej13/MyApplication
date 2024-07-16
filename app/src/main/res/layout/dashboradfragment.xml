@@ -274,17 +274,17 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/over_ATQ"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_margin="0dp" />
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChartDouble"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="35dp" />
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/over_ATQ"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_margin="0dp" />
 
         </LinearLayout>
     </ScrollView>

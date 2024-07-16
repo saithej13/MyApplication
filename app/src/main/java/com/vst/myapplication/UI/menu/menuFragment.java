@@ -32,6 +32,9 @@ public class menuFragment extends BaseFragment {
         return binding.getRoot();
     }
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner,Bundle savedInstanceState) {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         binding.milkcollection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,10 +42,8 @@ public class menuFragment extends BaseFragment {
                 mBundle.putBoolean("isTitle", true);
                 milkCollection milkFragment = new milkCollection();
                 milkFragment.setArguments(mBundle);
-                FragmentManager fragmentManager = getParentFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .add(R.id.frame, milkFragment, "")
+                        .replace(R.id.frame, milkFragment, "")
                         .addToBackStack("")
                         .commitAllowingStateLoss();
             }
@@ -54,10 +55,8 @@ public class menuFragment extends BaseFragment {
                 mBundle.putBoolean("isTitle", true);
                 farmers farmersFragment = new farmers();
                 farmersFragment.setArguments(mBundle);
-                FragmentManager fragmentManager = getParentFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .add(R.id.frame, farmersFragment, "")
+                        .replace(R.id.frame, farmersFragment, "")
                         .addToBackStack("")
                         .commitAllowingStateLoss();
             }
@@ -69,10 +68,8 @@ public class menuFragment extends BaseFragment {
                 mBundle.putBoolean("isTitle", true);
                 rates rateFragment = new rates();
                 rateFragment.setArguments(mBundle);
-                FragmentManager fragmentManager = getParentFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .add(R.id.frame, rateFragment, "")
+                        .replace(R.id.frame, rateFragment, "")
                         .addToBackStack("")
                         .commitAllowingStateLoss();
             }
@@ -80,10 +77,8 @@ public class menuFragment extends BaseFragment {
         binding.settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getParentFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .add(R.id.frame, new Settings(), "")
+                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.frame, new Settings(), "")
                         .addToBackStack("")
                         .commitAllowingStateLoss();
             }

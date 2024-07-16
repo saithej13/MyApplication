@@ -32,6 +32,9 @@
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:exported="true"/>
+        <activity android:name=".UI.Login.LoginNew"
+            android:screenOrientation="portrait"
+            android:exported="true"/>
         <activity android:name=".UI.Payments.payment"
             android:screenOrientation="portrait"
             android:exported="true"/>
