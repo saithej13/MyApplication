@@ -26,6 +26,7 @@ public class Splashscreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.splashscreen);
+//        preference= new SharedPreferences(getApplicationContext());
 //        binding.btnscan.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -39,6 +40,12 @@ public class Splashscreen extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         preference.saveIntInPreference(Preference.DEVICE_DISPLAY_WIDTH, displayMetrics.widthPixels);
         preference.saveIntInPreference(Preference.DEVICE_DISPLAY_HEIGHT, displayMetrics.heightPixels);
+
+        preference.saveStringInPreference(Preference.Select_Printer,"Printer 1" );
+        preference.saveStringInPreference(Preference.Select_Printer_Size, "3");
+        preference.saveStringInPreference(Preference.Select_Rate_collection_formate,"fat+snf+clr");
+        preference.saveIntInPreference(Preference.Select_Bill_Period, 15);
+
         preference.commitPreference();
         new Handler().postDelayed(() -> {
             Intent intent1 = new Intent(Splashscreen.this, MainActivity.class);

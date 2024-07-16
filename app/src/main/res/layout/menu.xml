@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
         <LinearLayout
+            android:id="@+id/options"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/options"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:background="@color/white"
+                android:gravity="center"
                 android:orientation="horizontal">
+
                 <com.google.android.material.card.MaterialCardView
-                    style="@style/Widget.MaterialComponents.CardView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     android:id="@+id/milkcollection"
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="15dp">
@@ -35,63 +37,31 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="90dp"
                             android:layout_height="90dp"
-                            android:src="@drawable/ic_milk_sale"
-                            />
+                            android:src="@drawable/ic_milk_sale" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat"
                             android:text="Collection"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/montserrat"
-                            />
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+
                 <com.google.android.material.card.MaterialCardView
-                    style="@style/Widget.MaterialComponents.CardView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     android:id="@+id/farmers"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="15dp"
-                    app:cardElevation="15dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_width="90dp"
-                            android:layout_height="90dp"
-                            android:src="@drawable/ic_baseline_people_24"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Farmers"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/montserrat"
-                            />
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.MaterialComponents.CardView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/rates"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="15dp">
@@ -101,37 +71,73 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="90dp"
                             android:layout_height="90dp"
-                            android:src="@drawable/ic_baseline_currency_rupee_24"
-                            />
+                            android:src="@drawable/ic_baseline_people_24" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rates"
-                            android:textStyle="bold"
                             android:fontFamily="@font/montserrat"
-                            />
+                            android:text="Farmers"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/rates"
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="15dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            android:src="@drawable/ic_baseline_currency_rupee_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat"
+                            android:text="Rates"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:background="@color/white"
+                android:gravity="center"
                 android:orientation="horizontal">
+
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/reports"
                     style="@style/Widget.MaterialComponents.CardView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/reports"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="15dp">
@@ -141,30 +147,31 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="90dp"
                             android:layout_height="90dp"
-                            android:src="@drawable/repc"
-                            />
+                            android:src="@drawable/repc" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Reports"
-                            android:textStyle="bold"
                             android:fontFamily="@font/montserrat"
-                            />
+                            android:text="Reports"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/bitmap"
                     style="@style/Widget.MaterialComponents.CardView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/bitmap"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="15dp">
@@ -183,22 +190,22 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="bitmap"
-                            android:textStyle="bold"
                             android:fontFamily="@font/montserrat"
-                            />
+                            android:text="bitmap"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/settings"
                     style="@style/Widget.MaterialComponents.CardView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/settings"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="15dp">
@@ -208,37 +215,39 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="90dp"
                             android:layout_height="90dp"
-                            android:src="@drawable/ic_baseline_settings_24"
-                            />
+                            android:src="@drawable/ic_baseline_settings_24" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/settings"
-                            android:textStyle="bold"
                             android:fontFamily="@font/montserrat"
-                            />
+                            android:text="@string/settings"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:background="@color/white"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.MaterialComponents.CardView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="15dp">
@@ -248,29 +257,30 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_milk_sale"
-                            />
+                            android:src="@drawable/ic_milk_sale" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Collection"
-                            android:textStyle="bold"
                             android:fontFamily="@font/montserrat"
-                            />
+                            android:text="Collection"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.MaterialComponents.CardView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="15dp">
@@ -280,29 +290,30 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_milk_sale"
-                            />
+                            android:src="@drawable/ic_milk_sale" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Collection"
-                            android:textStyle="bold"
                             android:fontFamily="@font/montserrat"
-                            />
+                            android:text="Collection"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.MaterialComponents.CardView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="15dp">
@@ -312,22 +323,22 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_milk_sale"
-                            />
+                            android:src="@drawable/ic_milk_sale" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Collection"
-                            android:textStyle="bold"
                             android:fontFamily="@font/montserrat"
-                            />
+                            android:text="Collection"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </LinearLayout>
-</RelativeLayout>
+    </RelativeLayout>
 </layout>

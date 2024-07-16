@@ -32,7 +32,7 @@ public abstract class BaseFragment extends Fragment {
     public MainActivity homeActivity;
     CustomDialog customDialog;
     View view1;
-    Preference preference;
+    Preference preference =  new Preference(getContext());;
     Button btnYes;
     Button btnNo;
 
@@ -43,6 +43,7 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanseState) {
         this.inflater = inflater;
         View view = provideYourFragmentView(inflater, parent, savedInstanseState,getViewLifecycleOwner());
+
         return view;
     }
     ImageView ivdashboard,ivmenu,ivprofile;

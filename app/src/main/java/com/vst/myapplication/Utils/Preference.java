@@ -100,6 +100,10 @@ import java.util.Map;
     public static final String GetTrxHeaderForApp		= 	"GetTrxHeaderForApp";
     public static final String GetJPAndRouteDetails		= 	"GetJPAndRouteDetails";
 
+    public static String Select_Printer = "Printer 1";
+    public static String Select_Printer_Size = "3";
+    public static String Select_Bill_Period = "15";
+    public static String Select_Rate_collection_formate = "fat+snf+clr";
 
     public static final String STARTDAY_TIME			= 	"STARTDAY_TIME";
     public static final String TRIP_DATE				= 	"TRIP_DATE";

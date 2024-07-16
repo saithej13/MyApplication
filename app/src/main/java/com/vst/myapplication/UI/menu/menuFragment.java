@@ -17,6 +17,7 @@ import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.UI.MCollection.milkCollection;
 import com.vst.myapplication.UI.Rates.rates;
 import com.vst.myapplication.Utils.BaseFragment;
+import com.vst.myapplication.Utils.Settings;
 import com.vst.myapplication.databinding.MenuBinding;
 
 public class menuFragment extends BaseFragment {
@@ -72,6 +73,17 @@ public class menuFragment extends BaseFragment {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                         .add(R.id.frame, rateFragment, "")
+                        .addToBackStack("")
+                        .commitAllowingStateLoss();
+            }
+        });
+        binding.settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .add(R.id.frame, new Settings(), "")
                         .addToBackStack("")
                         .commitAllowingStateLoss();
             }

@@ -15,7 +15,7 @@ public class AppConstants {
     public static String DATABASE_PATH = "";
 
     public static Typeface Montserrat_SemiBold, Montserrat_Medium, Montserrat_Thin, Montserrat_Regular, Montserrat_Bold;
-    public static Typeface  SanFranciscoDisplay_Medium, SanFranciscoDisplay_Bold;
-    public static Typeface montserrat_black, montserrat_light,montserrat_extralight, montserrat_thin, montserrat_extrabold;
+    public static Typeface SanFranciscoDisplay_Medium, SanFranciscoDisplay_Bold;
+    public static Typeface montserrat_black, montserrat_light, montserrat_extralight, montserrat_thin, montserrat_extrabold;
 
 }

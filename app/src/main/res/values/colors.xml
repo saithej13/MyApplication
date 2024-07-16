@@ -34,5 +34,18 @@
     <color name="toolbar_red">#f13c43</color>
 
     <color name="bg_delete_button">#7F7F7F</color> <!-- gray -->
+    <color name="new_bg_color">#27E1DFDF</color>
+    <color name="new_text_color">#000000</color>
+    <color name="text_light_grey">#D8D7D7</color>
+    <color name="pjp_waiting">#7400AA</color>
+    <color name="text_pjp">#1D1D1D</color>
+    <color name="text_color1">#464850</color>
+    <color name="table_background">#E1EDFF</color>
+    <color name="divider_c4c4c4">#C4C4C4</color>
+    <color name="unselected_tab">#8A8A8A</color>
+    <color name="tab_undeline">#6f6f2f</color>
+    <color name="text_color_dark">#3d5166</color> <!-- dark black Gray -->
+    <color name="new_app_color">#1B478A</color>
+
 
 </resources>

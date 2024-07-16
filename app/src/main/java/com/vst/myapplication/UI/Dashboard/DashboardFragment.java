@@ -103,7 +103,7 @@ public class DashboardFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         refreshData();
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+//        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
     private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
