@@ -1,6 +1,5 @@
 package com.vst.myapplication;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,9 +28,6 @@ import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.zxing.ResultPoint;
-import com.journeyapps.barcodescanner.BarcodeCallback;
-import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.vst.myapplication.Room.roomRepository;
@@ -40,7 +36,7 @@ import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.UI.Payments.payment;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NTLMAuthenticator;
-import com.vst.myapplication.Utils.SharedPreferences;
+import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.userDO;
 import com.vst.myapplication.databinding.ActivityMainBinding;
@@ -55,14 +51,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
@@ -84,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     roomRepository roomrepo;
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;
+    Preference preference;
 
 
     farmerDO farmerDo;
@@ -94,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         MyApplicationNew.lifecycleOwner = this;
+        preference = new Preference(getApplicationContext());
         repository = new ProjectRepository();
 //        barcodeScannerView = findViewById(R.id.zxing_barcode_scanner);
 //        capture = new CaptureManager(this, barcodeScannerView);
@@ -118,8 +114,9 @@ public class MainActivity extends AppCompatActivity {
         usersRef = database.getReference();
         usersRef2 = usersRef.child("users");
         mAuth = FirebaseAuth.getInstance();
-        SharedPreferences.saveStorage(getBaseContext(), "RoomDB");
-        if (SharedPreferences.getStorage(getBaseContext()).equalsIgnoreCase("RoomDB")) {
+//        preference.saveStorage(getBaseContext(), "RoomDB");
+        preference.saveBooleanInPreference("RoomDB", true);
+        if (preference.getbooleanFromPreference("RoomDB",true)) {
             MyApplicationNew.RoomDB = true;
         }
 //        binding.dashboard.setOnClickListener(view -> {

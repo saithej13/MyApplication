@@ -47,14 +47,14 @@ public class Dashboard1 extends BaseFragment {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new DashboardFragment());
         fragments.add(new graphFragment());
-
-        List<String> titles = new ArrayList<>();
-        titles.add("Dashboard");
-        titles.add("Graph");
-
-        viewPagerAdapter = new ViewPagerAdapter(getParentFragmentManager(), fragments, titles);
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+//
+//        List<String> titles = new ArrayList<>();
+//        titles.add("Dashboard");
+//        titles.add("Graph");
+//
+//        viewPagerAdapter = new ViewPagerAdapter(getParentFragmentManager(), fragments, titles);
+//        viewPager.setAdapter(viewPagerAdapter);
+//        tabLayout.setupWithViewPager(viewPager);
 
     }
 

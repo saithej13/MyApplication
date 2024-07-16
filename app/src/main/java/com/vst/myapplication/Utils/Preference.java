@@ -28,6 +28,7 @@ import java.util.Map;
     public static String SALES_GROUP 					=	"SALES_GROUP";
     public static String USERSUBTYPE 					=	"USERSUBTYPE";
     public static String IS_ONLINE_ONLY 				=	"IS_ONLINE_ONLY";
+
     public static final String IS_SYNC_FAILED    ="IS_SYNC_FAILED";
     public static String USER_TYPE 						=	"USER_TYPE";
     public static final String LANGUAGE						=	"LANGUAGE";

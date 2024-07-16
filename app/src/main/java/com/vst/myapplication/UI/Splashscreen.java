@@ -14,14 +14,12 @@ import androidx.databinding.DataBindingUtil;
 import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Utils.Preference;
-import com.vst.myapplication.Utils.SharedPreferences;
 import com.vst.myapplication.databinding.SplashscreenBinding;
 import com.vst.myapplication.Utils.AppConstants;
 
 public class Splashscreen extends AppCompatActivity {
     SplashscreenBinding binding;
     Preference preference;
-    SharedPreferences preferences;
     private static final int REQUEST_CODE_SCAN = 1;
 
     @Override
@@ -37,7 +35,6 @@ public class Splashscreen extends AppCompatActivity {
 //        });
 
         preference = new Preference(getApplicationContext());
-        preferences = new SharedPreferences();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         preference.saveIntInPreference(Preference.DEVICE_DISPLAY_WIDTH, displayMetrics.widthPixels);
