@@ -32,7 +32,7 @@ public abstract class BaseFragment extends Fragment {
     public MainActivity homeActivity;
     CustomDialog customDialog;
     View view1;
-    Preference preference =  new Preference(getContext());;
+    Preference preference =  new Preference(MyApplicationNew.mContext);
     Button btnYes;
     Button btnNo;
 

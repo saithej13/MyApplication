@@ -13,12 +13,14 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Services.ProjectRepository;
+import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.databinding.Dashboard1Binding;
 
@@ -29,7 +31,7 @@ public class Dashboard1 extends BaseFragment {
     Dashboard1Binding binding;
     private ProjectRepository repository;
     private ViewPager viewPager;
-    private ViewPagerAdapter viewPagerAdapter;
+//    private ViewPagerAdapter viewPagerAdapter;
     private TabLayout tabLayout;
 
     @Override
@@ -43,11 +45,21 @@ public class Dashboard1 extends BaseFragment {
     }
 
     private void setupUI() {
+        Bundle mBundle = new Bundle();
+        mBundle.putBoolean("isTitle", true);
+        DashboardFragment loginFragment = new DashboardFragment();
+        loginFragment.setArguments(mBundle);
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .add(R.id.frame, loginFragment, "")
+                .addToBackStack("")
+                .commitAllowingStateLoss();
 //        BottomNavigationView bottomNavigationView = binding.navView;
-        List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new DashboardFragment());
-        fragments.add(new graphFragment());
-//
+//        List<Fragment> fragments = new ArrayList<>();
+//        fragments.add(new DashboardFragment());
+//        fragments.add(new graphFragment());
+////
 //        List<String> titles = new ArrayList<>();
 //        titles.add("Dashboard");
 //        titles.add("Graph");
@@ -65,31 +77,31 @@ public class Dashboard1 extends BaseFragment {
     }
 
 
-    public class ViewPagerAdapter extends FragmentStatePagerAdapter  {
-        private List<Fragment> fragmentList;
-        private List<String> fragmentTitleList;
-
-        public ViewPagerAdapter(@NonNull FragmentManager fm, List<Fragment> fragmentList, List<String> fragmentTitleList) {
-            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-            this.fragmentList = fragmentList;
-            this.fragmentTitleList = fragmentTitleList;
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitleList.get(position);
-        }
-    }
+//    public class ViewPagerAdapter extends FragmentStatePagerAdapter  {
+//        private List<Fragment> fragmentList;
+//        private List<String> fragmentTitleList;
+//
+//        public ViewPagerAdapter(@NonNull FragmentManager fm, List<Fragment> fragmentList, List<String> fragmentTitleList) {
+//            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+//            this.fragmentList = fragmentList;
+//            this.fragmentTitleList = fragmentTitleList;
+//        }
+//
+//        @NonNull
+//        @Override
+//        public Fragment getItem(int position) {
+//            return fragmentList.get(position);
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return fragmentList.size();
+//        }
+//
+//        @Nullable
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            return fragmentTitleList.get(position);
+//        }
+//    }
 }
