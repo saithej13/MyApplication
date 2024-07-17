@@ -264,6 +264,18 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //
 //    }
+//@Override
+//public void onBackPressed() {
+//    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
+//    if (fragment instanceof BaseFragment) {
+//        boolean handled = ((BaseFragment) fragment).onBackPressed();
+//        if (!handled) {
+//            super.onBackPressed(); // If not handled by fragment, proceed with default back behavior
+//        }
+//    } else {
+//        super.onBackPressed();
+//    }
+//}
 
     public void test12() {
 
@@ -550,10 +562,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void movetoDashBoard() {
-        Bundle mBundle = new Bundle();
-        mBundle.putBoolean("isTitle", true);
-        Login loginFragment = new Login();
-        loginFragment.setArguments(mBundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)

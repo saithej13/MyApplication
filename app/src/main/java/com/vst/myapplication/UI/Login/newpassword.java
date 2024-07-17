@@ -27,6 +27,8 @@ public class newpassword extends BaseFragment {
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
+
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner)
     {
             binding.btnSave.setOnClickListener(new View.OnClickListener() {

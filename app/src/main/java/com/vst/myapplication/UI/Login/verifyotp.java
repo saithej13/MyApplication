@@ -26,6 +26,7 @@ public class verifyotp extends BaseFragment {
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner)
     {
         binding.btnVerify.setOnClickListener(new View.OnClickListener() {

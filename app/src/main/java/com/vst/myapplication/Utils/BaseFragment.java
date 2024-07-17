@@ -1,6 +1,7 @@
 package com.vst.myapplication.Utils;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
@@ -12,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +44,14 @@ public abstract class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanseState) {
         this.inflater = inflater;
         View view = provideYourFragmentView(inflater, parent, savedInstanseState,getViewLifecycleOwner());
 
         return view;
     }
+
     ImageView ivdashboard,ivmenu,ivprofile;
     LinearLayout llbottomnav;
     @Override
@@ -96,19 +100,17 @@ public abstract class BaseFragment extends Fragment {
     private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
-            Fragment f = requireActivity().getSupportFragmentManager().findFragmentById(R.id.frame) ;
-            if(f instanceof DashboardFragment){
+//            Fragment f = requireActivity().getSupportFragmentManager().findFragmentById(R.id.frame) ;
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame);
+            if(currentFragment instanceof DashboardFragment
+            || currentFragment instanceof menuFragment){
                 showCustomDialog(getContext(), getResources().getString(R.string.warning), getResources().getString(R.string.do_you_want_to_logout), getResources().getString(R.string.Yes), getResources().getString(R.string.No), "logout");
             }
-            /*else if(f instanceof Login){
-//                MainActivity a=new MainActivity();
-//                a.finish();
-                requireActivity().getSupportFragmentManager().popBackStack();
-                requireActivity().getSupportFragmentManager().popBackStack();
-            }*/
-            /*else{
-                requireActivity().getSupportFragmentManager().popBackStack();
-            }*/
+            else {
+                Log.d("backpressed","sai");
+                fragmentManager.popBackStack();
+            }
         }
     };
     public void loadMenuOne(){
@@ -166,6 +168,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public abstract View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner);
+
+
     class RunshowCustomDialogs implements Runnable {
         private final String strTitle;// Title of the dialog
         private final String strMessage;// Message to be shown in dialog

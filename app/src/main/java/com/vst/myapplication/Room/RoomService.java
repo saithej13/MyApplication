@@ -50,8 +50,13 @@ public interface RoomService {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertRates(rateDO rates);
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void UpdateRates(rateDO rates);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertRatesdetails(ratedetailsDO ratedetails);
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void UpdateRatesdetails(ratedetailsDO ratedetails);
     //Products
     @Insert
     void insertFarmer(farmerDO farmers);

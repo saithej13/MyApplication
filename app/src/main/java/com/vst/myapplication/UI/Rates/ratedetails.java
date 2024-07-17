@@ -71,6 +71,8 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
+
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         List<ratedetailsDO> ratedetailsList = new ArrayList<>();
         addRate = getArguments().getBoolean("addRate");
@@ -175,7 +177,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showpopup(null);
+                showpopup(null,-1);
             }
         });
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
@@ -184,15 +186,32 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                 if(!binding.llOverView.tvmilktype.getText().toString().isEmpty()&&!binding.llOverView.tvstartdate.getText().toString().isEmpty()&&!binding.llOverView.tvenddate.getText().toString().isEmpty())
                 {
                     try{
-                        rateDo = new rateDO();
-                        rateDo.MILKTYPE = binding.llOverView.tvmilktype.getText().toString();
-                        rateDo.STARTDATE = binding.llOverView.tvstartdate.getText().toString();
-                        rateDo.ENDDATE = binding.llOverView.tvenddate.getText().toString();
-                        RateAndDetails rateAndDetails = new RateAndDetails(rateDo, vecratedetailsdo);
-                        if (!rateAndDetails.rateDetailsList.isEmpty()) {
-                            ratesVm.insertRate(rateAndDetails);
-                        }else {
-                            showCustomDialog(getContext(),"Error","Add Atleast one RateDetail to Save!","OK",null,"");
+                        if(SLNO==0) {
+                            rateDo = new rateDO();
+                            rateDo.MILKTYPE = binding.llOverView.tvmilktype.getText().toString();
+                            rateDo.STARTDATE = binding.llOverView.tvstartdate.getText().toString();
+                            rateDo.ENDDATE = binding.llOverView.tvenddate.getText().toString();
+                            RateAndDetails rateAndDetails = new RateAndDetails(rateDo, vecratedetailsdo);
+                            if (!rateAndDetails.rateDetailsList.isEmpty()) {
+                                ratesVm.insertRate(rateAndDetails);
+                                refreshData();
+                            } else {
+                                showCustomDialog(getContext(), "Error", "Add Atleast one RateDetail to Save!", "OK", null, "");
+                            }
+                        }
+                        else
+                        {
+                            rateDo.SLNO = SLNO;
+                            rateDo.MILKTYPE = binding.llOverView.tvmilktype.getText().toString();
+                            rateDo.STARTDATE = binding.llOverView.tvstartdate.getText().toString();
+                            rateDo.ENDDATE = binding.llOverView.tvenddate.getText().toString();
+                            RateAndDetails rateAndDetails = new RateAndDetails(rateDo, vecratedetailsdo);
+                            if (!rateAndDetails.rateDetailsList.isEmpty()) {
+                                ratesVm.insertRate(rateAndDetails);
+                                refreshData();
+                            } else {
+                                showCustomDialog(getContext(), "Error", "Add Atleast one RateDetail to Save!", "OK", null, "");
+                            }
                         }
                     }
                     catch (Exception ex){
@@ -208,6 +227,8 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
         });
     }
     public void refreshData(){
+        if(vecratedetailsdo!=null && !vecratedetailsdo.isEmpty())
+            vecratedetailsdo.clear();
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("SLNO", SLNO);
         ratesVm.getRates(jsonObject).observe(this, new Observer<JsonObject>() {
@@ -272,7 +293,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
         refreshData();
     }
 
-    public void showpopup(ratedetailsDO selectedRateDetail){
+    public void showpopup(ratedetailsDO selectedRateDetail,int position){
         if (dialog == null || !dialog.isShowing()) {
             ViewGroup rootView = (ViewGroup) getView().getRootView();
             ratesEntryPopupBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.rates_entry_popup2, rootView, false);
@@ -297,13 +318,15 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                         ratedetailsDo.RATE = Double.parseDouble(ratesEntryPopupBinding.etRate.getText().toString());
                         if (selectedRateDetail != null) {
                             // Update existing item
-                            vecratedetailsdo.set(selectedPosition, ratedetailsDo);
+                            vecratedetailsdo.set(position, ratedetailsDo);
+                            ratedetailsadapter.notifyItemChanged(position);
                         } else {
                             // Add new item
                             vecratedetailsdo.add(ratedetailsDo);
+                            ratedetailsadapter.notifyDataSetChanged();
                         }
 
-                        ratedetailsadapter.notifyDataSetChanged();
+
                         dialog.dismiss();
 //                        vecratedetailsdo.add(ratedetailsDo);
 //                        ratedetailsAdapter ratedetailsadapter = new ratedetailsAdapter(getContext(), vecratedetailsdo, getActivity());
@@ -334,6 +357,6 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
     public void onItemClick(View view, int position) {
         Log.d("ITEM IS CLIECKED",""+position);
         ratedetailsDO selectedRateDetail = vecratedetailsdo.get(position);
-        showpopup(selectedRateDetail);
+        showpopup(selectedRateDetail,position);
     }
 }

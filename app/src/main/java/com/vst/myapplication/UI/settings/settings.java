@@ -15,4 +15,5 @@ public class settings extends BaseFragment {
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         return null;
     }
+
 }

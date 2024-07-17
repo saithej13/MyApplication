@@ -42,6 +42,8 @@ public class graphFragment extends BaseFragment {
         setupUI(inflater,parent,viewLifecycleOwner,savedInstanceState);
         return binding.getRoot();
     }
+
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner,Bundle savedInstanceState) {
     }
 

@@ -29,6 +29,7 @@ public class rates_VM extends AndroidViewModel {
     public MutableLiveData<JsonObject> insertRate(RateAndDetails rateDo){
         return repository.InsertRate(rateDo);
     }
+
     public MutableLiveData<JsonObject> getRates(JsonObject slno){
         return repository.getratebyslno(slno);
     }

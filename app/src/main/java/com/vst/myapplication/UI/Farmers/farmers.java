@@ -61,6 +61,8 @@ FarmerEntryPopupBinding farmerEntrybinding;
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
+
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         // Implement any additional UI setup here
         farmersAdapter = new FarmersAdapter(parent.getContext(), null);

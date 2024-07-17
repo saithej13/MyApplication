@@ -107,6 +107,8 @@ public class DashboardFragment extends BaseFragment {
             startActivity(intent);
         }
     }
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -343,4 +345,5 @@ public class DashboardFragment extends BaseFragment {
         barEntries.add(new BarEntry(7f, 60));
         return barEntries;
     }
+
 }

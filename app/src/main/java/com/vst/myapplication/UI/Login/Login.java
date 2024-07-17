@@ -30,6 +30,8 @@ public class Login extends BaseFragment {
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
+
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         boolean title =false;
         if(getArguments()!=null) {

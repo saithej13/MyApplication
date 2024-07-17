@@ -31,6 +31,8 @@ public class menuFragment extends BaseFragment {
         setupUI(inflater,parent,viewLifecycleOwner,savedInstanceState);
         return binding.getRoot();
     }
+
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner,Bundle savedInstanceState) {
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

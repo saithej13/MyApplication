@@ -29,6 +29,7 @@ public class Settings extends BaseFragment {
         return binding.getRoot();
     }
 
+
     @SuppressLint("SetTextI18n")
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner, Bundle savedInstanceState) {
 //        final String[] selectPrinter =attendance_types.toArray(new String[0]);

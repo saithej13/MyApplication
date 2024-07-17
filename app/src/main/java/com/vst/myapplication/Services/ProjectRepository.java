@@ -291,7 +291,13 @@ public MutableLiveData<JsonObject> getrates() {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB)
         {
-            roomrepo.insertrates(rateDO);
+            if(rateDO.rate.SLNO==0)
+            {
+                roomrepo.insertrates(rateDO);
+            }
+            else {
+                roomrepo.Updaterates(rateDO);
+            }
         }
         else {
             Gson gson = new Gson();

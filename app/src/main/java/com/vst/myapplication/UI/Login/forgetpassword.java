@@ -47,6 +47,8 @@ public class forgetpassword extends BaseFragment {
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
+
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner)
     {
         binding.btnSendOtp.setOnClickListener(new View.OnClickListener() {

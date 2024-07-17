@@ -27,6 +27,7 @@ public class register_notice  extends BaseFragment {
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         // Implement any additional UI setup here
 //        JsonObject jsonObject = new JsonObject();

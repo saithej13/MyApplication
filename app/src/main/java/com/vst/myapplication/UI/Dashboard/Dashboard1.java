@@ -44,6 +44,8 @@ public class Dashboard1 extends BaseFragment {
         return binding.getRoot();
     }
 
+
+
     private void setupUI() {
         Bundle mBundle = new Bundle();
         mBundle.putBoolean("isTitle", true);

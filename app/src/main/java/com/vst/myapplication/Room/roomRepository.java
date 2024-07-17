@@ -32,6 +32,9 @@ RoomService roomService;
     public void insertrates(RateAndDetails rates){
         new InsertRatesAsyncTask(roomService).execute(rates);
     }
+    public void Updaterates(RateAndDetails rates){
+        new UpdateRatesAsyncTask(roomService).execute(rates);
+    }
     public void insertmilkdata(milkDO mdata){
         new InsertMilkDataAsyncTask(roomService).execute(mdata);
     }
@@ -169,14 +172,6 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(RateAndDetails... rateAndDetailsArray) {
-//            RateAndDetails rateAndDetails = rateAndDetailsArray[0];
-//            long slNo = roomService.insertRates(rateAndDetails.rate);
-//            for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
-//                rateDetails.SLNO = (int) slNo;
-//                roomService.insertRatesdetails(rateDetails);
-//            }
-//
-//            return null;
             RateAndDetails rateAndDetails = rateAndDetailsArray[0];
             if (rateAndDetails == null) {
                 Log.e("InsertRatesAsyncTask", "rateAndDetails is null");
@@ -201,6 +196,42 @@ RoomService roomService;
                 }
                 rateDetails.SLNO = (int) slNo;
                 roomService.insertRatesdetails(rateDetails);
+            }
+
+            return null;
+        }
+    }
+    private static class UpdateRatesAsyncTask extends AsyncTask<RateAndDetails,Void,Void> {
+        RoomService roomService;
+        private UpdateRatesAsyncTask(RoomService roomService){
+            this.roomService = roomService;
+        }
+        @Override
+        protected Void doInBackground(RateAndDetails... rateAndDetailsArray) {
+            RateAndDetails rateAndDetails = rateAndDetailsArray[0];
+            if (rateAndDetails == null) {
+                Log.e("UpdateRatesAsyncTask", "rateAndDetails is null");
+                return null;
+            }
+
+            if (rateAndDetails.rate == null) {
+                Log.e("UpdateRatesAsyncTask", "rateAndDetails.rate is null");
+                return null;
+            }
+
+            roomService.UpdateRates(rateAndDetails.rate);
+            if (rateAndDetails.rateDetailsList == null) {
+                Log.e("UpdateRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
+                return null;
+            }
+
+            for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
+                if (rateDetails == null) {
+                    Log.e("UpdateRatesAsyncTask", "rateDetails is null");
+                    continue;
+                }
+                rateDetails.SLNO = rateAndDetails.rate.SLNO;
+                roomService.UpdateRatesdetails(rateDetails);
             }
 
             return null;

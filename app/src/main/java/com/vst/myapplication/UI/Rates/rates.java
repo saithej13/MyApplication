@@ -79,6 +79,8 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
+
+
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         // Implement any additional UI setup here
         ratesAdapter = new RatesAdapter(parent.getContext(), null,getActivity());
