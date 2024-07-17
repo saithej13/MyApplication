@@ -226,6 +226,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
             }
         });
     }
+//    adapter.refresh(arrOrderedProduct);
     public void refreshData(){
         if(vecratedetailsdo!=null && !vecratedetailsdo.isEmpty())
             vecratedetailsdo.clear();
@@ -319,14 +320,14 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                         if (selectedRateDetail != null) {
                             // Update existing item
                             vecratedetailsdo.set(position, ratedetailsDo);
-                            ratedetailsadapter.notifyItemChanged(position);
+//                            ratedetailsadapter.notifyItemChanged(position);
                         } else {
                             // Add new item
                             vecratedetailsdo.add(ratedetailsDo);
-                            ratedetailsadapter.notifyDataSetChanged();
+//                            ratedetailsadapter.notifyDataSetChanged();
                         }
 
-
+                        ratedetailsadapter.refresh(vecratedetailsdo);
                         dialog.dismiss();
 //                        vecratedetailsdo.add(ratedetailsDo);
 //                        ratedetailsAdapter ratedetailsadapter = new ratedetailsAdapter(getContext(), vecratedetailsdo, getActivity());

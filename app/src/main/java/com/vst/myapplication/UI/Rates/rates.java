@@ -3,7 +3,14 @@ package com.vst.myapplication.UI.Rates;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,10 +53,13 @@ import com.vst.myapplication.databinding.FarmersBinding;
 import com.vst.myapplication.databinding.RatesBinding;
 import com.vst.myapplication.databinding.RatesEntryPopupBinding;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 public class rates extends BaseFragment implements RatesAdapter.ItemClickListener{
@@ -60,9 +70,7 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
     RatesEntryPopupBinding ratesEntryPopupBinding;
     rates_VM ratesVm;
     int mdate,mmonth,myear;
-
     RateAndDetails[] rateAndDetails;
-
     private ProjectRepository repository;
 
 
@@ -117,6 +125,7 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
             binding.fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+//                    getRate();
                     Bundle mBundle = new Bundle();
                     mBundle.putBoolean("addRate", true);
                     ratedetails ratedetail = new ratedetails();
@@ -261,4 +270,6 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
     public void onItemClick(View view, int position) {
         Log.d("TAG", "onItemClick"+position);
     }
+
+
 }

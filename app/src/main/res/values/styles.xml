@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="AppThemeNoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/app_color</item>
+        <item name="colorPrimaryDark">@color/colourPrimary</item>
+        <item name="colorAccent">@color/colourTextPrimary</item>
+    </style>
+
+
     <style name="GraphUIComponents" parent="@android:style/TextAppearance">
         <item name="android:layout_width">350dp</item>
     </style>

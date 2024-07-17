@@ -13,7 +13,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.R;
 import com.vst.myapplication.UI.Dashboard.DashboardFragment;
+import com.vst.myapplication.UI.Register.register_notice_activity;
 import com.vst.myapplication.databinding.LoginBinding;
+import com.vst.myapplication.databinding.RegisterNoticeBinding;
 
 public class LoginNew extends AppCompatActivity {
     LoginBinding binding;
@@ -34,6 +36,18 @@ public class LoginNew extends AppCompatActivity {
             startActivity(new Intent(LoginNew.this, MainActivity.class));
             finish();
 
+        });
+        binding.btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginNew.this, register_notice_activity.class));
+            }
+        });
+        binding.btnForgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginNew.this, forgetpassword_activity.class));
+            }
         });
     }
 

@@ -1,5 +1,7 @@
 package com.vst.myapplication.UI.Rates;
 
+import static android.view.View.GONE;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,18 +59,18 @@ public class RatesChildAdapter extends RecyclerView.Adapter<RatesChildAdapter.Su
         ratedetailsDO rate = Listratedetailsdo.get(position);
         if (rate != null) {
 //            ((TextView) holder.itemView.findViewById(R.id.txtbcode)).setText("1");
+            ((TextView) holder.itemView.findViewById(R.id.tvdetailid)).setText(rate.DETAILID+"");
             ((TextView) holder.itemView.findViewById(R.id.tvfatmin)).setText("FATMIN : "+String.valueOf(rate.FATMIN));
             ((TextView) holder.itemView.findViewById(R.id.tvfatmax)).setText("FATMAX : "+String.valueOf(rate.FATMAX));
             ((TextView) holder.itemView.findViewById(R.id.tvsnfmin)).setText("SNFMIN : "+String.valueOf(rate.SNFMIN));
             ((TextView) holder.itemView.findViewById(R.id.tvsnfmax)).setText("SNFMAX : "+String.valueOf(rate.SNFMAX));
             ((TextView) holder.itemView.findViewById(R.id.tvrate)).setText(String.valueOf(rate.RATE));
-            ((ImageView) holder.itemView.findViewById(R.id.ivedit)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("AdapterPosition",""+holder.getAdapterPosition());
-//                    if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
-                }
-            });
+            ((ImageView) holder.itemView.findViewById(R.id.ivedit)).setVisibility(View.GONE);
+            ((ImageView) holder.itemView.findViewById(R.id.ivdelte)).setVisibility(View.GONE);
+            ((View) holder.itemView.findViewById(R.id.borderLine1)).setVisibility(View.GONE);
+            ((View) holder.itemView.findViewById(R.id.borderLine2)).setVisibility(View.GONE);
+//            ((TextView) holder.itemView.findViewById(R.id.tvrate)).setText(String.value/Of(rate.RATE));
+//
         }
     }
 

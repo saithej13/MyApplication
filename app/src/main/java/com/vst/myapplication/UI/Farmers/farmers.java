@@ -191,6 +191,7 @@ FarmerEntryPopupBinding farmerEntrybinding;
                                 farmerEntrybinding.fname.setText("");
                                 farmerEntrybinding.mtype.setText("");
                                 farmerEntrybinding.mobileno.setText("");
+                                dialog.dismiss();
 //                                isDuplicateFarmer(Integer.parseInt(edtFcode.getText().toString()), new DuplicateFarmerCallback() {
 //                                    @Override
 //                                    public void onResult(boolean isDuplicate) {

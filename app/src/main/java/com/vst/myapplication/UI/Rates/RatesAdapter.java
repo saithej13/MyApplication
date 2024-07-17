@@ -105,19 +105,23 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
                     //delete rate based on slno
                 }
             });
-
-            binding.llmain.setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Log.d("view is clicked","view is clicked");
-                    Log.d("expandedPosition",""+expandedPosition);
-                    Log.d("position",""+position);
+                public void onClick(View view) {
                     if (rateDetailsList != null && !rateDetailsList.isEmpty()) {
                         expandedPosition = expandedPosition == position ? -1 : position;
                         notifyItemChanged(position);
                     }
                 }
             });
+
+//            binding.llmain.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Log.d("expandedPosition",""+expandedPosition);
+//                    Log.d("position",""+position);
+//                }
+//            });
             boolean isExpanded = expandedPosition == position;
             binding.rcvChild.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 

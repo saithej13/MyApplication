@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />
 
@@ -17,7 +19,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication"
+        android:theme="@style/AppThemeNoActionBar"
         tools:targetApi="31">
         <activity
             android:name=".UI.Splashscreen"
@@ -36,6 +38,21 @@
             android:screenOrientation="portrait"
             android:exported="true"/>
         <activity android:name=".UI.Payments.payment"
+            android:screenOrientation="portrait"
+            android:exported="true"/>
+        <activity android:name=".UI.Login.verifyotp_activity"
+            android:screenOrientation="portrait"
+            android:exported="true"/>
+        <activity android:name=".UI.Login.newpassword_activity"
+            android:screenOrientation="portrait"
+            android:exported="true"/>
+        <activity android:name=".UI.Login.forgetpassword_activity"
+            android:screenOrientation="portrait"
+            android:exported="true"/>
+        <activity android:name=".UI.Register.register_activity"
+            android:screenOrientation="portrait"
+            android:exported="true"/>
+        <activity android:name=".UI.Register.register_notice_activity"
             android:screenOrientation="portrait"
             android:exported="true"/>
     </application>
