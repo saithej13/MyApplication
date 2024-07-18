@@ -35,6 +35,8 @@ import com.vst.myapplication.databinding.RatedetailscardcellBinding;
 import com.vst.myapplication.databinding.RatesEntryPopup2Binding;
 import com.vst.myapplication.databinding.RatesdetailedlistBinding;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -88,8 +90,8 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
             ivdeleterate.setVisibility(View.GONE);
         }else {
             ivdropdownmilktype.setVisibility(View.GONE);
-            iveditrate.setVisibility(View.VISIBLE);
-            ivdeleterate.setVisibility(View.VISIBLE);
+            iveditrate.setVisibility(View.GONE);
+            ivdeleterate.setVisibility(View.GONE);
         }
         if (rateDo != null) {
             binding.llOverView.tvstartdate.setText(rateDo.STARTDATE);
@@ -128,8 +130,10 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                 new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int monthOfYear, int month, int date) {
-                        String selDate = (monthOfYear + "-" + month + "-" + date);
-                        binding.llOverView.tvstartdate.setText(CalendarUtils.getFormatedDatefromString(selDate));
+                        int tmonth = month+1;
+                        String selDate = (monthOfYear + "-" + tmonth + "-" + date);
+//                        yyyy-MM-dd
+                        binding.llOverView.tvstartdate.setText(CalendarUtils.getFormatedDatefromString4(selDate));
                     }
                 }, myear, mmonth, mdate).show();
             }
@@ -144,8 +148,9 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                 new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int monthOfYear, int month, int date) {
-                        String selDate = (monthOfYear + "-" + month + "-" + date);
-                        binding.llOverView.tvenddate.setText(CalendarUtils.getFormatedDatefromString(selDate));
+                        int tmonth = month+1;
+                        String selDate = (monthOfYear + "-" + tmonth + "-" + date);
+                        binding.llOverView.tvenddate.setText(CalendarUtils.getFormatedDatefromString4(selDate));
 
                     }
                 }, myear, mmonth, mdate).show();
@@ -192,9 +197,12 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                             rateDo.STARTDATE = binding.llOverView.tvstartdate.getText().toString();
                             rateDo.ENDDATE = binding.llOverView.tvenddate.getText().toString();
                             RateAndDetails rateAndDetails = new RateAndDetails(rateDo, vecratedetailsdo);
+                            for(int i=0;i<vecratedetailsdo.size();i++){
+                                Log.d("vecratedetails",""+vecratedetailsdo.get(i).RATE);
+                            }
                             if (!rateAndDetails.rateDetailsList.isEmpty()) {
                                 ratesVm.insertRate(rateAndDetails);
-                                refreshData();
+                                showCustomDialog(getContext(), "Success", "Rates Updated Successfully", "OK", null, "save");
                             } else {
                                 showCustomDialog(getContext(), "Error", "Add Atleast one RateDetail to Save!", "OK", null, "");
                             }
@@ -208,7 +216,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                             RateAndDetails rateAndDetails = new RateAndDetails(rateDo, vecratedetailsdo);
                             if (!rateAndDetails.rateDetailsList.isEmpty()) {
                                 ratesVm.insertRate(rateAndDetails);
-                                refreshData();
+                                showCustomDialog(getContext(), "Success", "Rates Updated Successfully", "OK", null, "save");
                             } else {
                                 showCustomDialog(getContext(), "Error", "Add Atleast one RateDetail to Save!", "OK", null, "");
                             }
@@ -320,21 +328,16 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                         if (selectedRateDetail != null) {
                             // Update existing item
                             vecratedetailsdo.set(position, ratedetailsDo);
-//                            ratedetailsadapter.notifyItemChanged(position);
+                            ratedetailsadapter.notifyItemChanged(position);
                         } else {
                             // Add new item
                             vecratedetailsdo.add(ratedetailsDo);
-//                            ratedetailsadapter.notifyDataSetChanged();
                         }
-
-                        ratedetailsadapter.refresh(vecratedetailsdo);
+                        ratedetailsAdapter ratedetailsadapter = new ratedetailsAdapter(getContext(), vecratedetailsdo, getActivity(),ratedetails.this);
+                        binding.rcvRatedetails.setLayoutManager(new LinearLayoutManager(getContext()));
+                        binding.rcvRatedetails.setAdapter(ratedetailsadapter);
+                        binding.rcvRatedetails.setHasFixedSize(true);
                         dialog.dismiss();
-//                        vecratedetailsdo.add(ratedetailsDo);
-//                        ratedetailsAdapter ratedetailsadapter = new ratedetailsAdapter(getContext(), vecratedetailsdo, getActivity());
-//                        binding.rcvRatedetails.setLayoutManager(new LinearLayoutManager(getContext()));
-//                        binding.rcvRatedetails.setAdapter(ratedetailsadapter);
-//                        binding.rcvRatedetails.setHasFixedSize(true);
-//                        dialog.dismiss();
                     }
                 }
             });
@@ -344,7 +347,6 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                     dialog.dismiss();
                 }
             });
-
             dialog.show();
         }
     }
@@ -359,5 +361,14 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
         Log.d("ITEM IS CLIECKED",""+position);
         ratedetailsDO selectedRateDetail = vecratedetailsdo.get(position);
         showpopup(selectedRateDetail,position);
+    }
+
+    @Override
+    public void onButtonYesClick(String from) throws JSONException {
+        super.onButtonYesClick(from);
+        if(from.equalsIgnoreCase("save")){
+            getActivity().getSupportFragmentManager().popBackStack();
+//            fragmentManager.popBackStack();
+        }
     }
 }

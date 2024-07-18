@@ -1,11 +1,14 @@
 package com.vst.myapplication.UI.Login;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,20 +22,19 @@ import com.vst.myapplication.databinding.RegisterNoticeBinding;
 
 public class LoginNew extends AppCompatActivity {
     LoginBinding binding;
-
+    String version ="";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.login);
+        try {
+            version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        binding.txtversion.setText("App Version  :  "+version);
         binding.btnSignIn.setOnClickListener(v -> {
-            /*FragmentManager fragmentManager = getParentFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-//                        .replace(R.id.frame, new Dashboard1(), "")
-                    .replace(R.id.frame, new DashboardFragment(), "")
-                    .commitAllowingStateLoss();*/
-
             startActivity(new Intent(LoginNew.this, MainActivity.class));
             finish();
 

@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.room.Query;
 
 import com.google.gson.JsonObject;
 import com.vst.myapplication.Utils.MyApplicationNew;
@@ -218,22 +219,21 @@ RoomService roomService;
                 Log.e("UpdateRatesAsyncTask", "rateAndDetails.rate is null");
                 return null;
             }
-
-            roomService.UpdateRates(rateAndDetails.rate);
+//            int slno, String milkType, String startDate, String endDate
+            roomService.updateRates(rateAndDetails.rate.SLNO,rateAndDetails.rate.MILKTYPE,rateAndDetails.rate.STARTDATE,rateAndDetails.rate.ENDDATE);
+            roomService.deleteRateDetails(rateAndDetails.rate.SLNO);
             if (rateAndDetails.rateDetailsList == null) {
                 Log.e("UpdateRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
                 return null;
             }
-
             for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
                 if (rateDetails == null) {
                     Log.e("UpdateRatesAsyncTask", "rateDetails is null");
                     continue;
                 }
                 rateDetails.SLNO = rateAndDetails.rate.SLNO;
-                roomService.UpdateRatesdetails(rateDetails);
+                roomService.insertRatesdetails(rateDetails);
             }
-
             return null;
         }
     }

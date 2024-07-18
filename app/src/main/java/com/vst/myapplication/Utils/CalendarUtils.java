@@ -253,6 +253,60 @@ public class CalendarUtils {
         Log.d("formatedDate",""+formatedDate);
         return formatedDate;
     }
+    public static String getFormatedDatefromString4(String strDate)
+    {
+        //present format        tdate 2024 Jul 06
+        //required format     tdate "2024-07-06"
+        //
+        String formatedDate  = "N/A";
+        if(!TextUtils.isEmpty(strDate))
+        {
+            try
+            {
+                formatedDate = strDate;
+                LogUtils.errorLog(strDate, strDate);
+
+                if(strDate.contains(" "))
+                    strDate = strDate.replace(" ", "-");
+
+                if(strDate.contains("T"))
+                {
+                    String arrDate[]= strDate.split("T")[0].split("-");
+                    formatedDate = arrDate[2]+" "+getMonthFromString(arrDate[1])+" "+arrDate[0];
+                }
+                else
+                {
+                    String arrDate[]= strDate.split("-");
+                    String s = String.valueOf(getMonthFromString(arrDate[1]));
+                    if(s.length()==1)
+                    {
+                        if(arrDate[1].length()==1 && arrDate[2].length()==1)
+                        {
+                            formatedDate = arrDate[0]+"-0"+arrDate[1]+"-0"+arrDate[2];
+                        }
+                        else if(arrDate[1].length()==1){
+                            formatedDate = arrDate[0] + "-0" + arrDate[1] + "-" + arrDate[2];
+                        }
+                        else if(arrDate[2].length()==1){
+                            formatedDate = arrDate[0] + "-" + arrDate[1] + "-0" + arrDate[2];
+                        }
+                    }
+                    else
+                    {
+                        formatedDate = arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2];
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                formatedDate =null;
+            }
+        }
+        Log.d("formatedDate",""+formatedDate);
+        return formatedDate;
+    }
     public static String getMonthFromNumber(int intMonth)
     {
         String strMonth = "";

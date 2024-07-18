@@ -133,23 +133,53 @@ public class ProjectRepository {
     }
     public MutableLiveData<JsonObject> getTSrate(JsonObject payload) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
-
-        apiClient.getTsrate(payload).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    JsonObject jsonObject =response.body();
-                    Log.d("Log Response", "" + response.body());
+        if(MyApplicationNew.RoomDB){
+//            jsonObject1.addProperty("MILKTYPE", binding.textmtypec.getText().toString());
+//            jsonObject1.addProperty("TDATE", binding.textdate.getText().toString());
+//            jsonObject1.addProperty("FAT", fat);
+//            jsonObject1.addProperty("SNF", snf);
+            String MILKTYPE = payload.get("MILKTYPE").getAsString();
+            String TDATE = payload.get("TDATE").getAsString();
+            Double FAT = payload.get("FAT").getAsDouble();
+            Double SNF = payload.get("SNF").getAsDouble();
+            Log.d("MILKTYPE",""+MILKTYPE);
+            Log.d("TDATE",""+TDATE);
+            Log.d("FAT",""+FAT);
+            Log.d("SNF",""+SNF);
+            roomService.gettsrate(MILKTYPE,TDATE,FAT,SNF).observe(lifecycleOwner, new Observer<Double>() {
+                @Override
+                public void onChanged(Double aDouble) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    String jsonArrayString = gson.toJson(aDouble);
+                    JsonArray finalJsonArray = new JsonArray();
+                    JsonObject rateAndDetailsObject = new JsonObject();
+                    rateAndDetailsObject.add("rate", gson.toJsonTree(jsonArrayString));
+                    finalJsonArray.add(rateAndDetailsObject);
+                    jsonObject.add("Data", finalJsonArray);
+                    Log.d("PRINTjsonArray",""+finalJsonArray);
                     data.setValue(jsonObject);
                 }
-            }
+            });
+        }
+        else {
+            apiClient.getTsrate(payload).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        Log.d("Log Response", "" + response.body());
+                        data.setValue(jsonObject);
+                    }
+                }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("Log", "getTSRATE payload Failed-->" + t.getMessage());
-                data.setValue(null);
-            }
-        });
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.d("Log", "getTSRATE payload Failed-->" + t.getMessage());
+                    data.setValue(null);
+                }
+            });
+        }
         return data;
     }
 //  #Rates

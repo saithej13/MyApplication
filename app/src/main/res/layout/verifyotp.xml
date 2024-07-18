@@ -44,7 +44,7 @@
                     app:cardElevation="15dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtotp1"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@null"
                     android:imeOptions="actionNext"
@@ -68,7 +68,7 @@
                     app:cardElevation="15dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtotp2"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@null"
                     android:imeOptions="actionNext"
@@ -77,8 +77,7 @@
                     android:layout_margin="@dimen/dp10"
                     android:textColor="@color/colourTextPrimary"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_weight="1"/>
+                    android:textStyle="bold" />
                 </com.google.android.material.card.MaterialCardView>
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.MaterialComponents.CardView"
@@ -92,7 +91,7 @@
                     app:cardElevation="15dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtotp3"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@null"
                     android:imeOptions="actionNext"
@@ -102,7 +101,7 @@
                     android:textColor="@color/colourTextPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:layout_weight="1"/>
+                    />
                 </com.google.android.material.card.MaterialCardView>
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.MaterialComponents.CardView"
@@ -116,7 +115,7 @@
                     app:cardElevation="15dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtotp4"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@null"
                     android:imeOptions="actionNext"
@@ -126,7 +125,7 @@
                     android:textColor="@color/colourTextPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:layout_weight="1"/>
+                   />
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
             <com.google.android.material.card.MaterialCardView

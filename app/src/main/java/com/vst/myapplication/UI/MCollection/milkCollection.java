@@ -16,8 +16,10 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.room.util.StringUtil;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Room.roomRepository;
@@ -26,6 +28,7 @@ import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.Utils.StringUtils;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -49,7 +52,7 @@ public class milkCollection extends BaseFragment {
     farmerDO[] farmerDOs;
 
     milkDO[] milkDOS;
-    rateDO[] rateDOs;
+//    rateDO[] rateDOs;
 
     ProjectRepository repository;
     roomRepository roomrepo;
@@ -196,21 +199,27 @@ public class milkCollection extends BaseFragment {
                             !binding.rate.getText().toString().isEmpty()&&!binding.amt.getText().toString().isEmpty()&&
                             !binding.textshiftm.getText().toString().isEmpty()&&!binding.textmtypec.getText().toString().isEmpty()
                     ) {
-                        milkDO milkDo = new milkDO();
-                        milkDo.TDATE = CalendarUtils.getFormatedDatefromString3(binding.textdate.getText().toString());
-                        milkDo.SHIFT = binding.textshiftm.getText().toString();
-                        milkDo.FARMERID = binding.farmerid.getText().toString();
-                        milkDo.FARMERNAME = binding.fname.getText().toString();
-                        milkDo.MILKTYPE = binding.textmtypec.getText().toString();
-                        milkDo.QUANTITY = Double.parseDouble(binding.mqty.getText().toString());
-                        milkDo.FAT = Double.parseDouble(binding.mfat.getText().toString());
-                        milkDo.SNF = Double.parseDouble(binding.msnf.getText().toString());
-                        milkDo.RATE = Double.parseDouble(binding.rate.getText().toString());
-                        milkDo.AMOUNT = Double.parseDouble(binding.amt.getText().toString());
-                        milkCollectionVm.insertMdataRoom(milkDo);
-                        clearfields();
-                        refreshData();
-                        print(milkDo);
+                        if(StringUtils.getInt(binding.rate.getText().toString())==0)
+                        {
+                            showCustomDialog(getContext(),"Error","Rate Cannot be 0","OK",null,"");
+                        }
+                        else {
+                            milkDO milkDo = new milkDO();
+                            milkDo.TDATE = CalendarUtils.getFormatedDatefromString3(binding.textdate.getText().toString());
+                            milkDo.SHIFT = binding.textshiftm.getText().toString();
+                            milkDo.FARMERID = binding.farmerid.getText().toString();
+                            milkDo.FARMERNAME = binding.fname.getText().toString();
+                            milkDo.MILKTYPE = binding.textmtypec.getText().toString();
+                            milkDo.QUANTITY = Double.parseDouble(binding.mqty.getText().toString());
+                            milkDo.FAT = Double.parseDouble(binding.mfat.getText().toString());
+                            milkDo.SNF = Double.parseDouble(binding.msnf.getText().toString());
+                            milkDo.RATE = Double.parseDouble(binding.rate.getText().toString());
+                            milkDo.AMOUNT = Double.parseDouble(binding.amt.getText().toString());
+                            milkCollectionVm.insertMdataRoom(milkDo);
+                            clearfields();
+                            refreshData();
+                            print(milkDo);
+                        }
                     }
                     else {
                         showCustomDialog(getContext(),"Error","please make sure all the fields are filled up","OK",null,"");
@@ -479,44 +488,44 @@ public class milkCollection extends BaseFragment {
 //                            "FAT":3.0,
 //                            "SNF":8.0
 //                    }
-                if(MyApplicationNew.RoomDB)
-                {
-                    milkCollectionVm.getGetrates(binding.textmtypec.getText().toString(),CalendarUtils.convertDateToFormattedString(binding.textdate.getText().toString()),fat, snf).observe(this, new Observer<List<rateDO>>() {
-                        @Override
-                        public void onChanged(List<rateDO> mdata) {
-                            if (mdata != null && !mdata.isEmpty()) {
-                                if(mdata.get(0).MILKTYPE.equalsIgnoreCase("Cow"))
-                                {
-//                                    rate1[0] = (mdata.get(0).RATE / 100);
-//                                    snfmax[0] = (mdata.get(0).SNFMAX);
-                                    Log.d("rate[0]", "" + rate1[0]);
-                                    rate1[0] = (fat + snf) * (rate1[0]);
-                                    amount[0] = rate1[0] * qty;
-                                    binding.rate.setText(String.format("%.1f", rate1[0]));
-                                    binding.amt.setText(String.format("%.1f", amount[0]));
-                                }
-                                else {
-//                                    rate1[0] = (mdata.get(0).RATE / 100);
-//                                    snfmax[0] = (mdata.get(0).SNFMAX);
-                                    Log.d("rate[0]", "" + rate1[0]);
-                                    //(BMRATE)
-                                    rate1[0] = (fat * rate1[0]) - (snfmax[0] - snf);
-                                    amount[0] = rate1[0]*qty;
-                                    binding.rate.setText(String.format("%.1f",rate1[0]));
-                                    binding.amt.setText(String.format("%.1f",amount[0]));
-                                }
-                            }
-                            else {
-                                binding.rate.setText(String.format("%.1f",(rate1[0])));
-                                binding.amt.setText(String.format("%.1f",(amount[0])));
-                            }
-                        }
-                    });
-                }
-                else {
+//                if(MyApplicationNew.RoomDB)
+//                {
+//                    milkCollectionVm.getGetrates(binding.textmtypec.getText().toString(),CalendarUtils.convertDateToFormattedString(binding.textdate.getText().toString()),fat, snf).observe(this, new Observer<List<rateDO>>() {
+//                        @Override
+//                        public void onChanged(List<rateDO> mdata) {
+//                            if (mdata != null && !mdata.isEmpty()) {
+//                                if(mdata.get(0).MILKTYPE.equalsIgnoreCase("Cow"))
+//                                {
+////                                    rate1[0] = (mdata.get(0).RATE / 100);
+////                                    snfmax[0] = (mdata.get(0).SNFMAX);
+//                                    Log.d("rate[0]", "" + rate1[0]);
+//                                    rate1[0] = (fat + snf) * (rate1[0]);
+//                                    amount[0] = rate1[0] * qty;
+//                                    binding.rate.setText(String.format("%.1f", rate1[0]));
+//                                    binding.amt.setText(String.format("%.1f", amount[0]));
+//                                }
+//                                else {
+////                                    rate1[0] = (mdata.get(0).RATE / 100);
+////                                    snfmax[0] = (mdata.get(0).SNFMAX);
+//                                    Log.d("rate[0]", "" + rate1[0]);
+//                                    //(BMRATE)
+//                                    rate1[0] = (fat * rate1[0]) - (snfmax[0] - snf);
+//                                    amount[0] = rate1[0]*qty;
+//                                    binding.rate.setText(String.format("%.1f",rate1[0]));
+//                                    binding.amt.setText(String.format("%.1f",amount[0]));
+//                                }
+//                            }
+//                            else {
+//                                binding.rate.setText(String.format("%.1f",(rate1[0])));
+//                                binding.amt.setText(String.format("%.1f",(amount[0])));
+//                            }
+//                        }
+//                    });
+//                }
+//                else {
                     JsonObject jsonObject1 = new JsonObject();
                     jsonObject1.addProperty("MILKTYPE", binding.textmtypec.getText().toString());
-                    jsonObject1.addProperty("TDATE", binding.textdate.getText().toString());
+                    jsonObject1.addProperty("TDATE", CalendarUtils.convertDateToFormattedString(binding.textdate.getText().toString()));
                     jsonObject1.addProperty("FAT", fat);
                     jsonObject1.addProperty("SNF", snf);
                     repository.getTSrate(jsonObject1).observe(this, new Observer<JsonObject>() {
@@ -525,38 +534,45 @@ public class milkCollection extends BaseFragment {
                             if (jsonObject != null) {
                                 Log.d("TAG", jsonObject.toString());
                                 Gson gson = new Gson();
-                                rateDOs = gson.fromJson(jsonObject.getAsJsonArray("Data"), rateDO[].class);
-                                if (rateDOs != null) {
-                                    if (rateDOs.length > 0) {
+//                                Double rateDOs=0.0;
+//                                JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+//                                JsonElement rateElement = jsonObject.get("rate");
+//                                double rate = rateElement.getAsDouble();
+                                JsonArray jsonArray = jsonObject.getAsJsonArray("Data");
+                                if (jsonArray.size() > 0) {
+                                    JsonObject jsonObject1 = jsonArray.get(0).getAsJsonObject();
+                                    String rateString = jsonObject1.get("rate").getAsString();
+                                    double rate10 = StringUtils.getFloat(rateString);
+                                    rate1[0] = (rate10/100);
+//                                Log.d("rateDOs",""+jsonObject.getAsJsonArray("Data").getAsJsonObject().get("rate").getAsDouble());
+                                    Log.d("rateDOs", "" + rate1);
+
+//                                rateDOs = gson.fromJson(jsonObject.getAsJsonArray("Data"));
+                                        if (rate1[0] > 0) {
 //                                        binding.fname.setText(farmerDOs[0].FARMERNAME);
-                                        if (binding.textmtypec.getText().equals("Cow")) {
+                                            if (binding.textmtypec.getText().equals("Cow")) {
+//                                                rate1[0] = (rateDOs[0].RATE / 100);
+//                                            snfmax[0] = (rateDOs[0].SNFMAX);
+                                                amount[0] = ((fat + snf) * rate1[0]) * qty;
+                                                binding.rate.setText(String.format("%.1f", ((fat + snf) * rate1[0])));
+                                                binding.amt.setText(String.format("%.1f", amount[0]));
+                                            } else {
 //                                            rate1[0] = (rateDOs[0].RATE / 100);
 //                                            snfmax[0] = (rateDOs[0].SNFMAX);
-                                            Log.d("rate[0]", "" + rate1[0]);
-                                            rate1[0] = (fat + snf) * (rate1[0]);
-                                            amount[0] = rate1[0] * qty;
-                                            binding.rate.setText(String.format("%.1f", rate1[0]));
-                                            binding.amt.setText(String.format("%.1f", amount[0]));
+                                                //(BMRATE)
+                                                amount[0] = ((fat * rate1[0]) - (snfmax[0] - snf)) * qty;
+                                                binding.rate.setText(String.format("%.1f", ((fat * rate1[0]) - (snfmax[0] - snf))));
+                                                binding.amt.setText(String.format("%.1f", amount[0]));
+                                            }
                                         } else {
-//                                            rate1[0] = (rateDOs[0].RATE / 100);
-//                                            snfmax[0] = (rateDOs[0].SNFMAX);
-                                            Log.d("rate[0]", "" + rate1[0]);
-                                            //(BMRATE)
-                                            rate1[0] = (fat * rate1[0]) - (snfmax[0] - snf);
-                                            amount[0] = rate1[0] * qty;
                                             binding.rate.setText(String.format("%.1f", rate1[0]));
-                                            binding.amt.setText(String.format("%.1f", amount[0]));
+                                            binding.amt.setText(String.format("%.1f", (amount[0])));
                                         }
-                                    } else {
-                                        rateDOs = new rateDO[]{};
-                                        binding.rate.setText(String.format("%.1f", (rate1[0])));
-                                        binding.amt.setText(String.format("%.1f", (amount[0])));
                                     }
-                                }
                             }
                         }
                     });
-                }
+//                }
             }
         }
         catch (Exception ex){

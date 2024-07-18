@@ -78,13 +78,11 @@
     <string name="fatsnfmax">FAT &amp; SNF MAX</string>
     <string name="rate">Rate</string>
     <string name="edit">Edit</string>
+    <string name="deviceid">Device Id</string>
     <string name="delete">Delete</string>
     <string name="action">Action</string>
     <string name="detailid">id</string>
-
-
-
-
+    <string name="version">version</string>
     <string name="warning">Warning !</string>
     <string name="Yes">Yes</string>
     <string name="No">No</string>
