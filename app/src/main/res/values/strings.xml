@@ -3,6 +3,7 @@
     <string name="Todays_Collection_Summary">Todays Collection Summary</string>
     <string name="Buffalo_Milk">Buffalo Milk</string>
     <string name="_0">0</string>
+    <string name="select">Select</string>
     <string name="Cow_Milk">Cow Milk</string>
     <string name="Avg_Fat">Avg Fat</string>
     <string name="Avg_Snf">Avg Snf</string>
@@ -16,6 +17,8 @@
     <string name="Mobile_No">Mobile No.</string>
     <string name="Enter_Mobile_No_Here">Enter Mobile No. Here..,</string>
     <string name="Milk_Type">Milk Type</string>
+    <string name="Rate_Type">Rate Type</string>
+    <string name="Select_Rate_Type">Select Rate Type</string>
     <string name="Submit">Submit</string>
     <string name="Cancel">Cancel</string>
     <string name="Back">Back</string>
@@ -27,6 +30,23 @@
     <string name="branch_name">Branch Name</string>
     <string name="address">Address</string>
     <string name="email_address">Email_address</string>
+    <string name="amount">Amount</string>
+    <string name="remarks_reason">Remarks / Reason</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_advance_for">Select advance for Customer / </string>
+    <string name="select_type">Select Type</string>
+    <string name="select_Customer_or_farmer">Select Farmer / Customer</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="customer_code">Customer Code</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="active">Active Status</string>
+    <string name="Customers">Customers</string>
+    <string name="Collections">Collections</string>
+    <string name="Farmers">Farmers</string>
+    <string name="Rates">Rates</string>
+    <string name="Advance">Advance</string>
+    <string name="Reports">Reports</string>
+    <string name="Sale">Sale</string>
     <string name="RegisterNotice">Register Notice</string>
     <string name="ForgetPassword">Forget Password</string>
     <string name="verifyotp">Verify OTP</string>
@@ -88,6 +108,8 @@
     <string name="No">No</string>
     <string name="do_you_want_to_logout">Are you sure you want to logout?</string>
     <string name="Settings">Settings</string>
+    <string name="add_advnace">Add Advance</string>
+    <string name="add_customer">Add Customer</string>
 
 
 

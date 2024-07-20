@@ -764,68 +764,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public Bitmap getRate(){
-        File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/PrinterTest");
-        myDir.mkdirs();
-        Random generator = new Random();
-        int n = 10000;
-        int salesHeight = 1, freeGoodsHeight = 1, damageHeight = 1;
-//            n = generator.nextInt(n);
-        n = generator.nextInt((200 - 100) + 1) + 100;
-        String fname = "Image-" + n + ".jpg";
-        File file = new File(myDir, fname);
-        if (file.exists()) file.delete();
-        Bitmap bmp = null;
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-            int width = 920;
-            int height = 950 + ((salesHeight + freeGoodsHeight + damageHeight) *30);
-            bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            // NEWLY ADDED CODE STARTS HERE [
-            Canvas canvas = new Canvas(bmp);
-            Paint paintBG = new Paint();
-            paintBG.setColor(Color.WHITE);
-            canvas.drawRect(0, 0, width, height, paintBG);
-            int het1 = 40;
-            String[] as1 = null;
-            as1 = new String[]{"HI1", "Hi2", "HI3"};
-//            as1  = getInner();
-            int h1 = 20;
-            if (as1 != null) {
-                for (int i = 0; i < as1.length; i++) {
-                    canvas.drawText(as1[i], 60, h1, getPaintObjHeaderNew());
-                    h1 += 10;
-                }
-            }
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (bmp != null)
-                bmp.recycle();
-        }
-        return BitmapFactory.decodeFile(file.getAbsolutePath());
-    }
-    public String getInner(){
-        String singleText = "%1$30.30s \r\n";
-        String s;
-        s="";
-        s += "\r\n";
-        s+=String.format(singleText, "HI Sai");
-        return s;
-    }
-    private Paint getPaintObjHeaderNew() {
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK); // Text Color
-        paint.setTypeface(Typeface.DEFAULT_BOLD);
-        paint.setStrokeWidth(12); // Text Size
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
-        paint.setTextSize(16);
-        return paint;
-    }
+
 
 
 }

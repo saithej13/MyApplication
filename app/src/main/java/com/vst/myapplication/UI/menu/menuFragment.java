@@ -12,10 +12,13 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.vst.myapplication.R;
 import com.vst.myapplication.Services.ProjectRepository;
+import com.vst.myapplication.UI.Advance.advancefragment;
 import com.vst.myapplication.UI.Farmers.farmers;
 import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.UI.MCollection.milkCollection;
 import com.vst.myapplication.UI.Rates.rates;
+import com.vst.myapplication.UI.cusotmer.customer;
+import com.vst.myapplication.UI.sale.sale;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.Settings;
 import com.vst.myapplication.databinding.MenuBinding;
@@ -85,5 +88,33 @@ public class menuFragment extends BaseFragment {
                         .commitAllowingStateLoss();
             }
         });
+        binding.advance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.frame, new advancefragment(), "")
+                        .addToBackStack("")
+                        .commitAllowingStateLoss();
+            }
+        });
+        binding.customers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.frame, new customer(), "")
+                        .addToBackStack("")
+                        .commitAllowingStateLoss();
+            }
+        });
+        binding.sale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.frame, new sale(), "")
+                        .addToBackStack("")
+                        .commitAllowingStateLoss();
+            }
+        });
+
     }
 }

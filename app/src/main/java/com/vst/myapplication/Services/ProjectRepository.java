@@ -437,6 +437,67 @@ public MutableLiveData<JsonObject> getrates() {
         return data;
     }
 
+    public MutableLiveData<JsonObject> getMData2(LifecycleOwner owner,JsonObject payload) {
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB){
+            String STARTDATE = payload.get("STARTDATE").getAsString();
+            String ENDDATE = payload.get("ENDDATE").getAsString();
+            roomService.getmilkdata2(STARTDATE,ENDDATE).observe(owner,new Observer<List<milkDO>>() {
+                @Override
+                public void onChanged(List<milkDO> orderSummeries) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    String jsonArrayString = gson.toJson(orderSummeries);
+                    try {
+                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+                        jsonObject.add("Data", jsonArray);
+                    } catch (JsonSyntaxException e) {
+                        Log.e("Log Response", "Error parsing JSON array", e);
+                        jsonObject.add("Data", new JsonArray());
+                    }
+                    Log.d("Log Response", "" + jsonObject);
+                    data.setValue(jsonObject);
+                }
+            });
+//            roomrepo.getmilkdata(owner,payload.get("TDATE").toString(),payload.get("SHIFT").toString()).observe(lifecycleOwner, new Observer<List<milkDO>>() {
+//                @Override
+//                public void onChanged(List<milkDO> milkDOS) {
+//                    Gson gson = new Gson();
+//                    JsonObject jsonObject = new JsonObject();
+//                    String jsonArrayString = gson.toJson(milkDOS);
+//                    try {
+//                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+//                        jsonObject.add("Data", jsonArray);
+//                    } catch (JsonSyntaxException e) {
+//                        Log.e("Log Response", "Error parsing JSON array", e);
+//                        jsonObject.add("Data", new JsonArray());
+//                    }
+//                    Log.d("Log Response", "" + jsonObject);
+//                    data.setValue(jsonObject);
+//                }
+//            });
+        }
+        else {
+            apiClient.getMData(payload).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        Log.d("Log Response", "" + response.body());
+                        data.setValue(jsonObject);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
+                    data.setValue(null);
+                }
+            });
+        }
+        return data;
+    }
+
     public MutableLiveData<JsonObject> getUser(JsonObject payload) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
             apiClient.getuser(payload).enqueue(new Callback<JsonObject>() {

@@ -39,6 +39,7 @@ import com.vst.myapplication.UI.Login.LoginNew;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.dataObject.milkDO;
+import com.vst.myapplication.dataObject.ratedetailsDO;
 import com.vst.myapplication.databinding.DashboradfragmentBinding;
 
 import org.json.JSONException;
@@ -48,7 +49,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 public class DashboardFragment extends BaseFragment {
@@ -56,6 +59,7 @@ public class DashboardFragment extends BaseFragment {
     ProjectRepository repository;
     milkDO[] milkDOS;
     String shift="M";
+    HashMap<String, Map<String, String>> hashMapbarchart = new HashMap<>();
 
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
@@ -80,15 +84,22 @@ public class DashboardFragment extends BaseFragment {
         growPercentage1.add(1);growPercentage1.add(-2);growPercentage1.add(3);growPercentage1.add(3);growPercentage1.add(-4);growPercentage1.add(5);growPercentage1.add(6);growPercentage1.add(7);
 
         BarChart BarChart1 = binding.barChartDouble;
+
+
+        addData(hashMapbarchart, "2024-07-19", "100", "50");
+        addData(hashMapbarchart, "2024-07-18", "80", "45");
+        addData(hashMapbarchart, "2024-07-17", "120", "55");
+
         DoubleBarChart doubleBarChart=new DoubleBarChart(BarChart1,xlabels123,growPercentage1);
-        doubleBarChart.setDetails1(getBarEntriesOne(),"Oct-2023",Color.parseColor("#3ACA06"));
-        doubleBarChart.setDetails2(getBarEntriesTwo(),"Oct-2022",Color.parseColor("#1F7102"));
+        doubleBarChart.setDetails1(getBarEntriesOne(),"BM",Color.parseColor("#3ACA06"));
+        doubleBarChart.setDetails2(getBarEntriesTwo(),"CM",Color.parseColor("#1F7102"));
         doubleBarChart.isValueSelected(true);
         doubleBarChart.setAboveImageEnable(true);
         doubleBarChart.setAboveTextColor(Color.BLACK);
         doubleBarChart.createBarChart();
     }
     ArrayList<String> xlabels123 = new ArrayList<>();
+//    String[] xLabels = new String[]{"MTD","LM","YTD","LY","QW","PS","SK"};
     String[] xLabels = new String[]{"MTD","LM","YTD","LY","QW","PS","SK"};
     ArrayList<Integer> growPercentage1 = new ArrayList<>();
 
@@ -120,6 +131,54 @@ public class DashboardFragment extends BaseFragment {
         jsonObject.addProperty("TDATE", CalendarUtils.getDatePattern3());
         jsonObject.addProperty("SHIFT",shift);
         repository.getMData(getViewLifecycleOwner(),jsonObject).observe(this, new Observer<JsonObject>() {
+            @Override
+            public void onChanged(JsonObject jsonObject) {
+                if (jsonObject != null) {
+                    Log.d("TAG", jsonObject.toString());
+                    Gson gson = new Gson();
+                    milkDOS = gson.fromJson(jsonObject.getAsJsonArray("Data"), milkDO[].class);
+                    // rateDOs = gson.fromJson(jsonObject.toString(), rateDO[].class);
+                    if (milkDOS != null) {
+                        if(milkDOS!=null&&milkDOS.length>0) {
+                            double buffqty = 0, cowqty = 0,qty = 0, amt = 0, ltrfat = 0, ltrsnf = 0;
+                            for (int i = 0; i < milkDOS.length; i++) {
+                                qty += milkDOS[i].QUANTITY;
+                                if (milkDOS[i].MILKTYPE.equals("Buff")) {
+                                    buffqty += milkDOS[i].QUANTITY;
+                                } else if (milkDOS[i].MILKTYPE.equals("Cow")) {
+                                    cowqty += milkDOS[i].QUANTITY;
+                                }
+                                ltrfat += ((milkDOS[i].FAT * milkDOS[i].QUANTITY)/100);
+//                        ltrfat += ((mdata.get(i).getFat() * mdata.get(i).getQuantity()) / 100);
+                                ltrsnf += ((milkDOS[i].SNF * milkDOS[i].QUANTITY) / 100);
+                                amt += milkDOS[i].AMOUNT;
+                            }
+                            binding.txtcowqty.setText(String.format("%.1f",cowqty));
+                            binding.txtbuffqty.setText(String.format("%.1f",buffqty));
+                            binding.txttotalamt.setText(String.format("%.1f",amt));
+                            binding.txttotalqty.setText(String.format("%.1f",qty));
+                            binding.txtavgfat.setText(String.format("%.1f",(ltrfat / qty) * 100));
+//                    binding.txtavgsnf.setText(String.format("%.1f",(ltrsnf)));
+                            binding.txtavgsnf.setText(String.format("%.1f",(ltrsnf / qty) * 100));
+                        }
+                        else {
+                            binding.txtcowqty.setText(String.valueOf(0));
+                            binding.txtbuffqty.setText(String.valueOf(0));
+                            binding.txttotalamt.setText(String.valueOf(0));
+                            binding.txttotalqty.setText(String.valueOf(0));
+                            binding.txtavgfat.setText(String.valueOf(0));
+                            binding.txtavgsnf.setText(String.valueOf(0));
+                        }
+                    }
+                }
+            }
+        });
+    }
+    public void refreshbarchartData(){
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("STARTDATE", CalendarUtils.getDatePattern3());
+        jsonObject.addProperty("ENDDATE", CalendarUtils.getDatePattern3());
+        repository.getMData2(getViewLifecycleOwner(),jsonObject).observe(this, new Observer<JsonObject>() {
             @Override
             public void onChanged(JsonObject jsonObject) {
                 if (jsonObject != null) {
@@ -344,6 +403,16 @@ public class DashboardFragment extends BaseFragment {
         barEntries.add(new BarEntry(6f, 80));
         barEntries.add(new BarEntry(7f, 60));
         return barEntries;
+    }
+    private static void addData(HashMap<String, Map<String, String>> hashMapbarchart,
+                                String date, String bmtotal, String cmtotal) {
+        // Create the inner map
+        HashMap<String, String> innerMap = new HashMap<>();
+        innerMap.put("bmtotal", bmtotal);
+        innerMap.put("cmtotal", cmtotal);
+
+        // Add the inner map to the outer HashMap
+        hashMapbarchart.put(date, innerMap);
     }
 
 }

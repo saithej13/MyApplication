@@ -22,6 +22,7 @@ import com.vst.myapplication.databinding.McollectioncellBinding;
 public class milkCollectionAdapter extends RecyclerView.Adapter<milkCollectionAdapter.ViewHolder> implements Filterable {
     McollectioncellBinding binding;
     Context context;
+    private RatesAdapter.ItemClickListener mClickListener;
     private milkDO[] mData;
     private LayoutInflater inflater;
     @Override
@@ -54,6 +55,12 @@ public class milkCollectionAdapter extends RecyclerView.Adapter<milkCollectionAd
             ((TextView) holder.itemView.findViewById(R.id.txtsnf)).setText(String.valueOf(milkDOs.SNF));
             ((TextView) holder.itemView.findViewById(R.id.txtrate)).setText(String.valueOf(milkDOs.RATE));
             ((TextView) holder.itemView.findViewById(R.id.txtamt)).setText(String.valueOf(milkDOs.AMOUNT));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    milkCollection.getPrintSlip(milkDOs);
+                }
+            });
         }
 
     }
@@ -73,5 +80,11 @@ public class milkCollectionAdapter extends RecyclerView.Adapter<milkCollectionAd
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
+    }
+    public void setClickListener(RatesAdapter.ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 }

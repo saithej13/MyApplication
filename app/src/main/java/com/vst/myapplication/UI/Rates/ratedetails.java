@@ -185,6 +185,13 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                 showpopup(null,-1);
             }
         });
+        final String[] SelectRateType = {"Purchase", "Sale"};
+        binding.llOverView.llratetype.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDropDown(view, binding.llOverView.tvratetype, SelectRateType);
+            }
+        });
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,6 +201,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                         if(SLNO==0) {
                             rateDo = new rateDO();
                             rateDo.MILKTYPE = binding.llOverView.tvmilktype.getText().toString();
+                            rateDo.RATETYPE = binding.llOverView.tvratetype.getText().toString();
                             rateDo.STARTDATE = binding.llOverView.tvstartdate.getText().toString();
                             rateDo.ENDDATE = binding.llOverView.tvenddate.getText().toString();
                             RateAndDetails rateAndDetails = new RateAndDetails(rateDo, vecratedetailsdo);
@@ -211,6 +219,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                         {
                             rateDo.SLNO = SLNO;
                             rateDo.MILKTYPE = binding.llOverView.tvmilktype.getText().toString();
+                            rateDo.RATETYPE = binding.llOverView.tvratetype.getText().toString();
                             rateDo.STARTDATE = binding.llOverView.tvstartdate.getText().toString();
                             rateDo.ENDDATE = binding.llOverView.tvenddate.getText().toString();
                             RateAndDetails rateAndDetails = new RateAndDetails(rateDo, vecratedetailsdo);
@@ -253,6 +262,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                             binding.llOverView.tvstartdate.setText(rateDo.STARTDATE);
                             binding.llOverView.tvenddate.setText(rateDo.ENDDATE);
                             binding.llOverView.tvmilktype.setText(rateDo.MILKTYPE);
+                            binding.llOverView.tvratetype.setText(rateDo.RATETYPE);
                             for(int i=0;i<rateAndDetails[0].rateDetailsList.size();i++)
                             {
                                 ratedetailsDO ratedetailsDo = new ratedetailsDO();

@@ -62,19 +62,7 @@ public class Settings extends BaseFragment {
 
     }
 
-    private void setDropDown(View v, TextView tv, String[] stringArray) {
-        PopupMenu popupMenu = new PopupMenu(getContext(), v);
-        for (int i = 0; i < stringArray.length; i++) {
-            if (!stringArray[i].equals(tv.getText().toString()))
-                popupMenu.getMenu().add(stringArray[i]);
-        }
-        popupMenu.setOnMenuItemClickListener(item -> {
-            String selectedOption = item.getTitle().toString();
-            tv.setText(selectedOption);
-            return true;
-        });
-        popupMenu.show();
-    }
+
 
     
 

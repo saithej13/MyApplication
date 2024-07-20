@@ -18,6 +18,8 @@ public class rateDO implements Serializable {
     public int SLNO;
     @SerializedName("MILKTYPE")
     public String MILKTYPE;
+    @SerializedName("RATETYPE")
+    public String RATETYPE="";
     @SerializedName("STARTDATE")
     public String STARTDATE;
     @SerializedName("ENDDATE")

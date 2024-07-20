@@ -48,7 +48,7 @@ public class farmers extends BaseFragment {
     famers_VM farmersVM;
     farmerDO[] farmerDOs;
     FarmersAdapter farmersAdapter;
-FarmerEntryPopupBinding farmerEntrybinding;
+    FarmerEntryPopupBinding farmerEntrybinding;
     private ProjectRepository repository;
     roomRepository roomrepo;
     @Override

@@ -85,7 +85,7 @@ public interface RoomService {
     //    @Query("SELECT * FROM tblrates where MILKTYPE=:mtype and :tdate between STARTDATE and ENDDATE and :fat between FATMIN and FATMAX and :snf between SNFMIN and SNFMAX")
 //    LiveData<List<rateDO>> gettsrate(String mtype, String tdate, double fat, double snf);
     @Transaction
-    @Query("SELECT RD.RATE FROM tblrates R INNER JOIN tblratesdetails RD ON R.SLNO = RD.SLNO WHERE MILKTYPE=:MILKTYPE AND :TDATE BETWEEN R.STARTDATE AND R.ENDDATE AND :FAT BETWEEN RD.FATMIN AND RD.FATMAX AND :SNF BETWEEN RD.SNFMIN AND RD.SNFMAX LIMIT 1")
+    @Query("SELECT RD.RATE FROM tblrates R INNER JOIN tblratesdetails RD ON R.SLNO = RD.SLNO WHERE MILKTYPE=:MILKTYPE AND RATETYPE='PURCHASE' AND :TDATE BETWEEN R.STARTDATE AND R.ENDDATE AND :FAT BETWEEN RD.FATMIN AND RD.FATMAX AND :SNF BETWEEN RD.SNFMIN AND RD.SNFMAX LIMIT 1")
     LiveData<Double> gettsrate(String MILKTYPE, String TDATE, double FAT, double SNF);
 
     @Query("SELECT * FROM tblfarmers WHERE FARMERID = :code")
@@ -93,6 +93,8 @@ public interface RoomService {
 
     @Query("SELECT * FROM tblmilkdata where TDATE=:tdate and SHIFT=:shift")
     LiveData<List<milkDO>> getmilkdata(String tdate, String shift);
+    @Query("SELECT * FROM tblmilkdata where TDATE BETWEEN :STARTDATE AND :ENDDATE")
+    LiveData<List<milkDO>> getmilkdata2(String STARTDATE, String ENDDATE);
 
 //    @Query("SELECT * FROM tblrates where MILKTYPE=:mtype and :tdate between STARTDATE and ENDDATE and :fat between FATMIN and FATMAX and :snf between SNFMIN and SNFMAX")
 //    LiveData<List<rateDO>> gettsrate(String mtype, String tdate, double fat, double snf);

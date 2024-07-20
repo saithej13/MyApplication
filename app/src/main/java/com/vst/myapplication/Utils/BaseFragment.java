@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import com.vst.myapplication.R;
 import com.vst.myapplication.MainActivity;
@@ -349,6 +350,20 @@ public abstract class BaseFragment extends Fragment {
 
 
     public void onButtonNoClick(String from) {
+    }
+
+    public void setDropDown(View v, TextView tv, String[] stringArray) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        for (int i = 0; i < stringArray.length; i++) {
+            if (!stringArray[i].equals(tv.getText().toString()))
+                popupMenu.getMenu().add(stringArray[i]);
+        }
+        popupMenu.setOnMenuItemClickListener(item -> {
+            String selectedOption = item.getTitle().toString();
+            tv.setText(selectedOption);
+            return true;
+        });
+        popupMenu.show();
     }
 
 

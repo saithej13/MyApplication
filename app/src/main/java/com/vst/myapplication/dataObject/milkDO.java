@@ -15,12 +15,10 @@ public class milkDO implements Serializable {
     public String TDATE;
     @SerializedName("SHIFT")
     public String SHIFT;
-
     @SerializedName("MILKTYPE")
     public String MILKTYPE;
     @SerializedName("FARMERID")
     public String FARMERID;
-
     @SerializedName("FARMERNAME")
     public String FARMERNAME;
     @SerializedName("QUANTITY")

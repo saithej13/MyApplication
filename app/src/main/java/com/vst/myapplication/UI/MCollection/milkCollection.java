@@ -1,7 +1,14 @@
 package com.vst.myapplication.UI.MCollection;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -29,6 +36,7 @@ import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NetworkUtils;
 import com.vst.myapplication.Utils.StringUtils;
+import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -36,12 +44,15 @@ import com.vst.myapplication.databinding.McollectionBinding;
 
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
-public class milkCollection extends BaseFragment {
+public class milkCollection extends BaseFragment implements milkCollectionAdapter.ItemClickListener{
     private Dialog dialog;
     boolean active=true;
     McollectionBinding binding;
@@ -218,7 +229,8 @@ public class milkCollection extends BaseFragment {
                             milkCollectionVm.insertMdataRoom(milkDo);
                             clearfields();
                             refreshData();
-                            print(milkDo);
+//                            print(milkDo);
+                            getPrintSlip(milkDo);
                         }
                     }
                     else {
@@ -364,7 +376,8 @@ public class milkCollection extends BaseFragment {
                             milkCollectionVm.insertMdata(milkDo);
                             clearfields();
                             refreshData();
-                            print(milkDo);
+//                            print(milkDo);
+                            getPrintSlip(milkDo);
                         } else {
                             Toast.makeText(getContext(), "please make sure all the fields are filled up", Toast.LENGTH_SHORT).show();
                         }
@@ -604,12 +617,95 @@ public class milkCollection extends BaseFragment {
     public void onButtonYesClick(String from) throws JSONException {
         super.onButtonYesClick(from);
         if (from.equals("PRINT")) {
-            try {
-                printData();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            getPrintSlip();
+
+//            try {
+//                getPrintSlip();
+////                printData();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
     }
+    public static Bitmap getPrintSlip(milkDO mdata){
+        File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/PrinterTest");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        int salesHeight = 1, freeGoodsHeight = 1, damageHeight = 1;
+//            n = generator.nextInt(n);
+        n = generator.nextInt((200 - 100) + 1) + 100;
+        String fname = "Image-" + n + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        Bitmap bmp = null;
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            int width = 460;
+            int height = 950 + ((salesHeight + freeGoodsHeight + damageHeight) *30);
+            bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            // NEWLY ADDED CODE STARTS HERE [
+            Canvas canvas = new Canvas(bmp);
+            Paint paintBG = new Paint();
+            paintBG.setColor(Color.WHITE);
+            canvas.drawRect(0, 0, width, height, paintBG);
+            int het1 = 40;
+            String[] as1 = null;
+            String[] Header = null;
+            int Headerh1 = 20+40;
+            Header = new String[]{"Header","______________________________________________"};
+            if (Header != null) {
+                for (int i = 0; i < Header.length; i++) {
+                    canvas.drawText(Header[i], 30,Headerh1, getPaintObjHeaderNew(22));
+                    Headerh1 += 30;
+                }
+            }
+            as1 = new String[]{"TDATE : "+mdata.TDATE,"SHIFT : "+mdata.SHIFT,
+                    "Farmer Code:" + mdata.FARMERID,"Name:" + mdata.FARMERNAME,
+                    "Milk Type:" +mdata.MILKTYPE,"Milk Qty:" + mdata.QUANTITY,
+                    "Fat:" + mdata.FAT, "Snf:" + mdata.SNF,"Rate:" + mdata.RATE,
+                    "Amount:" + mdata.AMOUNT
+            };
+//            as1  = getInner();
+            int h1 = 20+Headerh1;
+            if (as1 != null) {
+                for (int i = 0; i < as1.length; i++) {
+                    canvas.drawText(as1[i], 30,h1, getPaintObjHeaderNew(16));
+                    h1 += 20;
+                }
+            }
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bmp != null)
+                bmp.recycle();
+        }
+        return BitmapFactory.decodeFile(file.getAbsolutePath());
+    }
+    public String getInner(){
+        String singleText = "%1$30.30s \r\n";
+        String s;
+        s="";
+        s += "\r\n";
+        s+=String.format(singleText, "HI Sai");
+        return s;
+    }
+    private static Paint getPaintObjHeaderNew(int textsize) {
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK); // Text Color
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        paint.setStrokeWidth(12); // Text Size
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+        paint.setTextSize(textsize);
+        return paint;
+    }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        Log.d("TAG", "onItemClick"+position);
+    }
 }

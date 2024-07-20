@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />
 
@@ -54,6 +55,9 @@
             android:screenOrientation="portrait"
             android:exported="true"/>
         <activity android:name=".UI.Register.register_notice_activity"
+            android:screenOrientation="portrait"
+            android:exported="true"/>
+        <activity android:name=".UI.onboarding.onboarding"
             android:screenOrientation="portrait"
             android:exported="true"/>
     </application>
