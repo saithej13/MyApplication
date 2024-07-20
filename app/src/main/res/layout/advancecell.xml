@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/acc"
+        android:padding="5dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:text="0"
+            android:id="@+id/txtcode"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/colourPrimary"
+            android:textSize="25dp"
+            android:background="@drawable/circle"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+        <TextView
+            android:text="First Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtcname"
+            android:textSize="17sp"
+            android:maxLength="30"
+            android:textStyle="bold"
+            android:textColor="@color/colourPrimary"
+            android:gravity="start"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@id/txtcode"
+            android:layout_toLeftOf="@id/textcusttype"
+            />
+
+        <TextView
+            android:id="@+id/txtamount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtcname"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@id/textcusttype"
+            android:layout_toRightOf="@id/txtcode"
+            android:gravity="left"
+            android:maxLength="30"
+            android:text="Mobile No"
+            android:textColor="@color/colourPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textcusttype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toLeftOf="@id/txtcusttype"
+            android:gravity="center"
+            android:maxLength="30"
+            android:text="@string/customer_type"
+            android:textColor="@color/colourPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/txtcusttype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            android:maxLength="30"
+            android:text="@string/customer_type"
+            android:textColor="@color/colourPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/ivedit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp10"
+            android:layout_toLeftOf="@+id/ivdelete"
+            android:layout_below="@id/txtcusttype"
+            android:src="@drawable/baseline_edit_24" />
+        <ImageView
+            android:id="@+id/ivdelete"
+            android:layout_width="@dimen/dp20"
+            android:layout_height="@dimen/dp20"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/txtcusttype"
+            android:src="@drawable/ic_baseline_delete_24"
+            />
+    </RelativeLayout>
+</LinearLayout>
+</layout>

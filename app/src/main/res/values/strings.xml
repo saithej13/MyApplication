@@ -17,6 +17,7 @@
     <string name="Mobile_No">Mobile No.</string>
     <string name="Enter_Mobile_No_Here">Enter Mobile No. Here..,</string>
     <string name="Milk_Type">Milk Type</string>
+    <string name="customer_type">Customer Type</string>
     <string name="Rate_Type">Rate Type</string>
     <string name="Select_Rate_Type">Select Rate Type</string>
     <string name="Submit">Submit</string>

@@ -12,6 +12,7 @@ import androidx.room.Query;
 import com.google.gson.JsonObject;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.dataObject.RateAndDetails;
+import com.vst.myapplication.dataObject.advanceDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -38,6 +39,12 @@ RoomService roomService;
     }
     public void insertmilkdata(milkDO mdata){
         new InsertMilkDataAsyncTask(roomService).execute(mdata);
+    }
+    public void insertAdvance(advanceDO advance){
+        new InsertAdvanceDataAsyncTask(roomService).execute(advance);
+    }
+    public void updateAdvance(advanceDO advance){
+        new UpdateAdvanceAsyncTask(roomService).execute(advance);
     }
     public List<farmerDO> getfarmerbyid(String farmerCode) {
         int code = Integer.parseInt(farmerCode);
@@ -155,6 +162,17 @@ RoomService roomService;
             return null;
         }
     }
+    private static class InsertAdvanceDataAsyncTask extends AsyncTask<advanceDO,Void,Void> {
+        RoomService roomService;
+        private InsertAdvanceDataAsyncTask(RoomService roomService){
+            this.roomService = roomService;
+        }
+        @Override
+        protected Void doInBackground(advanceDO... advance) {
+            roomService.insertAdvance(advance[0]);
+            return null;
+        }
+    }
     private static class InsertFarmersAsyncTask extends AsyncTask<farmerDO,Void,Void> {
         RoomService roomService;
         private InsertFarmersAsyncTask(RoomService roomService){
@@ -234,6 +252,41 @@ RoomService roomService;
                 rateDetails.SLNO = rateAndDetails.rate.SLNO;
                 roomService.insertRatesdetails(rateDetails);
             }
+            return null;
+        }
+    }
+    private static class UpdateAdvanceAsyncTask extends AsyncTask<advanceDO,Void,Void> {
+        RoomService roomService;
+        private UpdateAdvanceAsyncTask(RoomService roomService){
+            this.roomService = roomService;
+        }
+        @Override
+        protected Void doInBackground(advanceDO... rateAndDetailsArray) {
+//            advanceDO advance = advanceDO[0];
+//            if (advance == null) {
+//                Log.e("UpdateAdvanceAsyncTask", "advanceDO is null");
+//                return null;
+//            }
+//
+//            if (advance.TDATE == null) {
+//                Log.e("UpdateAdvanceAsyncTask", "advanceDO.TDATE is null");
+//                return null;
+//            }
+////            int slno, String milkType, String startDate, String endDate
+//            roomService.upda(rateAndDetails.rate.SLNO,rateAndDetails.rate.MILKTYPE,rateAndDetails.rate.STARTDATE,rateAndDetails.rate.ENDDATE);
+//            roomService.deleteRateDetails(rateAndDetails.rate.SLNO);
+//            if (rateAndDetails.rateDetailsList == null) {
+//                Log.e("UpdateRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
+//                return null;
+//            }
+//            for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
+//                if (rateDetails == null) {
+//                    Log.e("UpdateRatesAsyncTask", "rateDetails is null");
+//                    continue;
+//                }
+//                rateDetails.SLNO = rateAndDetails.rate.SLNO;
+//                roomService.insertRatesdetails(rateDetails);
+//            }
             return null;
         }
     }

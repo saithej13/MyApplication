@@ -9,13 +9,15 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.vst.myapplication.Utils.MyApplicationNew;
+import com.vst.myapplication.dataObject.advanceDO;
+import com.vst.myapplication.dataObject.customerDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
 import com.vst.myapplication.dataObject.ratedetailsDO;
 import com.vst.myapplication.dataObject.userDO;
 
-@androidx.room.Database(entities = {farmerDO.class,   milkDO.class, rateDO.class, ratedetailsDO.class, userDO.class},version = 1,exportSchema = false)
+@androidx.room.Database(entities = {farmerDO.class,   milkDO.class, rateDO.class, ratedetailsDO.class, userDO.class, advanceDO.class, customerDO.class},version = 1,exportSchema = false)
 public abstract class Database extends RoomDatabase {
     private static Database instance;
     public abstract RoomService roomService();

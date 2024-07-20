@@ -208,6 +208,20 @@
                         android:textSize="@dimen/text_size_small_14sp" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tvSubmit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/size10"
+                    android:layout_marginBottom="@dimen/size10"
+                    android:background="@drawable/corner_radius_16"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/size10"
+                    android:text="Submit"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
@@ -229,20 +243,6 @@
 <!--                    android:textColor="@color/white"-->
 <!--                    android:textSize="@dimen/size16" />-->
             </androidx.cardview.widget.CardView>
-            <TextView
-                android:id="@+id/tvSubmit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="center"
-                android:layout_alignParentBottom="true"
-                android:paddingVertical="@dimen/size10"
-                android:layout_marginHorizontal="@dimen/size10"
-                android:layout_marginBottom="@dimen/size10"
-                android:background="@drawable/corner_radius_16"
-                android:text="Submit"
-                android:textColor="@color/white"
-                android:textSize="@dimen/size16" />
 
         </RelativeLayout>
     </ScrollView>

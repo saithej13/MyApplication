@@ -1,5 +1,6 @@
 package com.vst.myapplication.UI.menu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.Advance.advancefragment;
 import com.vst.myapplication.UI.Farmers.farmers;
 import com.vst.myapplication.UI.Login.Login;
+import com.vst.myapplication.UI.Login.LoginNew;
 import com.vst.myapplication.UI.MCollection.milkCollection;
 import com.vst.myapplication.UI.Rates.rates;
 import com.vst.myapplication.UI.cusotmer.customer;
@@ -22,6 +24,8 @@ import com.vst.myapplication.UI.sale.sale;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.Settings;
 import com.vst.myapplication.databinding.MenuBinding;
+
+import org.json.JSONException;
 
 public class menuFragment extends BaseFragment {
     MenuBinding binding;
@@ -116,5 +120,14 @@ public class menuFragment extends BaseFragment {
             }
         });
 
+    }
+    @Override
+    public void onButtonYesClick(String from) throws JSONException {
+        super.onButtonYesClick(from);
+        if (from.equals("logout")) {
+            Intent intent = new Intent(getActivity(), LoginNew.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
     }
 }

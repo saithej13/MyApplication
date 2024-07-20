@@ -12,6 +12,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.vst.myapplication.dataObject.RateAndDetails;
+import com.vst.myapplication.dataObject.advanceDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -46,6 +47,8 @@ public interface RoomService {
 
     @Insert
     void insertMilkdata(milkDO mdata);
+    @Insert
+    void insertAdvance(advanceDO advance);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertRates(rateDO rates);
@@ -113,4 +116,14 @@ public interface RoomService {
 
 //    @Query("update tblfarmers set avlqty=:remqty where productid=:productid")
 //    void updateProductAvlQty(String productid,double remqty);
+
+
+    @Query("SELECT * FROM tbladvances")
+    LiveData<List<advanceDO>> getadvances();
+
+    @Query("SELECT * FROM tblcustomer")
+    LiveData<List<advanceDO>> getcustomers();
+
+    @Query("UPDATE tbladvances SET TDATE=:TDATE,NAME=:NAME,CUSTOMERTYPE=:CUSTOMERTYPE,AMOUNT=:AMOUNT,REMARKS=:REMARKS WHERE ID=:ID AND SLNO=:SLNO")
+    void updateAdvance(String TDATE,String NAME,String CUSTOMERTYPE,String AMOUNT,String REMARKS,String ID,int SLNO);
 }

@@ -17,6 +17,7 @@ import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.R;
 import com.vst.myapplication.UI.Dashboard.DashboardFragment;
 import com.vst.myapplication.UI.Register.register_notice_activity;
+import com.vst.myapplication.UI.onboarding.onboarding;
 import com.vst.myapplication.databinding.LoginBinding;
 import com.vst.myapplication.databinding.RegisterNoticeBinding;
 
@@ -48,7 +49,8 @@ public class LoginNew extends AppCompatActivity {
         binding.btnForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginNew.this, forgetpassword_activity.class));
+//                startActivity(new Intent(LoginNew.this, forgetpassword_activity.class));
+                startActivity(new Intent(LoginNew.this, onboarding.class));
             }
         });
     }
