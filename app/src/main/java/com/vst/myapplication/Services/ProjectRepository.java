@@ -20,6 +20,7 @@ import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.advanceDO;
+import com.vst.myapplication.dataObject.customerDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -568,15 +569,67 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return data;
     }
-    public MutableLiveData<JsonObject> getcustomers() {
+    public MutableLiveData<JsonObject> getAdvancesbyslno(int SLNO) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB) {
-            roomService.getcustomers().observe(lifecycleOwner, new Observer<List<advanceDO>>() {
+            roomService.getadvancesbyslno(SLNO).observe(lifecycleOwner, new Observer<List<advanceDO>>() {
                 @Override
                 public void onChanged(List<advanceDO> advanceDOS) {
                     Gson gson = new Gson();
                     JsonObject jsonObject = new JsonObject();
                     String jsonArrayString = gson.toJson(advanceDOS);
+                    try {
+                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+                        jsonObject.add("Data", jsonArray);
+                    } catch (JsonSyntaxException e) {
+                        Log.e("Log Response", "Error parsing JSON array", e);
+                        jsonObject.add("Data", new JsonArray());
+                    }
+                    Log.d("Log Response", "" + jsonObject);
+                    data.setValue(jsonObject);
+                }
+            });
+        }
+        else{
+            //API
+        }
+        return data;
+    }
+    public MutableLiveData<JsonObject> getcustomers() {
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB) {
+            roomService.getcustomers().observe(lifecycleOwner, new Observer<List<customerDO>>() {
+                @Override
+                public void onChanged(List<customerDO> customerDOS) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    String jsonArrayString = gson.toJson(customerDOS);
+                    try {
+                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+                        jsonObject.add("Data", jsonArray);
+                    } catch (JsonSyntaxException e) {
+                        Log.e("Log Response", "Error parsing JSON array", e);
+                        jsonObject.add("Data", new JsonArray());
+                    }
+                    Log.d("Log Response", "" + jsonObject);
+                    data.setValue(jsonObject);
+                }
+            });
+        }
+        else{
+            //API
+        }
+        return data;
+    }
+    public MutableLiveData<JsonObject> getcustomerbyslno(int SLNO) {
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB) {
+            roomService.getcustomerbyslno(SLNO).observe(lifecycleOwner, new Observer<List<customerDO>>() {
+                @Override
+                public void onChanged(List<customerDO> customerDOS) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    String jsonArrayString = gson.toJson(customerDOS);
                     try {
                         JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
                         jsonObject.add("Data", jsonArray);
@@ -607,6 +660,7 @@ public MutableLiveData<JsonObject> getrates() {
             advance.CUSTOMERTYPE = payload.get("CUSTOMERTYPE").getAsString();
             advance.AMOUNT = payload.get("AMOUNT").getAsString();
             advance.REMARKS = payload.get("REMARKS").getAsString();
+            advance.SLNO = SLNO;
             if(SLNO==0)
             {
                 roomrepo.insertAdvance(advance);
@@ -618,21 +672,34 @@ public MutableLiveData<JsonObject> getrates() {
         }
         else {
 
-            apiClient.InsertFarmer(payload).enqueue(new Callback<JsonObject>() {
-                @Override
-                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    Log.d("URL", "getFarmerbycode Request-->" + payload);
-                    if (response.isSuccessful()) {
-                        data.setValue(response.body());
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<JsonObject> call, Throwable t) {
-                    Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
-                    data.setValue(null);
-                }
-            });
+        }
+        return data;
+    }
+    public MutableLiveData<JsonObject> InsertUpdateCustomer(JsonObject payload) {
+        Log.d("URL","getFarmerbycode Request-->"+payload);
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB)
+        {
+            int SLNO = payload.get("SLNO").getAsInt();
+            customerDO customer = new customerDO();
+            customer.CUSTOMERCODE = payload.get("CUSTOMERCODE").getAsString();
+            customer.CUSTOMERNAME = payload.get("CUSTOMERNAME").getAsString();
+            customer.MOBILENO = payload.get("MOBILENO").getAsString();
+            customer.ISACTIVE = payload.get("ISACTIVE").getAsString();
+            customer.SLNO = SLNO;
+            if(SLNO==0)
+            {
+                roomrepo.insertCustomer(customer);
+            }
+            else {
+                roomrepo.updateCustomer(customer);
+            }
+//            roomService.InsertAdvanceDataAsyncTask
+        }
+        else {
+
+
         }
         return data;
     }

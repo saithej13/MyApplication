@@ -13,6 +13,7 @@ import androidx.room.Update;
 
 import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.advanceDO;
+import com.vst.myapplication.dataObject.customerDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -49,6 +50,9 @@ public interface RoomService {
     void insertMilkdata(milkDO mdata);
     @Insert
     void insertAdvance(advanceDO advance);
+
+    @Insert
+    void insertCustomer(customerDO customer);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertRates(rateDO rates);
@@ -120,10 +124,17 @@ public interface RoomService {
 
     @Query("SELECT * FROM tbladvances")
     LiveData<List<advanceDO>> getadvances();
+    @Query("SELECT * FROM tbladvances where SLNO=:SLNO LIMIT 1")
+    LiveData<List<advanceDO>> getadvancesbyslno(int SLNO);
 
     @Query("SELECT * FROM tblcustomer")
-    LiveData<List<advanceDO>> getcustomers();
+    LiveData<List<customerDO>> getcustomers();
+    @Query("SELECT * FROM tblcustomer WHERE SLNO=:SLNO LIMIT 1")
+    LiveData<List<customerDO>> getcustomerbyslno(int SLNO);
 
     @Query("UPDATE tbladvances SET TDATE=:TDATE,NAME=:NAME,CUSTOMERTYPE=:CUSTOMERTYPE,AMOUNT=:AMOUNT,REMARKS=:REMARKS WHERE ID=:ID AND SLNO=:SLNO")
     void updateAdvance(String TDATE,String NAME,String CUSTOMERTYPE,String AMOUNT,String REMARKS,String ID,int SLNO);
+
+    @Query("UPDATE tblcustomer SET CUSTOMERCODE=:CUSTOMERCODE,CUSTOMERNAME=:CUSTOMERNAME,MOBILENO=:MOBILENO,ISACTIVE=:ISACTIVE WHERE  SLNO=:SLNO")
+    void updateCustomer(String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,String ISACTIVE,int SLNO);
 }

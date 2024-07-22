@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
+import com.vst.myapplication.UI.Advance.addadvance;
 import com.vst.myapplication.UI.Advance.advancesAdapter;
 import com.vst.myapplication.UI.Rates.RatesAdapter;
 import com.vst.myapplication.Utils.BaseFragment;
@@ -74,10 +75,15 @@ public class customer extends BaseFragment implements RatesAdapter.ItemClickList
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle mBundle = new Bundle();
+                mBundle.putBoolean("edit", false);
+                mBundle.putInt("SLNO", 0);
+                addcustomer customer = new addcustomer();
+                customer.setArguments(mBundle);
                 FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .replace(R.id.frame, new addcustomer(), "")
+                        .replace(R.id.frame, customer, "")
                         .addToBackStack("")
                         .commitAllowingStateLoss();
             }

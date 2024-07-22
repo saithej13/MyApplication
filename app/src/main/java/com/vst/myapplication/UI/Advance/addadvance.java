@@ -2,6 +2,7 @@ package com.vst.myapplication.UI.Advance;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +10,25 @@ import android.widget.DatePicker;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.Rates.rates_VM;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
+import com.vst.myapplication.Utils.NetworkUtils;
 import com.vst.myapplication.Utils.StringUtils;
 import com.vst.myapplication.dataObject.advanceDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.databinding.AddadvanceBinding;
+
+import org.json.JSONException;
 
 import java.util.Calendar;
 
@@ -31,6 +39,8 @@ public class addadvance extends BaseFragment {
     int mdate,mmonth,myear;
     advancesVM advancesV_M;
     int SLNO = 0;
+    boolean edit=false;
+    advanceDO[] data;
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.addadvance, parent, false);
@@ -42,6 +52,34 @@ public class addadvance extends BaseFragment {
         return binding.getRoot();
     }
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
+        edit = getArguments().getBoolean("edit");
+        SLNO = getArguments().getInt("SLNO");
+        if(edit)
+        {
+            if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
+                repository.getAdvances().observe(this, new Observer<JsonObject>() {
+                    @Override
+                    public void onChanged(JsonObject jsonObject) {
+                        if (jsonObject != null) {
+                            Log.d("TAG", jsonObject.toString());
+                            Gson gson = new Gson();
+                            data = gson.fromJson(jsonObject.getAsJsonArray("Data"), advanceDO[].class);
+                            if (data != null) {
+                                if (data.length > 0) {
+                                    binding.etremarks.setText(data[0].REMARKS);
+                                    binding.etamount.setText(data[0].AMOUNT);
+                                    binding.tvSelectDate.setText(data[0].TDATE);
+                                    binding.tvselectcustomertype.setText(data[0].CUSTOMERTYPE);
+                                    binding.tvselectcustomer.setText(data[0].NAME);
+                                } else {
+                                    data = new advanceDO[]{};
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
         binding.tvSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +131,7 @@ public class addadvance extends BaseFragment {
                     advance.AMOUNT = amount;
                     advance.REMARKS = remarks;
                     advancesV_M.insertAdvance(advance);
+                    showCustomDialog(getContext(),"Success","Advance Details Saved","OK",null,"success");
                     //farmersVM.insertFarmer(farmerDo);
                 }
                 else{
@@ -100,5 +139,13 @@ public class addadvance extends BaseFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onButtonYesClick(String from) throws JSONException {
+        super.onButtonYesClick(from);
+        if(from.equalsIgnoreCase("success")){
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
     }
 }

@@ -11,8 +11,10 @@ import androidx.room.Query;
 
 import com.google.gson.JsonObject;
 import com.vst.myapplication.Utils.MyApplicationNew;
+import com.vst.myapplication.Utils.StringUtils;
 import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.advanceDO;
+import com.vst.myapplication.dataObject.customerDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -45,6 +47,12 @@ RoomService roomService;
     }
     public void updateAdvance(advanceDO advance){
         new UpdateAdvanceAsyncTask(roomService).execute(advance);
+    }
+    public void insertCustomer(customerDO cusotmer){
+        new InsertCustomerDataAsyncTask(roomService).execute(cusotmer);
+    }
+    public void updateCustomer(customerDO cusotmer){
+        new updateCustomerAsyncTask(roomService).execute(cusotmer);
     }
     public List<farmerDO> getfarmerbyid(String farmerCode) {
         int code = Integer.parseInt(farmerCode);
@@ -261,33 +269,45 @@ RoomService roomService;
             this.roomService = roomService;
         }
         @Override
-        protected Void doInBackground(advanceDO... rateAndDetailsArray) {
-//            advanceDO advance = advanceDO[0];
-//            if (advance == null) {
-//                Log.e("UpdateAdvanceAsyncTask", "advanceDO is null");
-//                return null;
-//            }
-//
-//            if (advance.TDATE == null) {
-//                Log.e("UpdateAdvanceAsyncTask", "advanceDO.TDATE is null");
-//                return null;
-//            }
-////            int slno, String milkType, String startDate, String endDate
-//            roomService.upda(rateAndDetails.rate.SLNO,rateAndDetails.rate.MILKTYPE,rateAndDetails.rate.STARTDATE,rateAndDetails.rate.ENDDATE);
-//            roomService.deleteRateDetails(rateAndDetails.rate.SLNO);
-//            if (rateAndDetails.rateDetailsList == null) {
-//                Log.e("UpdateRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
-//                return null;
-//            }
-//            for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
-//                if (rateDetails == null) {
-//                    Log.e("UpdateRatesAsyncTask", "rateDetails is null");
-//                    continue;
-//                }
-//                rateDetails.SLNO = rateAndDetails.rate.SLNO;
-//                roomService.insertRatesdetails(rateDetails);
-//            }
+        protected Void doInBackground(advanceDO... advanceArray) {
+            advanceDO advance = advanceArray[0];
+            if (advance == null) {
+                Log.e("UpdateAdvanceAsyncTask", "advanceDO is null");
+                return null;
+            }
+//            String TDATE,String NAME,String CUSTOMERTYPE,String AMOUNT,String REMARKS,String ID,int SLNO
+            roomService.updateAdvance(advance.TDATE,advance.NAME,advance.CUSTOMERTYPE,advance.AMOUNT,advance.REMARKS,advance.ID, advance.SLNO);
             return null;
         }
     }
+
+    private static class InsertCustomerDataAsyncTask extends AsyncTask<customerDO,Void,Void> {
+        RoomService roomService;
+        private InsertCustomerDataAsyncTask(RoomService roomService){
+            this.roomService = roomService;
+        }
+        @Override
+        protected Void doInBackground(customerDO... customer) {
+            roomService.insertCustomer(customer[0]);
+            return null;
+        }
+    }
+    private static class updateCustomerAsyncTask extends AsyncTask<customerDO,Void,Void> {
+        RoomService roomService;
+        private updateCustomerAsyncTask(RoomService roomService){
+            this.roomService = roomService;
+        }
+        @Override
+        protected Void doInBackground(customerDO... customerDOArray) {
+            customerDO customer = customerDOArray[0];
+            if (customer == null) {
+                Log.e("UpdateAdvanceAsyncTask", "advanceDO is null");
+                return null;
+            }
+//            String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,String ISACTIVE,int SLNO
+            roomService.updateCustomer(customer.CUSTOMERCODE,customer.CUSTOMERNAME,customer.MOBILENO,customer.ISACTIVE,customer.SLNO);
+            return null;
+        }
+    }
+
 }

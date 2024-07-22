@@ -49,7 +49,13 @@ public class LoginNew extends AppCompatActivity {
         binding.btnForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                startActivity(new Intent(LoginNew.this, forgetpassword_activity.class));
+                startActivity(new Intent(LoginNew.this, forgetpassword_activity.class));
+//                startActivity(new Intent(LoginNew.this, onboarding.class));
+            }
+        });
+        binding.txtversion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 startActivity(new Intent(LoginNew.this, onboarding.class));
             }
         });

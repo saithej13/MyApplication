@@ -1,6 +1,7 @@
 package com.vst.myapplication.UI.Advance;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vst.myapplication.R;
 import com.vst.myapplication.UI.Farmers.FarmersAdapter;
+import com.vst.myapplication.UI.Rates.RatesAdapter;
 import com.vst.myapplication.dataObject.advanceDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.databinding.AdvancecellBinding;
@@ -27,6 +32,7 @@ public class advancesAdapter extends RecyclerView.Adapter<advancesAdapter.ViewHo
     private LayoutInflater inflater;
     private advanceDO[] mData;
     AdvancecellBinding binding;
+    private advancesAdapter.ItemClickListener mClickListener;
 
     public advancesAdapter(Context context, advanceDO[] data) {
         this.inflater = LayoutInflater.from(context);
@@ -55,7 +61,17 @@ public class advancesAdapter extends RecyclerView.Adapter<advancesAdapter.ViewHo
             ((ImageView) holder.itemView.findViewById(R.id.ivedit)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Bundle mBundle = new Bundle();
+                    mBundle.putBoolean("edit", true);
+                    mBundle.putInt("SLNO", advance.SLNO);
+                    addadvance advance = new addadvance();
+                    advance.setArguments(mBundle);
+                    FragmentManager fragmentManager =  ((FragmentActivity) view.getContext()).getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                            .replace(R.id.frame, advance, "")
+                            .addToBackStack("")
+                            .commitAllowingStateLoss();
                 }
             });
 //            if(farmer.getIsactive())
@@ -85,6 +101,13 @@ public class advancesAdapter extends RecyclerView.Adapter<advancesAdapter.ViewHo
         @Override
         public void onClick(View view) {
             Log.d("position",""+getAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+    }
+    public void setClickListener(advancesAdapter.ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 }

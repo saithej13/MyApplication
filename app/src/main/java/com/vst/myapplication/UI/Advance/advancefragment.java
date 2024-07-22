@@ -21,6 +21,7 @@ import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.Farmers.famers_VM;
 import com.vst.myapplication.UI.Rates.RatesAdapter;
+import com.vst.myapplication.UI.Rates.ratedetails;
 import com.vst.myapplication.UI.cusotmer.addcustomer;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.NetworkUtils;
@@ -28,7 +29,7 @@ import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.advanceDO;
 import com.vst.myapplication.databinding.AdvanceBinding;
 
-public class advancefragment extends BaseFragment {
+public class advancefragment extends BaseFragment implements advancesAdapter.ItemClickListener{
     AdvanceBinding binding;
     roomRepository roomrepo;
     private ProjectRepository repository;
@@ -42,7 +43,7 @@ public class advancefragment extends BaseFragment {
         roomrepo = new roomRepository();
         binding.setLifecycleOwner(viewLifecycleOwner);
         adapter = new advancesAdapter(getContext(),data);
-//        adapter.setClickListener(this);
+        adapter.setClickListener(this);
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
@@ -75,13 +76,23 @@ public class advancefragment extends BaseFragment {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle mBundle = new Bundle();
+                mBundle.putBoolean("edit", false);
+                mBundle.putInt("SLNO", 0);
+                addadvance advance = new addadvance();
+                advance.setArguments(mBundle);
                 FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .replace(R.id.frame, new addadvance(), "")
+                        .replace(R.id.frame, advance, "")
                         .addToBackStack("")
                         .commitAllowingStateLoss();
             }
         });
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Log.d("TAG", "onItemClick"+position);
     }
 }
