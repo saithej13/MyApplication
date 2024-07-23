@@ -31,6 +31,7 @@ public class customerAdapter extends RecyclerView.Adapter<customerAdapter.ViewHo
     private LayoutInflater inflater;
     customerDO[] mData;
     CustomercellBinding binding;
+    private customerAdapter.ItemClickListener mClickListener;
 
     public customerAdapter(Context context, customerDO[] data) {
         this.inflater = LayoutInflater.from(context);
@@ -99,5 +100,11 @@ public class customerAdapter extends RecyclerView.Adapter<customerAdapter.ViewHo
         public void onClick(View view) {
             Log.d("position",""+getAdapterPosition());
         }
+    }
+    public void setClickListener(customerAdapter.ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 }

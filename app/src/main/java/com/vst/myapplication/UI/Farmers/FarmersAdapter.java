@@ -1,19 +1,28 @@
 package com.vst.myapplication.UI.Farmers;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vst.myapplication.R;
+import com.vst.myapplication.UI.Rates.RatesAdapter;
+import com.vst.myapplication.UI.cusotmer.addcustomer;
+import com.vst.myapplication.UI.cusotmer.customerAdapter;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.databinding.FarmerscellBinding;
 
@@ -26,6 +35,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.ViewHold
     private farmerDO[] mData;
     Context context;
     private LayoutInflater inflater;
+    private FarmersAdapter.ItemClickListener mClickListener;
     @Override
     public Filter getFilter() {
         return null;
@@ -51,6 +61,22 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.ViewHold
             ((TextView) holder.itemView.findViewById(R.id.txtmno)).setText(String.valueOf(farmer.MOBILENO));
             ((TextView) holder.itemView.findViewById(R.id.txtmytpe)).setText(String.valueOf(farmer.MILKTYPE));
             ((Switch) holder.itemView.findViewById(R.id.active)).setChecked(farmer.ISACTIVE);
+            ((ImageView) holder.itemView.findViewById(R.id.ivedit)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle mBundle = new Bundle();
+                    mBundle.putBoolean("edit", true);
+                    mBundle.putInt("SLNO", farmer.FARMERID);
+                    addfarmer farmer = new addfarmer();
+                    farmer.setArguments(mBundle);
+                    FragmentManager fragmentManager =  ((FragmentActivity) view.getContext()).getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                            .replace(R.id.frame, farmer, "")
+                            .addToBackStack("")
+                            .commitAllowingStateLoss();
+                }
+            });
 //            if(farmer.getIsactive())
 //                holder.farmerscellBinding.active.setChecked(true);
 //            else
@@ -73,5 +99,11 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
+    }
+    public void setClickListener(FarmersAdapter.ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 }

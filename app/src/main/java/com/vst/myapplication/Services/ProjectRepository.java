@@ -647,6 +647,32 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return data;
     }
+    public MutableLiveData<JsonObject> getfarmerbyslno(int SLNO) {
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB) {
+            roomService.getFarmerByCode(SLNO).observe(lifecycleOwner, new Observer<List<farmerDO>>() {
+                @Override
+                public void onChanged(List<farmerDO> farmerDOS) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    String jsonArrayString = gson.toJson(farmerDOS);
+                    try {
+                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+                        jsonObject.add("Data", jsonArray);
+                    } catch (JsonSyntaxException e) {
+                        Log.e("Log Response", "Error parsing JSON array", e);
+                        jsonObject.add("Data", new JsonArray());
+                    }
+                    Log.d("Log Response", "" + jsonObject);
+                    data.setValue(jsonObject);
+                }
+            });
+        }
+        else{
+            //API
+        }
+        return data;
+    }
     public MutableLiveData<JsonObject> InsertAdvance(JsonObject payload) {
         Log.d("URL","getFarmerbycode Request-->"+payload);
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
@@ -677,7 +703,7 @@ public MutableLiveData<JsonObject> getrates() {
         return data;
     }
     public MutableLiveData<JsonObject> InsertUpdateCustomer(JsonObject payload) {
-        Log.d("URL","getFarmerbycode Request-->"+payload);
+        Log.d("URL","CUSTOMERCODE Request-->"+payload);
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB)
         {
@@ -694,6 +720,33 @@ public MutableLiveData<JsonObject> getrates() {
             }
             else {
                 roomrepo.updateCustomer(customer);
+            }
+//            roomService.InsertAdvanceDataAsyncTask
+        }
+        else {
+
+
+        }
+        return data;
+    }
+    public MutableLiveData<JsonObject> InsertUpdateFarmer(JsonObject payload) {
+        Log.d("URL","getFarmerbycode Request-->"+payload);
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB)
+        {
+            int SLNO = payload.get("SLNO").getAsInt();
+            farmerDO farmer = new farmerDO();
+            farmer.FARMERID = payload.get("FARMERID").getAsInt();
+            farmer.FARMERNAME = payload.get("FARMERNAME").getAsString();
+            farmer.MOBILENO = payload.get("MOBILENO").getAsString();
+            farmer.ISACTIVE = Boolean.parseBoolean(payload.get("ISACTIVE").getAsString());
+            farmer.MILKTYPE = payload.get("MILKTYPE").getAsString();
+            if(SLNO==0)
+            {
+                roomrepo.insertfarmers(farmer);
+            }
+            else {
+                roomrepo.updateFarmer(farmer);
             }
 //            roomService.InsertAdvanceDataAsyncTask
         }

@@ -29,17 +29,11 @@ public class famers_VM extends AndroidViewModel {
         repository = new ProjectRepository();
         roomrepo = new roomRepository();
     }
-    public MutableLiveData<JsonObject> insertFarmer(farmerDO farmerDo){
-        boolean result = false;
-        if(MyApplicationNew.RoomDB){
-            roomrepo.insertfarmers(farmerDo);
-        }
-        else {
-            Gson gson = new Gson();
-            String jsonString = gson.toJson(farmerDo);
-            JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-            repository.InsertFarmer(jsonObject);
-        }
+    public MutableLiveData<JsonObject> insertUpdateFarmer(farmerDO farmerDo){
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(farmerDo);
+        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
+        repository.InsertUpdateFarmer(jsonObject);
         return null;
     }
 //    public MutableLiveData<JSONObject> getFarmerdata(){

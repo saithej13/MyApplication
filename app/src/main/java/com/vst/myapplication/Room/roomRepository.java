@@ -54,6 +54,9 @@ RoomService roomService;
     public void updateCustomer(customerDO cusotmer){
         new updateCustomerAsyncTask(roomService).execute(cusotmer);
     }
+    public void updateFarmer(farmerDO farmer){
+        new updateFarmerAsyncTask(roomService).execute(farmer);
+    }
     public List<farmerDO> getfarmerbyid(String farmerCode) {
         int code = Integer.parseInt(farmerCode);
         return roomService.getfarmerbyid(code);
@@ -306,6 +309,24 @@ RoomService roomService;
             }
 //            String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,String ISACTIVE,int SLNO
             roomService.updateCustomer(customer.CUSTOMERCODE,customer.CUSTOMERNAME,customer.MOBILENO,customer.ISACTIVE,customer.SLNO);
+            return null;
+        }
+    }
+
+    private static class updateFarmerAsyncTask extends AsyncTask<farmerDO,Void,Void> {
+        RoomService roomService;
+        private updateFarmerAsyncTask(RoomService roomService){
+            this.roomService = roomService;
+        }
+        @Override
+        protected Void doInBackground(farmerDO... farmerDOArray) {
+            farmerDO farmer = farmerDOArray[0];
+            if (farmer == null) {
+                Log.e("UpdateFarmerAsyncTask", "FarmerDO is null");
+                return null;
+            }
+//            String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,String ISACTIVE,int SLNO
+            roomService.updateFarmer(farmer.FARMERNAME,farmer.MOBILENO,farmer.ISACTIVE,farmer.MILKTYPE,farmer.FARMERID);
             return null;
         }
     }

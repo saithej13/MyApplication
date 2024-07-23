@@ -29,7 +29,7 @@ import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.databinding.AdvanceBinding;
 import com.vst.myapplication.databinding.CustomerBinding;
 
-public class customer extends BaseFragment implements RatesAdapter.ItemClickListener{
+public class customer extends BaseFragment implements customerAdapter.ItemClickListener{
     CustomerBinding binding;
     roomRepository roomrepo;
     private ProjectRepository repository;
@@ -89,6 +89,7 @@ public class customer extends BaseFragment implements RatesAdapter.ItemClickList
             }
         });
     }
+
 
     @Override
     public void onItemClick(View view, int position) {

@@ -113,6 +113,22 @@
             android:layout_marginLeft="10dp"
             android:gravity="center"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
+        <ImageView
+            android:id="@+id/ivedit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp10"
+            android:layout_toLeftOf="@+id/ivdelete"
+            android:layout_below="@id/active"
+            android:src="@drawable/baseline_edit_24" />
+        <ImageView
+            android:id="@+id/ivdelete"
+            android:layout_width="@dimen/dp20"
+            android:layout_height="@dimen/dp20"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/active"
+            android:src="@drawable/ic_baseline_delete_24"
+            />
     </RelativeLayout>
 </LinearLayout>
 </layout>

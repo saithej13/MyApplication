@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +28,8 @@ import com.google.gson.JsonObject;
 import com.vst.myapplication.R;
 import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
+import com.vst.myapplication.UI.cusotmer.addcustomer;
+import com.vst.myapplication.UI.cusotmer.customerAdapter;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NetworkUtils;
@@ -41,7 +45,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class farmers extends BaseFragment {
+public class farmers extends BaseFragment implements FarmersAdapter.ItemClickListener{
     private Dialog dialog;
     boolean active=true;
     FarmersBinding binding;
@@ -135,98 +139,115 @@ public class farmers extends BaseFragment {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dialog == null || !dialog.isShowing()) {
-                    farmerEntrybinding = DataBindingUtil.inflate(inflater, R.layout.farmer_entry_popup, parent, false);
-                    dialog = new Dialog(parent.getContext(), R.style.Dialog);
-                    dialog.setContentView(farmerEntrybinding.getRoot());
-                    //DataBindingUtil.setContentView((Activity) getContext(), R.layout.farmer_entry_popup);
-                    farmerEntrybinding.mtype.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (getContext() != null) {
-                                final String[] arraySpinner = new String[]{
-                                        "Cow", "Buff", "Both"
-                                };
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle("Select an option");
-                                builder.setItems(arraySpinner, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String selectedOption = arraySpinner[which];
-                                        farmerEntrybinding.mtype.setText(selectedOption);
-                                    }
-                                });
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
-                            } else {
-                                Log.e("nothing phone3", "");
-                            }
-                        }
-                    });
-                    farmerEntrybinding.close.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
-                    farmerEntrybinding.btnCancle.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
-                    farmerEntrybinding.btnOK.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (!TextUtils.isEmpty(farmerEntrybinding.fname.getText().toString()) && !TextUtils.isEmpty(farmerEntrybinding.code.getText().toString()) && !TextUtils.isEmpty(farmerEntrybinding.mobileno.getText().toString()) && !TextUtils.isEmpty(farmerEntrybinding.mtype.getText().toString())) {
-                                farmerDO farmerDo = new farmerDO();
-                                farmerDo.FARMERID = Integer.parseInt(farmerEntrybinding.code.getText().toString());
-                                farmerDo.FARMERNAME = farmerEntrybinding.fname.getText().toString();
-                                farmerDo.ISACTIVE = active;
-                                farmerDo.MILKTYPE = farmerEntrybinding.mtype.getText().toString();
-                                farmerDo.MOBILENO = farmerEntrybinding.mobileno.getText().toString();
-                                farmersVM.insertFarmer(farmerDo);
-                                showCustomDialog(getContext(),"Success","Farmer Added!","OK",null,"");
-                                farmerEntrybinding.code.setText("");
-                                farmerEntrybinding.fname.setText("");
-                                farmerEntrybinding.mtype.setText("");
-                                farmerEntrybinding.mobileno.setText("");
-                                dialog.dismiss();
-//                                isDuplicateFarmer(Integer.parseInt(edtFcode.getText().toString()), new DuplicateFarmerCallback() {
+                Bundle mBundle = new Bundle();
+                mBundle.putBoolean("edit", false);
+                mBundle.putInt("SLNO", 0);
+                addfarmer farmer = new addfarmer();
+                farmer.setArguments(mBundle);
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.frame, farmer, "")
+                        .addToBackStack("")
+                        .commitAllowingStateLoss();
+
+//                if (dialog == null || !dialog.isShowing()) {
+//                    farmerEntrybinding = DataBindingUtil.inflate(inflater, R.layout.farmer_entry_popup, parent, false);
+//                    dialog = new Dialog(parent.getContext(), R.style.Dialog);
+//                    dialog.setContentView(farmerEntrybinding.getRoot());
+//                    //DataBindingUtil.setContentView((Activity) getContext(), R.layout.farmer_entry_popup);
+//                    farmerEntrybinding.mtype.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            if (getContext() != null) {
+//                                final String[] arraySpinner = new String[]{
+//                                        "Cow", "Buff", "Both"
+//                                };
+//                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                                builder.setTitle("Select an option");
+//                                builder.setItems(arraySpinner, new DialogInterface.OnClickListener() {
 //                                    @Override
-//                                    public void onResult(boolean isDuplicate) {
-//                                        if (!isDuplicate) {
-//                                            // No duplicates found
-////                                            tblfarmers tfarmers = new tblfarmers();
-//
-////                                            farmersVM.insertFarmersVM(tfarmers);
-//
-//                                        } else {
-//                                            // Duplicate found
-//                                            Toast.makeText(farmers_newActivity.this,"Farmer Code Already Exists!",Toast.LENGTH_SHORT).show();
-//                                        }
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        String selectedOption = arraySpinner[which];
+//                                        farmerEntrybinding.mtype.setText(selectedOption);
 //                                    }
 //                                });
-                            } else {
-                                showCustomDialog(getContext(),"Error","please make sure all the fields are filled up","OK",null,"");
-                            }
-                        }
-                    });
-                    farmerEntrybinding.isactive.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (active) {
-                                farmerEntrybinding.isactive.setImageResource(R.drawable.inactive);
-                                active = false;
-                            } else {
-                                farmerEntrybinding.isactive.setImageResource(R.drawable.active);
-                                active = true;
-                            }
-                        }
-                    });
-                    dialog.show();
-                }
+//                                AlertDialog dialog = builder.create();
+//                                dialog.show();
+//                            } else {
+//                                Log.e("nothing phone3", "");
+//                            }
+//                        }
+//                    });
+//                    farmerEntrybinding.close.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    farmerEntrybinding.btnCancle.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    farmerEntrybinding.btnOK.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            if (!TextUtils.isEmpty(farmerEntrybinding.fname.getText().toString()) && !TextUtils.isEmpty(farmerEntrybinding.code.getText().toString()) && !TextUtils.isEmpty(farmerEntrybinding.mobileno.getText().toString()) && !TextUtils.isEmpty(farmerEntrybinding.mtype.getText().toString())) {
+//                                farmerDO farmerDo = new farmerDO();
+//                                farmerDo.FARMERID = Integer.parseInt(farmerEntrybinding.code.getText().toString());
+//                                farmerDo.FARMERNAME = farmerEntrybinding.fname.getText().toString();
+//                                farmerDo.ISACTIVE = active;
+//                                farmerDo.MILKTYPE = farmerEntrybinding.mtype.getText().toString();
+//                                farmerDo.MOBILENO = farmerEntrybinding.mobileno.getText().toString();
+//                                farmersVM.insertFarmer(farmerDo);
+//                                showCustomDialog(getContext(),"Success","Farmer Added!","OK",null,"");
+//                                farmerEntrybinding.code.setText("");
+//                                farmerEntrybinding.fname.setText("");
+//                                farmerEntrybinding.mtype.setText("");
+//                                farmerEntrybinding.mobileno.setText("");
+//                                dialog.dismiss();
+////                                isDuplicateFarmer(Integer.parseInt(edtFcode.getText().toString()), new DuplicateFarmerCallback() {
+////                                    @Override
+////                                    public void onResult(boolean isDuplicate) {
+////                                        if (!isDuplicate) {
+////                                            // No duplicates found
+//////                                            tblfarmers tfarmers = new tblfarmers();
+////
+//////                                            farmersVM.insertFarmersVM(tfarmers);
+////
+////                                        } else {
+////                                            // Duplicate found
+////                                            Toast.makeText(farmers_newActivity.this,"Farmer Code Already Exists!",Toast.LENGTH_SHORT).show();
+////                                        }
+////                                    }
+////                                });
+//                            } else {
+//                                showCustomDialog(getContext(),"Error","please make sure all the fields are filled up","OK",null,"");
+//                            }
+//                        }
+//                    });
+//                    farmerEntrybinding.isactive.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            if (active) {
+//                                farmerEntrybinding.isactive.setImageResource(R.drawable.inactive);
+//                                active = false;
+//                            } else {
+//                                farmerEntrybinding.isactive.setImageResource(R.drawable.active);
+//                                active = true;
+//                            }
+//                        }
+//                    });
+//                    dialog.show();
+//                }
             }
         });
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+
     }
 }
