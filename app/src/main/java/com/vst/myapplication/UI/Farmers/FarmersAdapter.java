@@ -1,5 +1,6 @@
 package com.vst.myapplication.UI.Farmers;
 
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,9 +21,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vst.myapplication.R;
+import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.Rates.RatesAdapter;
 import com.vst.myapplication.UI.cusotmer.addcustomer;
 import com.vst.myapplication.UI.cusotmer.customerAdapter;
+import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.databinding.FarmerscellBinding;
 
@@ -75,6 +78,12 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.ViewHold
                             .replace(R.id.frame, farmer, "")
                             .addToBackStack("")
                             .commitAllowingStateLoss();
+                }
+            });
+            ((ImageView) holder.itemView.findViewById(R.id.ivdelete)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   new ProjectRepository().deleteFarmerID(farmer.FARMERID);
                 }
             });
 //            if(farmer.getIsactive())

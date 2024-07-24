@@ -53,14 +53,9 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
     RatedetailscardcellBinding binding;
     private RateAndDetails[] mData;
     private LayoutInflater inflater;
-    private int expandedPosition = -1;
     private ItemClickListener mClickListener;
     private FragmentActivity fragmentActivity;
     private HashMap<Integer, Boolean> expandMap = new HashMap<>();
-    Vector<rateDO> vecratedo;
-    ratedetailsDO ratedetailsDo = new ratedetailsDO();
-    Vector<ratedetailsDO> vecratedetailsdo = new Vector<>();
-    HashMap<Integer,ratedetailsDO> hashMap=new HashMap<>();
     List<ratedetailsDO> rateDetailsList = new ArrayList<>();
     @Override
     public Filter getFilter() {
@@ -70,9 +65,6 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
         this.inflater = LayoutInflater.from(context);
         this.mData = data;
         this.fragmentActivity = fragmentActivity;
-        for (int i = 0; i < (mData == null ? 0 : mData.length); i++) {
-            expandMap.put(i, false);
-        }
     }
 
     @NonNull
@@ -86,12 +78,8 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull RatesAdapter.ViewHolder holder, int position) {
         RateAndDetails rate = mData[position];
         rateDetailsList = mData[position].rateDetailsList;
+        expandMap.put(position,false);
         if (rate != null) {
-//            List<ratedetailsDO> itemslistItems=rate.rateDetailsList;
-//            hashMap.put(position,rate.rateDetailsList.get(position));
-//            vecratedetailsdo = new Vector<>(rate.rateDetailsList);
-//            vecratedetailsdo.clear();
-//            vecratedetailsdo.add(rate.rateDetailsList.get(position));
             ((ImageView) holder.itemView.findViewById(R.id.dropdownmilktype)).setVisibility(View.GONE);
             ((TextView) holder.itemView.findViewById(R.id.tvstartdate)).setText(String.valueOf(rate.rate.STARTDATE));
             ((TextView) holder.itemView.findViewById(R.id.tvenddate)).setText(String.valueOf(rate.rate.ENDDATE));
@@ -119,75 +107,29 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
                     //delete rate based on slno
                 }
             });
+            RatesChildAdapter ratedetailsAdapter = new RatesChildAdapter(fragmentActivity, rateDetailsList);
+            binding.rcvChild.setLayoutManager(new LinearLayoutManager(fragmentActivity));
+            binding.rcvChild.setAdapter(ratedetailsAdapter);
+            binding.rcvChild.setHasFixedSize(true);
 
-
-//            binding.llmain.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Log.d("expandedPosition",""+expandedPosition);
-//                    Log.d("position",""+position);
-//                }
-//            });
-
-//            boolean isExpanded = expandedPosition == position;
-//            binding.rcvChild.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-//            ExpandState finalExpandState = expandState;
+            holder.itemView.findViewById(R.id.rcv_child).setVisibility(View.GONE);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    boolean expanded = Boolean.TRUE.equals(expandMap.get(position));
-//                    expandMap.put(position, !expanded);
-//                    notifyDataSetChanged();
-//                    Boolean isexpand = expandMap.get(position);
-                    getRate(mData);
-                    expandMap.put(position,true);
-                    notifyItemChanged(position);
+                    if(expandMap.get(position).booleanValue()){
+                        //we should not expand
+                        holder.itemView.findViewById(R.id.rcv_child).setVisibility(View.GONE);
+                        expandMap.put(position,false);
+//                        Log.d("position",""+position+"ex"+expandMap.get(position).booleanValue());
+                    }
+                    else {
+                        //we should expand
+                        holder.itemView.findViewById(R.id.rcv_child).setVisibility(View.VISIBLE);
+                        expandMap.put(position,true);
+//                        Log.d("position",""+position+"exe"+expandMap.get(position).booleanValue());
+                    }
                 }
             });
-            boolean isExpanded = expandMap.get(position);
-            if (isExpanded) {
-                binding.rcvChild.setVisibility(View.VISIBLE);
-                holder.itemView.setActivated(true);
-            } else {
-                binding.rcvChild.setVisibility(View.GONE);
-                holder.itemView.setActivated(false);
-            }
-//            binding.rcvChild.setVisibility(expandState.isExpanded ? View.VISIBLE : View.GONE);
-//            holder.itemView.setActivated(expandState.isExpanded);
-
-            if (isExpanded) {
-                Log.d("expanded","expanded");
-                RatesChildAdapter ratedetailsAdapter = new RatesChildAdapter(fragmentActivity, rateDetailsList);
-                binding.rcvChild.setLayoutManager(new LinearLayoutManager(fragmentActivity));
-                binding.rcvChild.setAdapter(ratedetailsAdapter);
-                binding.rcvChild.setHasFixedSize(true);
-//                notifyDataSetChanged();
-            }
-
-//            ((LinearLayout) holder.itemView.findViewById(R.id.llmain)).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Log.d("expandedPosition",""+expandedPosition);
-//                    Log.d("position",""+position);
-//                    if (vecratedetailsdo != null && vecratedetailsdo.size() > 0) {
-//                        expandedPosition = position;
-////                        RatesChildAdapter myRecyclerViewAdapter = new RatesChildAdapter(v.getContext(),vecratedetailsdo );
-////                        LinearLayoutManager llm = new LinearLayoutManager(context);
-////                        llm.setOrientation(LinearLayoutManager.VERTICAL);
-////                        ((RecyclerView) holder.itemView.findViewById(R.id.rcv_child)).setLayoutManager(llm);
-////                        ((RecyclerView) holder.itemView.findViewById(R.id.rcv_child)).setAdapter(myRecyclerViewAdapter);
-//
-////                        myRecyclerViewAdapter.notifyDataSetChanged();
-//                        vecratedetailsdo.clear();
-//                        vecratedetailsdo.add(rate.rateDetailsList.get(position));
-//                        RatesChildAdapter ratedetailsadapter = new RatesChildAdapter(fragmentActivity,vecratedetailsdo);
-//                        binding.rcvChild.setLayoutManager(new LinearLayoutManager(fragmentActivity));
-//                        binding.rcvChild.setAdapter(ratedetailsadapter);
-//                        binding.rcvChild.setHasFixedSize(true);
-//
-//                    }
-//                }
-//            });
         }
     }
 

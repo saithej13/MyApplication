@@ -132,6 +132,10 @@ public interface RoomService {
     @Query("SELECT * FROM tblcustomer WHERE SLNO=:SLNO LIMIT 1")
     LiveData<List<customerDO>> getcustomerbyslno(int SLNO);
 
+    @Query("DELETE FROM tblfarmers WHERE FARMERID = :FARMERID")
+    void deleteFarmerId(int FARMERID);
+
+
     @Query("UPDATE tbladvances SET TDATE=:TDATE,NAME=:NAME,CUSTOMERTYPE=:CUSTOMERTYPE,AMOUNT=:AMOUNT,REMARKS=:REMARKS WHERE ID=:ID AND SLNO=:SLNO")
     void updateAdvance(String TDATE,String NAME,String CUSTOMERTYPE,String AMOUNT,String REMARKS,String ID,int SLNO);
 

@@ -673,6 +673,16 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return data;
     }
+    public MutableLiveData<JsonObject> deleteFarmerID(int FARMERID) {
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB) {
+            roomService.deleteFarmerId(FARMERID);
+        }
+        else{
+            //API
+        }
+        return data;
+    }
     public MutableLiveData<JsonObject> InsertAdvance(JsonObject payload) {
         Log.d("URL","getFarmerbycode Request-->"+payload);
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();

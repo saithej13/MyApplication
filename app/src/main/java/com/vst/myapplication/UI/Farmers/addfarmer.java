@@ -115,14 +115,12 @@ public class addfarmer extends BaseFragment {
                     farmerDo.ISACTIVE = active;
                     farmerDo.MILKTYPE = mobileno;
                     farmerDo.MOBILENO = mobileno;
-                    farmersVM.insertFarmer(farmerDo);
-                    showCustomDialog(getContext(),"Success","Farmer Added!","OK",null,"success");
+                    farmersVM.insertUpdateFarmer(farmerDo);
                     binding.etfarmercode.setText("");
                     binding.etfarmername.setText("");
                     binding.tvmilktype.setText("");
                     binding.etMobileno.setText("");
-
-
+                    showCustomDialog(getContext(),"Success","Farmer Added!","OK",null,"success");
                 } else {
                     showCustomDialog(getContext(),"Error","please make sure all the fields are filled up","OK",null,"");
                 }

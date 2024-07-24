@@ -210,7 +210,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                             }
                             if (!rateAndDetails.rateDetailsList.isEmpty()) {
                                 ratesVm.insertRate(rateAndDetails);
-                                showCustomDialog(getContext(), "Success", "Rates Updated Successfully", "OK", null, "save");
+                                showCustomDialog(getContext(), "Success", "Rates Saved Successfully", "OK", null, "save");
                             } else {
                                 showCustomDialog(getContext(), "Error", "Add Atleast one RateDetail to Save!", "OK", null, "");
                             }
