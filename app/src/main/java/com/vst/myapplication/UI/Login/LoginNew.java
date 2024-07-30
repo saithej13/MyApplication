@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.R;
 import com.vst.myapplication.UI.Dashboard.DashboardFragment;
+import com.vst.myapplication.UI.Payments.payment;
 import com.vst.myapplication.UI.Register.register_notice_activity;
 import com.vst.myapplication.UI.onboarding.onboarding;
 import com.vst.myapplication.databinding.LoginBinding;
@@ -30,7 +31,6 @@ public class LoginNew extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.login);
         try {
             version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -57,6 +57,8 @@ public class LoginNew extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LoginNew.this, onboarding.class));
+//                startActivity(new Intent(LoginNew.this, payment.class));
+
             }
         });
     }

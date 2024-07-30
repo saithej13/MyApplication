@@ -188,7 +188,7 @@
                         android:visibility="visible">
 
                         <ToggleButton
-                            android:id="@+id/tbAvailable"
+                            android:id="@+id/tbsms"
                             android:layout_width="@dimen/margin_50"
                             android:layout_height="@dimen/size25"
                             android:background="@drawable/toggle_selector_yes_no"
@@ -229,6 +229,7 @@
                         android:visibility="visible">
 
                         <ToggleButton
+                            android:id="@+id/tbwhatsapp"
                             android:layout_width="@dimen/margin_50"
                             android:layout_height="@dimen/size25"
                             android:background="@drawable/toggle_selector_yes_no"
@@ -271,7 +272,34 @@
                         android:textColorHint="@color/text_color_dark"
                         android:textSize="@dimen/text_size_small_14sp" />
                 </LinearLayout>
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:visibility="visible">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/connect"
+                    android:text="Connect"
+                    android:layout_weight="1"
+                    />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/print"
+                    android:text="Print"
+                    android:layout_weight="1"
+                    />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/disconnect"
+                    android:text="Disconnect"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
 
             </LinearLayout>
 

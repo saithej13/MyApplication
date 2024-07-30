@@ -18,9 +18,9 @@ public class milkSaleDO {
         @SerializedName("MILKTYPE")
         public String MILKTYPE;
         @SerializedName("CUSTOMERID")
-        public String FARMERID;
+        public String CUSTOMERID;
         @SerializedName("CUSTOMERNAME")
-        public String FARMERNAME;
+        public String CUSTOMERNAME;
         @SerializedName("QUANTITY")
         public double QUANTITY;
         @SerializedName("FAT")

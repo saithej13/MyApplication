@@ -1,6 +1,7 @@
 package com.vst.myapplication.UI.MCollection;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +10,9 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -33,8 +37,10 @@ import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
+import com.vst.myapplication.Utils.ImagePrintDocumentAdapter;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.Utils.Settings;
 import com.vst.myapplication.Utils.StringUtils;
 import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.farmerDO;
@@ -230,7 +236,7 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                             clearfields();
                             refreshData();
 //                            print(milkDo);
-                            getPrintSlip(milkDo);
+//                            getPrintSlip(milkDo);
                         }
                     }
                     else {
@@ -377,7 +383,7 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                             clearfields();
                             refreshData();
 //                            print(milkDo);
-                            getPrintSlip(milkDo);
+//                            getPrintSlip(milkDo);
                         } else {
                             Toast.makeText(getContext(), "please make sure all the fields are filled up", Toast.LENGTH_SHORT).show();
                         }
@@ -634,16 +640,17 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
         int n = 10000;
         int salesHeight = 1, freeGoodsHeight = 1, damageHeight = 1;
 //            n = generator.nextInt(n);
-        n = generator.nextInt((200 - 100) + 1) + 100;
-        String fname = "Image-" + n + ".jpg";
+//        n = generator.nextInt((200 - 100) + 1) + 100;
+//        String fname = "Image-" + n + ".jpg";
+        String fname = "Image-" + 100 + ".jpg";
         File file = new File(myDir, fname);
         if (file.exists()) file.delete();
         Bitmap bmp = null;
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file);
-            int width = 460;
-            int height = 950 + ((salesHeight + freeGoodsHeight + damageHeight) *30);
+            int width = 200;
+            int height = 200 + ((salesHeight + freeGoodsHeight + damageHeight) *30);
             bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             // NEWLY ADDED CODE STARTS HERE [
             Canvas canvas = new Canvas(bmp);
@@ -654,10 +661,12 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
             String[] as1 = null;
             String[] Header = null;
             int Headerh1 = 20+40;
-            Header = new String[]{"Header","______________________________________________"};
+//            String formateHeader1 	= "%1$-12.12s %2$-15.15s %3$-13.13s %4$-15.15s %5$-16.16s %6$-15.15s %7$-15.15s %8$-10.10s %9$-15.15s \r\n";
+            String rightalign = "%1$12.12s";
+            Header = new String[]{"Company Name","Branch Name","Collection CenterName","Village Name","Address","Contact","______________________________________________"};
             if (Header != null) {
                 for (int i = 0; i < Header.length; i++) {
-                    canvas.drawText(Header[i], 30,Headerh1, getPaintObjHeaderNew(22));
+                    canvas.drawText(Header[i], ((width/2)-(Header[i].length()*8)),Headerh1, getPaintObjHeaderNew(22));
                     Headerh1 += 30;
                 }
             }
@@ -675,9 +684,133 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                     h1 += 20;
                 }
             }
+            String[] Footer = null;
+            int Footerf1 = h1+20;
+            Footer = new String[]{"______________________________________________"};
+            if (Footer != null) {
+                for (int i = 0; i < Footer.length; i++) {
+                    canvas.drawText(Footer[i], 30,Footerf1, getPaintObjHeaderNew(22));
+                    Footerf1 += 30;
+                }
+            }
+            canvas.drawText(String.format(rightalign,"Footer Text"),300,Footerf1+10,getPaintObjHeaderNew(22));
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//            Settings.printImage(bmp);
             out.flush();
             out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bmp != null)
+                bmp.recycle();
+        }
+        return BitmapFactory.decodeFile(file.getAbsolutePath());
+    }
+    public static Bitmap getPrintSummaryslip(milkDO mdata){
+
+        File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/PrinterTest");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        int salesHeight = 1, freeGoodsHeight = 1, damageHeight = 1;
+            n = generator.nextInt(n);
+        n = generator.nextInt((200 - 100) + 1) + 100;
+//        String fname = "Image-" + n + ".jpg";
+        String fname = "Image-" + 100 + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        Bitmap bmp = null;
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            int width = 400;
+            int height = 500 + ((salesHeight + freeGoodsHeight + damageHeight) *30);
+            bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            // NEWLY ADDED CODE STARTS HERE [
+            Canvas canvas = new Canvas(bmp);
+            Paint paintBG = new Paint();
+            paintBG.setColor(Color.WHITE);
+            canvas.drawRect(0, 0, width, height, paintBG);
+            int het1 = 40;
+            String[] as1 = null;
+            String[] as2 = null;
+            String[] Header = null;
+            int Headerh1 = 20+40;
+//            String formateHeader1 	= "%1$-12.12s %2$-15.15s %3$-13.13s %4$-15.15s %5$-16.16s %6$-15.15s %7$-15.15s %8$-10.10s %9$-15.15s \r\n";
+            String rightalign = "%1$12.12s";
+            //30 CHARACTERS FOR THE TEXTSIZE 28
+            // WIDTH START FROM 10 TO 380
+            Header = new String[]{" ***   Company Name1234   *** ","BRANCH NAME","VILLAGE","ADDRESS","CONTACT","---------------------------------------"};
+            if (Header != null) {
+                for (int i = 0; i < Header.length; i++) {
+//                    canvas.drawText(Header[i], ((width/2)-Header[i].length()),Headerh1, getPaintObjHeaderNew(22));
+                    Log.d("width"+i,""+((width/2)-(Header[i].length())));
+//                    float  f1 = (190/Header[i].length());
+                    canvas.drawText(Header[i], (float) ((width/2)-(Header[i].length())*6.5),Headerh1, getPaintObjHeaderNew(28));
+                    Headerh1 += 30;
+                }
+            }
+//            as1 = new String[]{"TDATE : "+mdata.TDATE,"SHIFT : "+mdata.SHIFT,
+//                    "Farmer Code:" + mdata.FARMERID,"Name:" + mdata.FARMERNAME,
+//                    "Milk Type:" +mdata.MILKTYPE,"Milk Qty:" + mdata.QUANTITY,
+//                    "Fat:" + mdata.FAT, "Snf:" + mdata.SNF,"Rate:" + mdata.RATE,
+//                    "Amount:" + mdata.AMOUNT
+//            };
+            as1 = new String[]{"TDATE : ","SHIFT : ",
+                    "Farmer Code:" ,"Name:" ,
+                    "Milk Type:" ,"Milk Qty:",
+                    "Fat:" , "Snf:" ,"Rate:" ,
+                    "Amount:"
+            };
+            as2 = new String[]{mdata.TDATE,mdata.SHIFT,
+                    mdata.FARMERID,mdata.FARMERNAME,
+                    mdata.MILKTYPE,""+mdata.QUANTITY,
+                   ""+ mdata.FAT, "" + mdata.SNF,"" + mdata.RATE,
+                    "" + mdata.AMOUNT
+            };
+//            as1  = getInner();
+
+            int h1 = 20+Headerh1;
+            if (as1 != null) {
+                for (int i = 0; i < as1.length; i++) {
+                    canvas.drawText(as1[i], 10,h1, getPaintObjbody(28));
+                    h1 += 30;
+                }
+            }
+            int h2 = 20+Headerh1;
+            if (as2 != null) {
+                for (int i = 0; i < as2.length; i++) {
+                    canvas.drawText(as2[i], (float)(390-as2[i].length()*18),h2, getPaintObjbody(28));
+                    h2 += 30;
+                }
+            }
+//            String[] Footer = null;
+//            int Footerf1 = h1+20;
+//            Footer = new String[]{"______________________________________________"};
+//            if (Footer != null) {
+//                for (int i = 0; i < Footer.length; i++) {
+//                    canvas.drawText(Footer[i], 30,Footerf1, getPaintObjHeaderNew(22));
+//                    Footerf1 += 30;
+//                }
+//            }
+//            String formateHeader1 	= "%1$-10.12s %2$-5.5s %3$-6.6s %4$-6.6s %5$-7.7s %6$-5.5s %7$-5.5s %8$-5.5s %9$-6.6s %10$-5.5s\r\n";
+//            canvas.drawText(String.format(formateHeader1,"TDATE","M/E","CODE","NAME","B/C","QTY","FAT","SNF","RATE","AMT"), 30,Footerf1+10, getPaintObjHeaderNew(16));
+//            int footerheight=Footerf1+50;
+//            for(int i=0 ;i<5;i++){
+//                canvas.drawText(String.format(formateHeader1,"01JUN2024","M","111","NAME123456789012345","BUFF","111.00","3.5","8.5","32.00","4800.00"), 30,footerheight, getPaintObjHeaderNew(16));
+//                footerheight+=20;
+//            }
+//            canvas.drawText(String.format(rightalign,"Footer Text"),300,Footerf1+10,getPaintObjHeaderNew(22));
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            if (Settings.outputStream == null) {
+//                showCustomDialog(getContext(),"Print","Would you like to Print?","Yes","No","PRINT");
+                Toast.makeText(MyApplicationNew.mContext,"Printer is not Connected!",Toast.LENGTH_SHORT).show();
+            }else {
+                Settings.printImage(bmp);
+            }
+            out.flush();
+            out.close();
+//            Settings.printBitmap(bmp);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -700,6 +833,15 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
         paint.setTypeface(Typeface.DEFAULT_BOLD);
         paint.setStrokeWidth(12); // Text Size
         paint.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+        paint.setTextSize(textsize);
+        return paint;
+    }
+    private static Paint getPaintObjbody(int textsize) {
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK); // Text Color
+        paint.setTypeface(Typeface.DEFAULT);
+        paint.setStrokeWidth(1); // Text Size
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         paint.setTextSize(textsize);
         return paint;
     }

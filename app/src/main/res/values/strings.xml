@@ -111,7 +111,9 @@
     <string name="Settings">Settings</string>
     <string name="add_advnace">Add Advance</string>
     <string name="add_customer">Add Customer</string>
+    <string name="edit_customer">Edit Customer</string>
     <string name="add_farmer">Add Farmer</string>
+    <string name="edit_farmer">Edit Farmer</string>
 
 
 

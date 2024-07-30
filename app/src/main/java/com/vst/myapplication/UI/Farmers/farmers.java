@@ -70,29 +70,30 @@ public class farmers extends BaseFragment implements FarmersAdapter.ItemClickLis
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         // Implement any additional UI setup here
         farmersAdapter = new FarmersAdapter(parent.getContext(), null);
-        if(MyApplicationNew.RoomDB)
-        {
-            roomrepo.getFarmersData(getViewLifecycleOwner()).observe(this, new Observer<List<farmerDO>>() {
-                @Override
-                public void onChanged(List<farmerDO> farmer) {
-                    Gson gson = new Gson();
-                    JsonArray jsonArray = gson.toJsonTree(farmer).getAsJsonArray();
-                    farmerDOs = gson.fromJson(jsonArray, farmerDO[].class);
-                    if (farmerDOs.length > 0) {
-                        binding.recFarmes.setLayoutManager(new LinearLayoutManager(parent.getContext()));
-                        farmersAdapter = new FarmersAdapter(parent.getContext(), farmerDOs);
-                        binding.recFarmes.setAdapter(farmersAdapter);
-                        binding.recFarmes.setHasFixedSize(true);
-                    } else {
-                        farmerDOs = new farmerDO[]{};
-                        if (farmersAdapter != null) {
-                            farmersAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            });
-        }
-        else {
+//        if(MyApplicationNew.RoomDB)
+//        {
+//            roomrepo.getFarmersData(getViewLifecycleOwner()).observe(this, new Observer<List<farmerDO>>() {
+//                @Override
+//                public void onChanged(List<farmerDO> farmer) {
+//                    Gson gson = new Gson();
+//                    JsonArray jsonArray = gson.toJsonTree(farmer).getAsJsonArray();
+//                    farmerDOs = gson.fromJson(jsonArray, farmerDO[].class);
+//                    List<farmerDO> farmerDOsList = Arrays.asList(farmerDOs);
+//                    if (farmerDOs.length > 0) {
+//                        binding.recFarmes.setLayoutManager(new LinearLayoutManager(parent.getContext()));
+//                        farmersAdapter = new FarmersAdapter(parent.getContext(), farmerDOsList);
+//                        binding.recFarmes.setAdapter(farmersAdapter);
+//                        binding.recFarmes.setHasFixedSize(true);
+//                    } else {
+//                        farmerDOs = new farmerDO[]{};
+//                        if (farmersAdapter != null) {
+//                            farmersAdapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                }
+//            });
+//        }
+//        else {
             if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
 //            repository.getfarmers().observe(this, new Observer<JSONObject>() {
                 repository.getfarmers().observe(this, new Observer<JsonObject>() {
@@ -102,7 +103,7 @@ public class farmers extends BaseFragment implements FarmersAdapter.ItemClickLis
                             Log.d("TAG", jsonObject.toString());
                             Gson gson = new Gson();
                             farmerDOs = gson.fromJson(jsonObject.getAsJsonArray("Data"), farmerDO[].class);
-
+                            List<farmerDO> farmerDOsList = Arrays.asList(farmerDOs);
 //                        Gson gson = new Gson();
 //                        farmerDOs = gson.fromJson(jsonArray.toString(), farmerDO[].class);
                             if (farmerDOs != null) {
@@ -117,7 +118,7 @@ public class farmers extends BaseFragment implements FarmersAdapter.ItemClickLis
 //                                layoutViewPager.setVisibility(View.VISIBLE);
                                     //setupTabs(orders);
                                     binding.recFarmes.setLayoutManager(new LinearLayoutManager(parent.getContext()));
-                                    farmersAdapter = new FarmersAdapter(parent.getContext(), farmerDOs);
+                                    farmersAdapter = new FarmersAdapter(parent.getContext(), farmerDOsList);
                                     binding.recFarmes.setAdapter(farmersAdapter);
                                     binding.recFarmes.setHasFixedSize(true);
                                 } else {
@@ -134,7 +135,7 @@ public class farmers extends BaseFragment implements FarmersAdapter.ItemClickLis
                 });
 //        farmersVM.getFarmerdata();
 //        farmersAdapter.setFarmers();
-            }
+//            }
         }
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override

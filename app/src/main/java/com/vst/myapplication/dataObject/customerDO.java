@@ -18,5 +18,5 @@ public class customerDO {
     @SerializedName("MOBILENO")
     public String MOBILENO="";
     @SerializedName("ISACTIVE")
-    public String ISACTIVE="";
+    public boolean ISACTIVE;
 }

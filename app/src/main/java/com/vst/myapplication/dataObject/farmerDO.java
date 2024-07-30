@@ -9,8 +9,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 @Entity(tableName = "tblfarmers", indices = {@Index(value = "FARMERID", unique = true)})
 public class farmerDO implements Serializable {
-//    @SerializedName("slno")
-//    public int slno;
+    @PrimaryKey(autoGenerate = true)
+    @SerializedName("SLNO")
+    public int SLNO;
 //{
 //    "farmerid":"1",
 //        "farmername":"1",
@@ -18,7 +19,6 @@ public class farmerDO implements Serializable {
 //        "milktype":"1",
 //        "isactive":"1"
 //}
-    @PrimaryKey(autoGenerate = true)
     @SerializedName("FARMERID")
     public int FARMERID;
     @SerializedName("FARMERNAME")

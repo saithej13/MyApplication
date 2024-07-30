@@ -29,6 +29,9 @@ import com.vst.myapplication.UI.Dashboard.DashboardFragment;
 import com.vst.myapplication.UI.Dashboard.graphFragment;
 import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.UI.menu.menuFragment;
+import android.widget.PopupWindow;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.json.JSONException;
 
@@ -270,7 +273,6 @@ public abstract class BaseFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     customDialog.dismiss();
-
                     if (from != null && from.equalsIgnoreCase("cancelorder"))
                         onButtonYesClick(from, params);
                     else if (from != null && (from.equalsIgnoreCase("EXCESS_LOAD") || from.equalsIgnoreCase("StoreCheckObject") || from.equalsIgnoreCase("Excess_Stock")))
@@ -365,6 +367,4 @@ public abstract class BaseFragment extends Fragment {
         });
         popupMenu.show();
     }
-
-
 }

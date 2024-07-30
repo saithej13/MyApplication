@@ -18,6 +18,7 @@ import com.vst.myapplication.Room.RoomService;
 import com.vst.myapplication.Room.roomRepository;
 import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.MyApplicationNew;
+import com.vst.myapplication.dataObject.MilkDataSummary;
 import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.advanceDO;
 import com.vst.myapplication.dataObject.customerDO;
@@ -114,23 +115,45 @@ public class ProjectRepository {
 
     public MutableLiveData<JsonObject> getfarmers() {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
-
-        apiClient.getFarmers().enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    JsonObject jsonObject =response.body();
-                    Log.d("Log Response", "" + response.body());
+        if (MyApplicationNew.RoomDB) {
+            roomService.getfarmers().observe(lifecycleOwner,new Observer<List<farmerDO>>() {
+                @Override
+                public void onChanged(List<farmerDO> farmerdo) {
+//                    JsonObject jsonObject = new JsonObject();
+//                    jsonObject.add("Data", farmerdo[].class);
+//                    data.setValue(jsonObject);
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    String jsonArrayString = gson.toJson(farmerdo);
+                    try {
+                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+                        jsonObject.add("Data", jsonArray);
+                    } catch (JsonSyntaxException e) {
+                        Log.e("Log Response", "Error parsing JSON array", e);
+                        jsonObject.add("Data", new JsonArray());
+                    }
+                    Log.d("Log Response", "" + jsonObject);
                     data.setValue(jsonObject);
                 }
-            }
+            });
+        } else {
+            apiClient.getFarmers().enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        Log.d("Log Response", "" + response.body());
+                        data.setValue(jsonObject);
+                    }
+                }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
-                data.setValue(null);
-            }
-        });
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
+                    data.setValue(null);
+                }
+            });
+        }
         return data;
     }
     public MutableLiveData<JsonObject> getTSrate(JsonObject payload) {
@@ -438,15 +461,15 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return data;
     }
-
-    public MutableLiveData<JsonObject> getMData2(LifecycleOwner owner,JsonObject payload) {
+    public MutableLiveData<JsonObject> getMDatabarchart(LifecycleOwner owner,JsonObject payload) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB){
             String STARTDATE = payload.get("STARTDATE").getAsString();
             String ENDDATE = payload.get("ENDDATE").getAsString();
-            roomService.getmilkdata2(STARTDATE,ENDDATE).observe(owner,new Observer<List<milkDO>>() {
+            Log.d("datebar",""+STARTDATE);
+            roomService.getmilkdataforbarchart(STARTDATE,ENDDATE).observe(owner,new Observer<List<MilkDataSummary>>() {
                 @Override
-                public void onChanged(List<milkDO> orderSummeries) {
+                public void onChanged(List<MilkDataSummary> orderSummeries) {
                     Gson gson = new Gson();
                     JsonObject jsonObject = new JsonObject();
                     String jsonArrayString = gson.toJson(orderSummeries);
@@ -496,6 +519,35 @@ public MutableLiveData<JsonObject> getrates() {
                     data.setValue(null);
                 }
             });
+        }
+        return data;
+    }
+
+    public MutableLiveData<JsonObject> getMData2(LifecycleOwner owner,JsonObject payload) {
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        if(MyApplicationNew.RoomDB){
+            String STARTDATE = payload.get("STARTDATE").getAsString();
+            String ENDDATE = payload.get("ENDDATE").getAsString();
+            roomService.getmilkdata2(STARTDATE,ENDDATE).observe(owner,new Observer<List<milkDO>>() {
+                @Override
+                public void onChanged(List<milkDO> orderSummeries) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    String jsonArrayString = gson.toJson(orderSummeries);
+                    try {
+                        JsonArray jsonArray = gson.fromJson(jsonArrayString, JsonArray.class);
+                        jsonObject.add("Data", jsonArray);
+                    } catch (JsonSyntaxException e) {
+                        Log.e("Log Response", "Error parsing JSON array", e);
+                        jsonObject.add("Data", new JsonArray());
+                    }
+                    Log.d("Log Response", "" + jsonObject);
+                    data.setValue(jsonObject);
+                }
+            });
+        }
+        else {
+
         }
         return data;
     }
@@ -650,7 +702,7 @@ public MutableLiveData<JsonObject> getrates() {
     public MutableLiveData<JsonObject> getfarmerbyslno(int SLNO) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB) {
-            roomService.getFarmerByCode(SLNO).observe(lifecycleOwner, new Observer<List<farmerDO>>() {
+            roomService.getFarmerBySLNO(SLNO).observe(lifecycleOwner, new Observer<List<farmerDO>>() {
                 @Override
                 public void onChanged(List<farmerDO> farmerDOS) {
                     Gson gson = new Gson();
@@ -673,15 +725,86 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return data;
     }
-    public MutableLiveData<JsonObject> deleteFarmerID(int FARMERID) {
-        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
-        if(MyApplicationNew.RoomDB) {
-            roomService.deleteFarmerId(FARMERID);
+    public boolean deleteFarmerID(JsonObject payload) {
+        try {
+            int SLNO = payload.get("SLNO").getAsInt();
+            if (MyApplicationNew.RoomDB) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int farmerId = roomService.getFarmerIdBySlno(SLNO);
+                        int milkDataCount = roomService.countMilkpurchaseDataRecordsByFarmerId(farmerId);
+                        if (milkDataCount > 0) {
+                            Log.d("error","error");
+                        } else {
+                            roomService.deleteFarmerId(SLNO);
+                        }
+
+                    }
+                }).start();
+
+            } else {
+                //API
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        else{
-            //API
+    }
+    public boolean deleteCustomerID(JsonObject payload) {
+        try {
+            int SLNO = payload.get("SLNO").getAsInt();
+            if (MyApplicationNew.RoomDB) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int cusotmerId = roomService.getCustomerIdBySlno(SLNO);
+                        int salecount = roomService.countMilksaleDataRecordsByFarmerId(cusotmerId);
+                        //salecount
+                        if (salecount > 0) {
+                            Log.d("error","error");
+                        } else {
+                            roomService.deleteCustomerId(SLNO);
+                        }
+                    }
+                }).start();
+
+            } else {
+                //API
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        return data;
+    }
+    public int getNextFarmerId() {
+        final int[] farmerid = {0};
+        try {
+            if (MyApplicationNew.RoomDB) {
+                farmerid[0] = roomService.getNextFarmerId();
+                Log.d("farmerid", "" + farmerid[0]);
+            } else {
+                //API
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return farmerid[0];
+    }
+    public int getNextCustomerId() {
+        final int[] cusotmerid = {0};
+        try {
+            if (MyApplicationNew.RoomDB) {
+                cusotmerid[0] = roomService.getNextCustomerId();
+            } else {
+                //API
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cusotmerid[0];
     }
     public MutableLiveData<JsonObject> InsertAdvance(JsonObject payload) {
         Log.d("URL","getFarmerbycode Request-->"+payload);
@@ -722,7 +845,7 @@ public MutableLiveData<JsonObject> getrates() {
             customer.CUSTOMERCODE = payload.get("CUSTOMERCODE").getAsString();
             customer.CUSTOMERNAME = payload.get("CUSTOMERNAME").getAsString();
             customer.MOBILENO = payload.get("MOBILENO").getAsString();
-            customer.ISACTIVE = payload.get("ISACTIVE").getAsString();
+            customer.ISACTIVE = payload.get("ISACTIVE").getAsBoolean();
             customer.SLNO = SLNO;
             if(SLNO==0)
             {
@@ -746,6 +869,7 @@ public MutableLiveData<JsonObject> getrates() {
         {
             int SLNO = payload.get("SLNO").getAsInt();
             farmerDO farmer = new farmerDO();
+            farmer.SLNO = payload.get("SLNO").getAsInt();
             farmer.FARMERID = payload.get("FARMERID").getAsInt();
             farmer.FARMERNAME = payload.get("FARMERNAME").getAsString();
             farmer.MOBILENO = payload.get("MOBILENO").getAsString();

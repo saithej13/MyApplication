@@ -47,6 +47,7 @@ public class addcustomer extends BaseFragment {
         repository = new ProjectRepository();
         roomrepo = new roomRepository();
         binding.setLifecycleOwner(viewLifecycleOwner);
+        binding.etCustomercode.setEnabled(false);
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
@@ -68,7 +69,7 @@ public class addcustomer extends BaseFragment {
                                     binding.etCustomercode.setText(data[0].CUSTOMERCODE);
                                     binding.etCustomerName.setText(data[0].CUSTOMERNAME);
                                     binding.etMobileno.setText(data[0].MOBILENO);
-                                    binding.tbcustomeractivestatus.setChecked(Boolean.getBoolean(data[0].ISACTIVE));
+                                    binding.tbcustomeractivestatus.setChecked(data[0].ISACTIVE);
                                 } else {
                                     data = new customerDO[]{};
                                 }
@@ -76,6 +77,19 @@ public class addcustomer extends BaseFragment {
                         }
                     }
                 });
+            }
+        }
+        else {
+            try {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int customerId = repository.getNextCustomerId();
+                        binding.etCustomercode.setText(customerId + "");
+                    }
+                }).start();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         binding.tvSubmit.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +106,7 @@ public class addcustomer extends BaseFragment {
                     customer.CUSTOMERCODE = customercode;
                     customer.CUSTOMERNAME = customername;
                     customer.MOBILENO = mobileno;
-                    customer.ISACTIVE = active?"true":"false";
+                    customer.ISACTIVE = active;
                     customerV_M.insertUpdateCustomer(customer);
                     showCustomDialog(getContext(),"Success","Customer Details Saved","OK",null,"success");
                     //farmersVM.insertFarmer(farmerDo);

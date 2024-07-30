@@ -1,5 +1,6 @@
 package com.vst.myapplication.UI.Farmers;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -45,6 +46,7 @@ public class addfarmer extends BaseFragment {
         repository = new ProjectRepository();
         roomrepo = new roomRepository();
         binding.setLifecycleOwner(viewLifecycleOwner);
+        binding.etfarmercode.setEnabled(false);
         setupUI(inflater,parent,viewLifecycleOwner);
         return binding.getRoot();
     }
@@ -76,6 +78,7 @@ public class addfarmer extends BaseFragment {
         });
         if(edit)
         {
+            binding.title1.setText(getContext().getString(R.string.edit_farmer));
             if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
                 repository.getfarmerbyslno(SLNO).observe(this, new Observer<JsonObject>() {
                     @Override
@@ -90,7 +93,7 @@ public class addfarmer extends BaseFragment {
                                     binding.etfarmername.setText(data[0].FARMERNAME);
                                     binding.etMobileno.setText(data[0].MOBILENO);
                                     binding.tvmilktype.setText(data[0].MILKTYPE);
-                                    binding.tbcustomeractivestatus.setChecked(Boolean.getBoolean(String.valueOf(data[0].ISACTIVE)));
+                                    binding.tbactivestatus.setChecked(data[0].ISACTIVE);
                                 } else {
                                     data = new farmerDO[]{};
                                 }
@@ -99,30 +102,72 @@ public class addfarmer extends BaseFragment {
                     }
                 });
             }
+            else {
+                showCustomDialog(getContext(),"Internet Connection","No Internet, please check your Internet Connection","OK",null,"success");
+            }
+        }
+        else {
+            //get the new farmerid
+            try {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int farmerid = new ProjectRepository().getNextFarmerId();
+                            ((Activity) getContext()).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    binding.etfarmercode.setText(farmerid + "");
+                                }
+                            });
+                    }
+                }).start();
+//                int farmerid = repository.getNextFarmerId();
+//                binding.etfarmercode.setText(farmerid + "");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
         binding.tvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String farmercode = binding.etfarmercode.getText().toString();
-                String farmername = binding.etfarmername.getText().toString();
-                String mobileno = binding.etMobileno.getText().toString();
-                String milktype = binding.tvmilktype.getText().toString();
-                Boolean active = binding.tbcustomeractivestatus.isChecked();
-                if (!TextUtils.isEmpty(farmercode) && !TextUtils.isEmpty(farmername) && !TextUtils.isEmpty(mobileno) && !TextUtils.isEmpty(milktype)) {
-                    farmerDO farmerDo = new farmerDO();
-                    farmerDo.FARMERID = Integer.parseInt(farmercode);
-                    farmerDo.FARMERNAME = farmername;
-                    farmerDo.ISACTIVE = active;
-                    farmerDo.MILKTYPE = mobileno;
-                    farmerDo.MOBILENO = mobileno;
-                    farmersVM.insertUpdateFarmer(farmerDo);
-                    binding.etfarmercode.setText("");
-                    binding.etfarmername.setText("");
-                    binding.tvmilktype.setText("");
-                    binding.etMobileno.setText("");
-                    showCustomDialog(getContext(),"Success","Farmer Added!","OK",null,"success");
+                if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
+                    try{
+                    String farmercode = binding.etfarmercode.getText().toString();
+                    String farmername = binding.etfarmername.getText().toString();
+                    String mobileno = binding.etMobileno.getText().toString();
+                    String milktype = binding.tvmilktype.getText().toString();
+                    Boolean active = binding.tbactivestatus.isChecked();
+                    if (!TextUtils.isEmpty(farmercode) && !TextUtils.isEmpty(farmername) && !TextUtils.isEmpty(mobileno) && !TextUtils.isEmpty(milktype)) {
+                        farmerDO farmerDo = new farmerDO();
+                        farmerDo.SLNO = SLNO;
+                        farmerDo.FARMERID = Integer.parseInt(farmercode);
+                        farmerDo.FARMERNAME = farmername;
+                        farmerDo.ISACTIVE = active;
+                        farmerDo.MILKTYPE = milktype;
+                        farmerDo.MOBILENO = mobileno;
+                        farmersVM.insertUpdateFarmer(farmerDo);
+                        binding.etfarmercode.setText("");
+                        binding.etfarmername.setText("");
+                        binding.tvmilktype.setText("");
+                        binding.etMobileno.setText("");
+                        if(SLNO==0)
+                        {
+                            showCustomDialog(getContext(), "Success", "Farmer Added!", "OK", null, "success");
+                        }
+                        else {
+                            showCustomDialog(getContext(), "Success", "Farmer Updated!", "OK", null, "success");
+                        }
+
+                    } else {
+                        showCustomDialog(getContext(), "Error", "please make sure all the fields are filled up", "OK", null, "");
+                    }
+                    }
+                    catch (Exception ex){
+                        showCustomDialog(getContext(),"Exception",""+ex.getMessage(),"OK",null,"");
+                    }
                 } else {
-                    showCustomDialog(getContext(),"Error","please make sure all the fields are filled up","OK",null,"");
+                    showCustomDialog(getContext(), "Internet Connection", "No Internet, please check your Internet Connection", "OK", null, "success");
                 }
             }
         });

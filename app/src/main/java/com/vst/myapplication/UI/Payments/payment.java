@@ -34,7 +34,7 @@ public class payment extends AppCompatActivity implements PaymentResultListener 
                 Checkout checkout = new Checkout();
                 //checkout.setKeyID("rzp_live_G8kp9PmzRPBsP6");
                 //rzp_live_6wPsYHs1emTgGz
-                checkout.setKeyID("rzp_test_Bq3eJ5w9Xy1mAM");
+                checkout.setKeyID("rzp_live_ngEAJ3BMLzsRof");
 //                checkout.setImage(R.drawable.logo);
                 JSONObject object = new JSONObject();
                 try {

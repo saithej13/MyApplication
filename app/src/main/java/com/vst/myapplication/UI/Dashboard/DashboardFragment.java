@@ -29,6 +29,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.R;
@@ -60,6 +61,7 @@ public class DashboardFragment extends BaseFragment {
     milkDO[] milkDOS;
     String shift="M";
     HashMap<String, Map<String, String>> hashMapbarchart = new HashMap<>();
+    String[] Qty;
 
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
@@ -69,6 +71,7 @@ public class DashboardFragment extends BaseFragment {
         setupUI(inflater,parent,viewLifecycleOwner,savedInstanceState);
         return binding.getRoot();
     }
+    BarChart BarChart1;
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner,Bundle savedInstanceState) {
         overATQ();
         Calendar cal = Calendar.getInstance();
@@ -83,24 +86,19 @@ public class DashboardFragment extends BaseFragment {
         xlabels123 = new ArrayList<>(Arrays.asList(xLabels));
         growPercentage1.add(1);growPercentage1.add(-2);growPercentage1.add(3);growPercentage1.add(3);growPercentage1.add(-4);growPercentage1.add(5);growPercentage1.add(6);growPercentage1.add(7);
 
-        BarChart BarChart1 = binding.barChartDouble;
+        BarChart1 = binding.barChartDouble;
 
 
         addData(hashMapbarchart, "2024-07-19", "100", "50");
         addData(hashMapbarchart, "2024-07-18", "80", "45");
         addData(hashMapbarchart, "2024-07-17", "120", "55");
 
-        DoubleBarChart doubleBarChart=new DoubleBarChart(BarChart1,xlabels123,growPercentage1);
-        doubleBarChart.setDetails1(getBarEntriesOne(),"BM",Color.parseColor("#3ACA06"));
-        doubleBarChart.setDetails2(getBarEntriesTwo(),"CM",Color.parseColor("#1F7102"));
-        doubleBarChart.isValueSelected(true);
-        doubleBarChart.setAboveImageEnable(true);
-        doubleBarChart.setAboveTextColor(Color.BLACK);
-        doubleBarChart.createBarChart();
+
     }
     ArrayList<String> xlabels123 = new ArrayList<>();
 //    String[] xLabels = new String[]{"MTD","LM","YTD","LY","QW","PS","SK"};
-    String[] xLabels = new String[]{"MTD","LM","YTD","LY","QW","PS","SK"};
+    String[] xLabels = new String[]{CalendarUtils.getDatePattern3()};
+    //dates{"01/07/24","01/07/24","01/07/24","01/07/24"}
     ArrayList<Integer> growPercentage1 = new ArrayList<>();
 
     @Override
@@ -129,6 +127,7 @@ public class DashboardFragment extends BaseFragment {
     public void refreshData(){
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("TDATE", CalendarUtils.getDatePattern3());
+        Log.d("datebylog",""+CalendarUtils.getDatePattern3());
         jsonObject.addProperty("SHIFT",shift);
         repository.getMData(getViewLifecycleOwner(),jsonObject).observe(this, new Observer<JsonObject>() {
             @Override
@@ -158,7 +157,6 @@ public class DashboardFragment extends BaseFragment {
                             binding.txttotalamt.setText(String.format("%.1f",amt));
                             binding.txttotalqty.setText(String.format("%.1f",qty));
                             binding.txtavgfat.setText(String.format("%.1f",(ltrfat / qty) * 100));
-//                    binding.txtavgsnf.setText(String.format("%.1f",(ltrsnf)));
                             binding.txtavgsnf.setText(String.format("%.1f",(ltrsnf / qty) * 100));
                         }
                         else {
@@ -171,6 +169,82 @@ public class DashboardFragment extends BaseFragment {
                         }
                     }
                 }
+            }
+        });
+        JsonObject jsonObject2 = new JsonObject();
+        jsonObject2.addProperty("STARTDATE", "2024-07-22");
+        jsonObject2.addProperty("ENDDATE","2024-07-29");
+        repository.getMDatabarchart(getViewLifecycleOwner(),jsonObject2).observe(this, new Observer<JsonObject>() {
+            @Override
+            public void onChanged(JsonObject jsonObject) {
+                if (jsonObject != null) {
+                    Log.d("TAG", jsonObject.toString());
+                    Gson gson = new Gson();
+                    Log.d("forbarchart",""+jsonObject.getAsJsonArray("Data"));
+                    ArrayList<String> tdates=new ArrayList<>();
+                    ArrayList<Integer> growPercentage12=new ArrayList<>();
+
+//                    for(int i=0;i<jsonObject.getAsJsonArray("Data").size();i++){
+//                        tdates.add(jsonObject.get("tdate").toString());
+//                    }
+                    barEntries12.clear();
+                    growPercentage12.clear();
+                    barEntries123.clear();
+                    growPercentage12.add(3);
+                    for (JsonElement jsonElement : jsonObject.getAsJsonArray("Data")) {
+                        JsonObject jsonObject1 = jsonElement.getAsJsonObject();
+                        String tdate = jsonObject1.get("tdate").getAsString();
+                        float qty = Float.parseFloat(jsonObject1.get("qty").getAsString());
+                        barEntries12.add(new BarEntry(1f, qty));
+                        barEntries123.add(new BarEntry(1f, (float) (qty-0.2)));
+                        tdates.add(tdate);
+                    }
+
+
+//                            double buffqty = 0, cowqty = 0,qty = 0, amt = 0, ltrfat = 0, ltrsnf = 0;
+//                            for (int i = 0; i < jsonObject.getAsJsonArray("Data").size(); i++) {
+//                                qty += milkDOS[i].q;
+//                                if (milkDOS[i].MILKTYPE.equals("Buff")) {
+//                                    buffqty += milkDOS[i].QUANTITY;
+//                                } else if (milkDOS[i].MILKTYPE.equals("Cow")) {
+//                                    cowqty += milkDOS[i].QUANTITY;
+//                                }
+//                                ltrfat += ((milkDOS[i].FAT * milkDOS[i].QUANTITY)/100);
+////                        ltrfat += ((mdata.get(i).getFat() * mdata.get(i).getQuantity()) / 100);
+//                                ltrsnf += ((milkDOS[i].SNF * milkDOS[i].QUANTITY) / 100);
+//                                amt += milkDOS[i].AMOUNT;
+//                            }
+////                            Qty[0]= String.valueOf(qty);
+//                            barEntries12.add(new BarEntry(1f, (float) cowqty));
+//                            barEntries123.add(new BarEntry(1f, (float) buffqty));
+//                            ArrayList<String> xlabels1234=new ArrayList<>();
+//                            xlabels1234.add(CalendarUtils.getDatePattern3());
+//                            ArrayList<Integer> growPercentage12=new ArrayList<>();
+//                            growPercentage12.add(3);
+//                            binding.txtcowqty.setText(String.format("%.1f",cowqty));
+//                            binding.txtbuffqty.setText(String.format("%.1f",buffqty));
+//                            binding.txttotalamt.setText(String.format("%.1f",amt));
+//                            binding.txttotalqty.setText(String.format("%.1f",qty));
+//                            binding.txtavgfat.setText(String.format("%.1f",(ltrfat / qty) * 100));
+////                    binding.txtavgsnf.setText(String.format("%.1f",(ltrsnf)));
+//                            binding.txtavgsnf.setText(String.format("%.1f",(ltrsnf / qty) * 100));
+                            DoubleBarChart doubleBarChart=new DoubleBarChart(BarChart1,tdates,growPercentage12);
+                            doubleBarChart.setDetails1(barEntries12,"BM",Color.parseColor("#3ACA06"));
+                            doubleBarChart.setDetails2(barEntries123,"CM",Color.parseColor("#1F7102"));
+                            doubleBarChart.isValueSelected(true);
+                            doubleBarChart.setAboveImageEnable(true);
+                            doubleBarChart.setAboveTextColor(Color.BLACK);
+                            doubleBarChart.createBarChart();
+                        }
+                        else {
+                            binding.txtcowqty.setText(String.valueOf(0));
+                            binding.txtbuffqty.setText(String.valueOf(0));
+                            binding.txttotalamt.setText(String.valueOf(0));
+                            binding.txttotalqty.setText(String.valueOf(0));
+                            binding.txtavgfat.setText(String.valueOf(0));
+                            binding.txtavgsnf.setText(String.valueOf(0));
+                            BarChart1.setNoDataText("no Data");
+                        }
             }
         });
     }
@@ -223,7 +297,87 @@ public class DashboardFragment extends BaseFragment {
         });
     }
 
+    private String[] generateDates(int length) {
+        String[] dates = new String[length];
+        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMM", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        dates[0] = "";
+        for (int i = 1; i < length; i++) {
+            dates[i] = dateFormat.format(calendar.getTime());
+            calendar.add(Calendar.DAY_OF_MONTH, 1); // Adjust the interval as needed
+        }
+        return dates;
+    }
+    private ArrayList<Entry> generateRandomData(int length) {
+        ArrayList<Entry> randomData = new ArrayList<>();
+        Random random = new Random();
+        randomData.add(new Entry(0,0));
+        for (int i = 1; i < length; i++) {
+            randomData.add(new Entry(i, random.nextInt(10))); // Adjust the range as needed
+        }
+        return randomData;
+    }
+    private ArrayList<BarEntry> getBarEntriesOne() {
+        ArrayList barEntries = new ArrayList<>();
+        // y is the quantity
+        barEntries.add(new BarEntry(1f, Float.parseFloat(Qty[0])));
+//        barEntries.add(new BarEntry(2f, 200));
+//        barEntries.add(new BarEntry(3f, 180));
+//        barEntries.add(new BarEntry(4f, 162));
+//        barEntries.add(new BarEntry(5f, 142));
+//        barEntries.add(new BarEntry(6f, 120));
+//        barEntries.add(new BarEntry(7f, 100));
+        return barEntries;
+    }
+    ArrayList barEntries12 = new ArrayList<>();
+    ArrayList barEntries123 = new ArrayList<>();
 
+    private ArrayList<BarEntry> getBarEntriesTwo() {
+        ArrayList barEntries = new ArrayList<>();
+
+        barEntries.add(new BarEntry(1f, Float.parseFloat(Qty[0])));
+//        barEntries.add(new BarEntry(2f, 180));
+//        barEntries.add(new BarEntry(3f, 160));
+//        barEntries.add(new BarEntry(4f, 140));
+//        barEntries.add(new BarEntry(5f, 80));
+//        barEntries.add(new BarEntry(6f, 100));
+//        barEntries.add(new BarEntry(7f, 80));
+        return barEntries;
+    }
+    private ArrayList<BarEntry> getBarEntriesThree() {
+        ArrayList barEntries = new ArrayList<>();
+
+        barEntries.add(new BarEntry(1f, 180));
+        barEntries.add(new BarEntry(2f, 160));
+        barEntries.add(new BarEntry(3f, 140));
+        barEntries.add(new BarEntry(4f, 120));
+        barEntries.add(new BarEntry(5f, 100));
+        barEntries.add(new BarEntry(6f, 80));
+        barEntries.add(new BarEntry(7f, 60));
+        return barEntries;
+    }
+    private ArrayList<BarEntry> getBarEntriesFour() {
+        ArrayList barEntries = new ArrayList<>();
+
+        barEntries.add(new BarEntry(1f, 180));
+        barEntries.add(new BarEntry(2f, 150));
+        barEntries.add(new BarEntry(3f, 80));
+        barEntries.add(new BarEntry(4f, 120));
+        barEntries.add(new BarEntry(5f, 105));
+        barEntries.add(new BarEntry(6f, 80));
+        barEntries.add(new BarEntry(7f, 60));
+        return barEntries;
+    }
+    private static void addData(HashMap<String, Map<String, String>> hashMapbarchart,
+                                String date, String bmtotal, String cmtotal) {
+        // Create the inner map
+        HashMap<String, String> innerMap = new HashMap<>();
+        innerMap.put("bmtotal", bmtotal);
+        innerMap.put("cmtotal", cmtotal);
+
+        // Add the inner map to the outer HashMap
+        hashMapbarchart.put(date, innerMap);
+    }
     private void overATQ() {
 //        LineChart lineChart = findViewById(R.id.over_ATQ);
         LineChart lineChart = binding.overATQ;
@@ -335,84 +489,6 @@ public class DashboardFragment extends BaseFragment {
 //        layoutParams.leftMargin = (int) getResources().getDimensionPixelSize(R.dimen.legend_left_offset);
         lineChart.setLayoutParams(layoutParams);
         lineChart.invalidate();
-    }
-    private String[] generateDates(int length) {
-        String[] dates = new String[length];
-        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMM", Locale.getDefault());
-        Calendar calendar = Calendar.getInstance();
-        dates[0] = "";
-        for (int i = 1; i < length; i++) {
-            dates[i] = dateFormat.format(calendar.getTime());
-            calendar.add(Calendar.DAY_OF_MONTH, 1); // Adjust the interval as needed
-        }
-        return dates;
-    }
-    private ArrayList<Entry> generateRandomData(int length) {
-        ArrayList<Entry> randomData = new ArrayList<>();
-        Random random = new Random();
-        randomData.add(new Entry(0,0));
-        for (int i = 1; i < length; i++) {
-            randomData.add(new Entry(i, random.nextInt(10))); // Adjust the range as needed
-        }
-        return randomData;
-    }
-    private ArrayList<BarEntry> getBarEntriesOne() {
-        ArrayList barEntries = new ArrayList<>();
-
-        barEntries.add(new BarEntry(1f, 220));
-        barEntries.add(new BarEntry(2f, 200));
-        barEntries.add(new BarEntry(3f, 180));
-        barEntries.add(new BarEntry(4f, 162));
-        barEntries.add(new BarEntry(5f, 142));
-        barEntries.add(new BarEntry(6f, 120));
-        barEntries.add(new BarEntry(7f, 100));
-        return barEntries;
-    }
-    private ArrayList<BarEntry> getBarEntriesTwo() {
-        ArrayList barEntries = new ArrayList<>();
-
-        barEntries.add(new BarEntry(1f, 200));
-        barEntries.add(new BarEntry(2f, 180));
-        barEntries.add(new BarEntry(3f, 160));
-        barEntries.add(new BarEntry(4f, 140));
-        barEntries.add(new BarEntry(5f, 80));
-        barEntries.add(new BarEntry(6f, 100));
-        barEntries.add(new BarEntry(7f, 80));
-        return barEntries;
-    }
-    private ArrayList<BarEntry> getBarEntriesThree() {
-        ArrayList barEntries = new ArrayList<>();
-
-        barEntries.add(new BarEntry(1f, 180));
-        barEntries.add(new BarEntry(2f, 160));
-        barEntries.add(new BarEntry(3f, 140));
-        barEntries.add(new BarEntry(4f, 120));
-        barEntries.add(new BarEntry(5f, 100));
-        barEntries.add(new BarEntry(6f, 80));
-        barEntries.add(new BarEntry(7f, 60));
-        return barEntries;
-    }
-    private ArrayList<BarEntry> getBarEntriesFour() {
-        ArrayList barEntries = new ArrayList<>();
-
-        barEntries.add(new BarEntry(1f, 180));
-        barEntries.add(new BarEntry(2f, 150));
-        barEntries.add(new BarEntry(3f, 80));
-        barEntries.add(new BarEntry(4f, 120));
-        barEntries.add(new BarEntry(5f, 105));
-        barEntries.add(new BarEntry(6f, 80));
-        barEntries.add(new BarEntry(7f, 60));
-        return barEntries;
-    }
-    private static void addData(HashMap<String, Map<String, String>> hashMapbarchart,
-                                String date, String bmtotal, String cmtotal) {
-        // Create the inner map
-        HashMap<String, String> innerMap = new HashMap<>();
-        innerMap.put("bmtotal", bmtotal);
-        innerMap.put("cmtotal", cmtotal);
-
-        // Add the inner map to the outer HashMap
-        hashMapbarchart.put(date, innerMap);
     }
 
 }

@@ -64,15 +64,17 @@ RoomService roomService;
     public MutableLiveData<List<farmerDO>> getFarmersData(LifecycleOwner owner) {
         Log.d("URL", "GetFarmersFarmers Request-->");
         final MutableLiveData<List<farmerDO>> data = new MutableLiveData<>();
-
-        roomService.getfarmers().observe(owner,new Observer<List<farmerDO>>() {
-            @Override
-            public void onChanged(List<farmerDO> orderSummaries) {
-                data.setValue(orderSummaries);
-                Log.d("value", "body " + data.getValue());
-            }
-        });
-
+        try {
+            roomService.getfarmers().observe(owner, new Observer<List<farmerDO>>() {
+                @Override
+                public void onChanged(List<farmerDO> orderSummaries) {
+                    data.setValue(orderSummaries);
+                    Log.d("value", "body " + data.getValue());
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return data;
     }
 
@@ -93,14 +95,17 @@ RoomService roomService;
     public MutableLiveData<List<RateAndDetails>> getratesData(LifecycleOwner lifecycleOwner) {
         Log.d("URL", "GetFarmersFarmers Request-->");
         final MutableLiveData<List<RateAndDetails>> data = new MutableLiveData<>();
-
-        roomService.getrates().observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
-            @Override
-            public void onChanged(List<RateAndDetails> orderSummeries) {
-                data.setValue(orderSummeries);
-                Log.d("value", "body " + data.getValue());
-            }
-        });
+        try {
+            roomService.getrates().observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
+                @Override
+                public void onChanged(List<RateAndDetails> orderSummeries) {
+                    data.setValue(orderSummeries);
+                    Log.d("value", "body " + data.getValue());
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         return data;
     }
@@ -121,29 +126,36 @@ RoomService roomService;
     public MutableLiveData<List<farmerDO>> GetFarmerbycodeAsyncTask(LifecycleOwner owner,int code) {
         Log.d("URL", "GetFarmersFarmers Request-->" );
         final MutableLiveData<List<farmerDO>> data = new MutableLiveData<>();
-
-        roomService.getFarmerByCode(code).observe(owner,new Observer<List<farmerDO>>() {
-            @Override
-            public void onChanged(List<farmerDO> farmers) {
-                data.setValue(farmers);
-                Log.d("value", "body " + data.getValue());
-            }
-        });
-
+        try {
+            roomService.getFarmerByCode(code).observe(owner, new Observer<List<farmerDO>>() {
+                @Override
+                public void onChanged(List<farmerDO> farmers) {
+                    data.setValue(farmers);
+                    Log.d("value", "body " + data.getValue());
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         return data;
     }
 
     public MutableLiveData<List<milkDO>> getmilkdata(LifecycleOwner owner, String tdate, String shift) {
         Log.d("URL", "GetMilkData Request--> tdate "+tdate+" shift "+shift );
         final MutableLiveData<List<milkDO>> data = new MutableLiveData<>();
-
-        roomService.getmilkdata(tdate,shift).observe(owner,new Observer<List<milkDO>>() {
-            @Override
-            public void onChanged(List<milkDO> orderSummeries) {
-                data.setValue(orderSummeries);
-                Log.d("value", "body " + data.getValue());
-            }
-        });
+try {
+    roomService.getmilkdata(tdate, shift).observe(owner, new Observer<List<milkDO>>() {
+        @Override
+        public void onChanged(List<milkDO> orderSummeries) {
+            data.setValue(orderSummeries);
+            Log.d("value", "body " + data.getValue());
+        }
+    });
+}catch (Exception e){
+    e.printStackTrace();
+}
 
         return data;
     }
@@ -169,7 +181,13 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(milkDO... mdata) {
-            roomService.insertMilkdata(mdata[0]);
+            try {
+                roomService.insertMilkdata(mdata[0]);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
             return null;
         }
     }
@@ -180,7 +198,13 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(advanceDO... advance) {
-            roomService.insertAdvance(advance[0]);
+            try {
+                roomService.insertAdvance(advance[0]);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
             return null;
         }
     }
@@ -191,7 +215,12 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(farmerDO... farmers) {
-            roomService.insertFarmer(farmers[0]);
+            try {
+                roomService.insertFarmer(farmers[0]);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -202,32 +231,35 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(RateAndDetails... rateAndDetailsArray) {
-            RateAndDetails rateAndDetails = rateAndDetailsArray[0];
-            if (rateAndDetails == null) {
-                Log.e("InsertRatesAsyncTask", "rateAndDetails is null");
-                return null;
-            }
-
-            if (rateAndDetails.rate == null) {
-                Log.e("InsertRatesAsyncTask", "rateAndDetails.rate is null");
-                return null;
-            }
-
-            long slNo = roomService.insertRates(rateAndDetails.rate);
-            if (rateAndDetails.rateDetailsList == null) {
-                Log.e("InsertRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
-                return null;
-            }
-
-            for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
-                if (rateDetails == null) {
-                    Log.e("InsertRatesAsyncTask", "rateDetails is null");
-                    continue;
+            try {
+                RateAndDetails rateAndDetails = rateAndDetailsArray[0];
+                if (rateAndDetails == null) {
+                    Log.e("InsertRatesAsyncTask", "rateAndDetails is null");
+                    return null;
                 }
-                rateDetails.SLNO = (int) slNo;
-                roomService.insertRatesdetails(rateDetails);
-            }
 
+                if (rateAndDetails.rate == null) {
+                    Log.e("InsertRatesAsyncTask", "rateAndDetails.rate is null");
+                    return null;
+                }
+
+                long slNo = roomService.insertRates(rateAndDetails.rate);
+                if (rateAndDetails.rateDetailsList == null) {
+                    Log.e("InsertRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
+                    return null;
+                }
+
+                for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
+                    if (rateDetails == null) {
+                        Log.e("InsertRatesAsyncTask", "rateDetails is null");
+                        continue;
+                    }
+                    rateDetails.SLNO = (int) slNo;
+                    roomService.insertRatesdetails(rateDetails);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -238,30 +270,34 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(RateAndDetails... rateAndDetailsArray) {
-            RateAndDetails rateAndDetails = rateAndDetailsArray[0];
-            if (rateAndDetails == null) {
-                Log.e("UpdateRatesAsyncTask", "rateAndDetails is null");
-                return null;
-            }
-
-            if (rateAndDetails.rate == null) {
-                Log.e("UpdateRatesAsyncTask", "rateAndDetails.rate is null");
-                return null;
-            }
-//            int slno, String milkType, String startDate, String endDate
-            roomService.updateRates(rateAndDetails.rate.SLNO,rateAndDetails.rate.MILKTYPE,rateAndDetails.rate.STARTDATE,rateAndDetails.rate.ENDDATE);
-            roomService.deleteRateDetails(rateAndDetails.rate.SLNO);
-            if (rateAndDetails.rateDetailsList == null) {
-                Log.e("UpdateRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
-                return null;
-            }
-            for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
-                if (rateDetails == null) {
-                    Log.e("UpdateRatesAsyncTask", "rateDetails is null");
-                    continue;
+            try {
+                RateAndDetails rateAndDetails = rateAndDetailsArray[0];
+                if (rateAndDetails == null) {
+                    Log.e("UpdateRatesAsyncTask", "rateAndDetails is null");
+                    return null;
                 }
-                rateDetails.SLNO = rateAndDetails.rate.SLNO;
-                roomService.insertRatesdetails(rateDetails);
+
+                if (rateAndDetails.rate == null) {
+                    Log.e("UpdateRatesAsyncTask", "rateAndDetails.rate is null");
+                    return null;
+                }
+//            int slno, String milkType, String startDate, String endDate
+                roomService.updateRates(rateAndDetails.rate.SLNO, rateAndDetails.rate.MILKTYPE, rateAndDetails.rate.STARTDATE, rateAndDetails.rate.ENDDATE);
+                roomService.deleteRateDetails(rateAndDetails.rate.SLNO);
+                if (rateAndDetails.rateDetailsList == null) {
+                    Log.e("UpdateRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
+                    return null;
+                }
+                for (ratedetailsDO rateDetails : rateAndDetails.rateDetailsList) {
+                    if (rateDetails == null) {
+                        Log.e("UpdateRatesAsyncTask", "rateDetails is null");
+                        continue;
+                    }
+                    rateDetails.SLNO = rateAndDetails.rate.SLNO;
+                    roomService.insertRatesdetails(rateDetails);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return null;
         }
@@ -273,13 +309,17 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(advanceDO... advanceArray) {
-            advanceDO advance = advanceArray[0];
-            if (advance == null) {
-                Log.e("UpdateAdvanceAsyncTask", "advanceDO is null");
-                return null;
-            }
+            try {
+                advanceDO advance = advanceArray[0];
+                if (advance == null) {
+                    Log.e("UpdateAdvanceAsyncTask", "advanceDO is null");
+                    return null;
+                }
 //            String TDATE,String NAME,String CUSTOMERTYPE,String AMOUNT,String REMARKS,String ID,int SLNO
-            roomService.updateAdvance(advance.TDATE,advance.NAME,advance.CUSTOMERTYPE,advance.AMOUNT,advance.REMARKS,advance.ID, advance.SLNO);
+                roomService.updateAdvance(advance.TDATE, advance.NAME, advance.CUSTOMERTYPE, advance.AMOUNT, advance.REMARKS, advance.ID, advance.SLNO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -291,7 +331,11 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(customerDO... customer) {
-            roomService.insertCustomer(customer[0]);
+            try {
+                roomService.insertCustomer(customer[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -302,13 +346,17 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(customerDO... customerDOArray) {
-            customerDO customer = customerDOArray[0];
-            if (customer == null) {
-                Log.e("UpdateAdvanceAsyncTask", "advanceDO is null");
-                return null;
-            }
+            try {
+                customerDO customer = customerDOArray[0];
+                if (customer == null) {
+                    Log.e("UpdateAdvanceAsyncTask", "advanceDO is null");
+                    return null;
+                }
 //            String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,String ISACTIVE,int SLNO
-            roomService.updateCustomer(customer.CUSTOMERCODE,customer.CUSTOMERNAME,customer.MOBILENO,customer.ISACTIVE,customer.SLNO);
+                roomService.updateCustomer(customer.CUSTOMERCODE, customer.CUSTOMERNAME, customer.MOBILENO, customer.ISACTIVE, customer.SLNO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -320,13 +368,17 @@ RoomService roomService;
         }
         @Override
         protected Void doInBackground(farmerDO... farmerDOArray) {
-            farmerDO farmer = farmerDOArray[0];
-            if (farmer == null) {
-                Log.e("UpdateFarmerAsyncTask", "FarmerDO is null");
-                return null;
-            }
+            try {
+                farmerDO farmer = farmerDOArray[0];
+                if (farmer == null) {
+                    Log.e("UpdateFarmerAsyncTask", "FarmerDO is null");
+                    return null;
+                }
 //            String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,String ISACTIVE,int SLNO
-            roomService.updateFarmer(farmer.FARMERNAME,farmer.MOBILENO,farmer.ISACTIVE,farmer.MILKTYPE,farmer.FARMERID);
+                roomService.updateFarmer(farmer.FARMERNAME, farmer.MOBILENO, farmer.ISACTIVE, farmer.MILKTYPE, farmer.FARMERID, farmer.SLNO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }

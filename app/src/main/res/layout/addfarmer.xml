@@ -195,7 +195,7 @@
                         android:layout_weight="1"
                         android:textSize="@dimen/text_size_small_14sp" />
                     <ToggleButton
-                        android:id="@+id/tbcustomeractivestatus"
+                        android:id="@+id/tbactivestatus"
                         android:layout_width="@dimen/margin_50"
                         android:layout_height="@dimen/size25"
                         android:background="@drawable/toggle_selector_yes_no"

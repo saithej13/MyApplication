@@ -55,6 +55,7 @@ import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NTLMAuthenticator;
 import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.dataObject.farmerDO;
+import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.userDO;
 import com.vst.myapplication.databinding.ActivityMainBinding;
 
@@ -77,6 +78,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -110,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         MyApplicationNew.lifecycleOwner = this;
+//        Log.d("String",""+returnstring());
+//        getPrintSummaryslip();
         preference = new Preference(getApplicationContext());
         repository = new ProjectRepository();
 //        barcodeScannerView = findViewById(R.id.zxing_barcode_scanner);
@@ -755,16 +759,102 @@ public class MainActivity extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
 //    }
+    public static Bitmap getPrintSummaryslip(){
+        File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/PrinterTest");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        int salesHeight = 1, freeGoodsHeight = 1, damageHeight = 1;
+//            n = generator.nextInt(n);
+        n = generator.nextInt((200 - 100) + 1) + 100;
+//        String fname = "Image-" + n + ".jpg";
+        String fname = "Image-" + 102 + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        Bitmap bmp = null;
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            int width = 460;
+            int height = 900 + ((salesHeight + freeGoodsHeight + damageHeight) *30);
+            bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            // NEWLY ADDED CODE STARTS HERE [
+            Canvas canvas = new Canvas(bmp);
+            Paint paintBG = new Paint();
+            paintBG.setColor(Color.WHITE);
+            canvas.drawRect(0, 0, width, height, paintBG);
+            int het1 = 40;
+            String[] as1 = null;
+            String[] Header = null;
+            int Headerh1 = 20+40;
+//            String formateHeader1 	= "%1$-12.12s %2$-15.15s %3$-13.13s %4$-15.15s %5$-16.16s %6$-15.15s %7$-15.15s %8$-10.10s %9$-15.15s \r\n";
+            String rightalign = "%1$12.12s";
+            Header = new String[]{"Company Name","Branch Name","Collection CenterName","Village Name","Address","Contact","______________________________________________"};
+            if (Header != null) {
+                for (int i = 0; i < Header.length; i++) {
+                    canvas.drawText(Header[i], ((width/2)-Header[i].length()),Headerh1, getPaintObjHeaderNew(22));
+                    Headerh1 += 30;
+                }
+            }
+//            as1  = getInner();
 
-
-
-
-
-
-
-
-
-
-
-
+            int h1 = 20+Headerh1;
+            if (as1 != null) {
+                for (int i = 0; i < as1.length; i++) {
+                    canvas.drawText(as1[i], 30,h1, getPaintObjHeaderNew(16));
+                    h1 += 20;
+                }
+            }
+            String[] Footer = null;
+            int Footerf1 = h1+20;
+            Footer = new String[]{"______________________________________________"};
+            if (Footer != null) {
+                for (int i = 0; i < Footer.length; i++) {
+                    canvas.drawText(Footer[i], 30,Footerf1, getPaintObjHeaderNew(22));
+                    Footerf1 += 30;
+                }
+            }
+//            Paint paint = new Paint();
+            String formateHeader1 	= "%1$-12.12s %2$-5.5s %3$-6.6s %4$-6.6s %5$-7.7s %6$-7.7s %7$-5.5s %8$-5.5s %9$-6.6s %10$-7.7s\r\n";
+            canvas.drawText(String.format(formateHeader1,"TDATE","M/E","CODE","NAME","B/C","QTY","FAT","SNF","RATE","AMT"), 10,Footerf1+10, getPaintObjHeaderNew(14));
+            canvas.drawText(String.format(formateHeader1,"01JUN2024","M","111","NAME123456789012345","BM","111.00","3.5","8.5","32.00","4800.00"), 10,Footerf1+25, getPaintObjHeaderNew(14));
+            int footerheight=Footerf1+50;
+            for(int i=0 ;i<5;i++){
+                canvas.drawText(String.format(formateHeader1,"TDATE","M/E","CODE","NAME","B/C","QTY","FAT","SNF","RATE","AMT"), 10,footerheight, getPaintObjHeaderNew(14));
+                footerheight+=20;
+                canvas.drawText(String.format(formateHeader1,"01JUN2024","M","111","NAME123456789012345","BM","111.00","3.5","8.5","32.00","4800.00"), 10,footerheight, getPaintObjHeaderNew(14));
+                footerheight+=20;
+//                canvas.drawText(returnstring(), 10,footerheight, getPaintObjHeaderNew(14));
+//                paint.measureText("TDATE") + paint.measureText(" ");
+            }
+//            canvas.drawText(String.format(rightalign,"Footer Text"),300,Footerf1+10,getPaintObjHeaderNew(22));
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bmp != null)
+                bmp.recycle();
+        }
+        return BitmapFactory.decodeFile(file.getAbsolutePath());
+    }
+    private static Paint getPaintObjHeaderNew(int textsize) {
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK); // Text Color
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        paint.setStrokeWidth(12); // Text Size
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+        paint.setTextSize(textsize);
+        return paint;
+    }
+    private static String returnstring(){
+        String s ="";
+        String formateHeader1 	= "%1$-12.12s %2$-5.5s %3$-6.6s %4$-6.6s %5$-7.7s %6$-7.7s %7$-5.5s %8$-5.5s %9$-6.6s %10$-7.7s \r\n";
+        s+=String.format(formateHeader1,"TDATE","M/E","CODE","NAME","B/C","QTY","FAT","SNF","RATE","AMT");
+        s+=String.format(formateHeader1,"01JUN2024","M","111","NAME123456789012345","BM","111.00","3.5","8.5","32.00","4800.00");
+        s+=String.format(formateHeader1,"TDATE","M/E","CODE","NAME","B/C","QTY","FAT","SNF","RATE","AMT");
+        s+=String.format(formateHeader1,"01JUN2024","M","111","NAME123456789012345","BM","111.00","3.5","8.5","32.00","4800.00");
+        return s;
+    }
 }

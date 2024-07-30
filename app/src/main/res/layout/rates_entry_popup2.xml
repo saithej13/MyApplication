@@ -58,39 +58,39 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="@dimen/margin_10"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:visibility="visible">-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginHorizontal="@dimen/size15"
-                            android:singleLine="true"
-                            android:text="@string/Select_Rate_Type"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:textColor="@color/text_color1"
-                            android:textSize="@dimen/text_size_small_12sp" />
-                        <TextView
-                            android:id="@+id/tvSelectRateType"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/size10"
-                            android:background="@drawable/corner_radius_5_and_border_ebebeb"
-                            android:padding="@dimen/size10"
-                            android:layout_marginBottom="@dimen/size2"
-                            android:hint="@string/Select_Rate_Type"
-                            android:gravity="center_vertical"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:textColor="@color/text_color_dark"
-                            android:drawableRight="@drawable/arrow_down_new_1"
-                            android:textColorHint="@color/text_color_dark"
-                            android:textSize="@dimen/text_size_small_14sp" />
-                    </LinearLayout>
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center_vertical"-->
+<!--                            android:layout_marginHorizontal="@dimen/size15"-->
+<!--                            android:singleLine="true"-->
+<!--                            android:text="@string/Select_Rate_Type"-->
+<!--                            android:fontFamily="@font/montserrat_semibold"-->
+<!--                            android:textColor="@color/text_color1"-->
+<!--                            android:textSize="@dimen/text_size_small_12sp" />-->
+<!--                        <TextView-->
+<!--                            android:id="@+id/tvSelectRateType"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginHorizontal="@dimen/size10"-->
+<!--                            android:background="@drawable/corner_radius_5_and_border_ebebeb"-->
+<!--                            android:padding="@dimen/size10"-->
+<!--                            android:layout_marginBottom="@dimen/size2"-->
+<!--                            android:hint="@string/Select_Rate_Type"-->
+<!--                            android:gravity="center_vertical"-->
+<!--                            android:fontFamily="@font/montserrat_semibold"-->
+<!--                            android:textColor="@color/text_color_dark"-->
+<!--                            android:drawableRight="@drawable/arrow_down_new_1"-->
+<!--                            android:textColorHint="@color/text_color_dark"-->
+<!--                            android:textSize="@dimen/text_size_small_14sp" />-->
+<!--                    </LinearLayout>-->
                     <LinearLayout
                         android:id="@+id/lltfat"
                         android:layout_width="match_parent"

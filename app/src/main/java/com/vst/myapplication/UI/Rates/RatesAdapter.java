@@ -81,9 +81,11 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
         expandMap.put(position,false);
         if (rate != null) {
             ((ImageView) holder.itemView.findViewById(R.id.dropdownmilktype)).setVisibility(View.GONE);
+            ((ImageView) holder.itemView.findViewById(R.id.dropdownratetype)).setVisibility(View.GONE);
             ((TextView) holder.itemView.findViewById(R.id.tvstartdate)).setText(String.valueOf(rate.rate.STARTDATE));
             ((TextView) holder.itemView.findViewById(R.id.tvenddate)).setText(String.valueOf(rate.rate.ENDDATE));
             ((TextView) holder.itemView.findViewById(R.id.tvmilktype)).setText(String.valueOf(rate.rate.MILKTYPE));
+            ((TextView) holder.itemView.findViewById(R.id.tvratetype)).setText(String.valueOf(rate.rate.RATETYPE));
             ((ImageView) holder.itemView.findViewById(R.id.ivedit)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -111,7 +113,6 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
             binding.rcvChild.setLayoutManager(new LinearLayoutManager(fragmentActivity));
             binding.rcvChild.setAdapter(ratedetailsAdapter);
             binding.rcvChild.setHasFixedSize(true);
-
             holder.itemView.findViewById(R.id.rcv_child).setVisibility(View.GONE);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

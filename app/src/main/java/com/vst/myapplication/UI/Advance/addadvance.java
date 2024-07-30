@@ -2,6 +2,8 @@ package com.vst.myapplication.UI.Advance;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +27,15 @@ import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.NetworkUtils;
 import com.vst.myapplication.Utils.StringUtils;
 import com.vst.myapplication.dataObject.advanceDO;
+import com.vst.myapplication.dataObject.customerDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.databinding.AddadvanceBinding;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class addadvance extends BaseFragment {
     AddadvanceBinding binding;
@@ -41,6 +46,10 @@ public class addadvance extends BaseFragment {
     int SLNO = 0;
     boolean edit=false;
     advanceDO[] data;
+    farmerDO[] farmerDOs;
+    customerDO[] customerDo;
+    List<farmerDO> farmerList = new ArrayList<>();
+    List<customerDO> customerList = new ArrayList<>();
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.addadvance, parent, false);
@@ -103,6 +112,33 @@ public class addadvance extends BaseFragment {
             @Override
             public void onClick(View view) {
                 setDropDown(view, binding.tvselectcustomertype, selectcustomertype);
+            }
+        });
+        binding.tvselectcustomertype.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(binding.tvselectcustomertype.getText().equals("Farmer")){
+                    //get farmers and bind in list
+                    repository.getfarmers().observe(getViewLifecycleOwner(), new Observer<JsonObject>() {
+                        @Override
+                        public void onChanged(JsonObject jsonObject) {
+
+                        }
+                    });
+                }
+                else{
+                    //get customers and bind in list
+                }
             }
         });
         final String[] selectcustomer = {"Farmer", "Customer"};

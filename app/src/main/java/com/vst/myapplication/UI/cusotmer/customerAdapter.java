@@ -1,5 +1,6 @@
 package com.vst.myapplication.UI.cusotmer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +19,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonObject;
 import com.vst.myapplication.R;
+import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.Advance.addadvance;
 import com.vst.myapplication.UI.Advance.advancesAdapter;
 import com.vst.myapplication.UI.Rates.RatesAdapter;
@@ -56,7 +59,7 @@ public class customerAdapter extends RecyclerView.Adapter<customerAdapter.ViewHo
             ((TextView) holder.itemView.findViewById(R.id.txtcode)).setText(String.valueOf(customer.CUSTOMERCODE));
             ((TextView) holder.itemView.findViewById(R.id.txtcname)).setText(String.valueOf(customer.CUSTOMERNAME));
             ((TextView) holder.itemView.findViewById(R.id.txtmno)).setText(String.valueOf(customer.MOBILENO));
-            ((TextView) holder.itemView.findViewById(R.id.txtcusttype)).setText(customer.ISACTIVE);
+//            ((TextView) holder.itemView.findViewById(R.id.txtcusttype)).setText(customer.ISACTIVE);
             ((ImageView) holder.itemView.findViewById(R.id.ivedit)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -71,6 +74,27 @@ public class customerAdapter extends RecyclerView.Adapter<customerAdapter.ViewHo
                             .replace(R.id.frame, customer, "")
                             .addToBackStack("")
                             .commitAllowingStateLoss();
+                }
+            });
+            ((ImageView) holder.itemView.findViewById(R.id.ivdelete)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            JsonObject jsonObject = new JsonObject();
+                            jsonObject.addProperty("SLNO",customer.SLNO);
+                            final boolean isDeletd = new ProjectRepository().deleteCustomerID(jsonObject);
+                            if(isDeletd){
+                                ((Activity) view.getContext()).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        notifyItemRemoved(position);
+                                    }
+                                });
+                            }
+                        }
+                    }).start();
                 }
             });
 //            if(farmer.getIsactive())

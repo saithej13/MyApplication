@@ -58,7 +58,8 @@ public class milkCollectionAdapter extends RecyclerView.Adapter<milkCollectionAd
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    milkCollection.getPrintSlip(milkDOs);
+//                    milkCollection.getPrintSlip(milkDOs);
+                    milkCollection.getPrintSummaryslip(milkDOs);
                 }
             });
         }
