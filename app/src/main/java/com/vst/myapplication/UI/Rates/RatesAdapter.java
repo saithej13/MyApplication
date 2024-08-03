@@ -84,8 +84,8 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
             ((ImageView) holder.itemView.findViewById(R.id.dropdownratetype)).setVisibility(View.GONE);
             ((TextView) holder.itemView.findViewById(R.id.tvstartdate)).setText(String.valueOf(rate.rate.STARTDATE));
             ((TextView) holder.itemView.findViewById(R.id.tvenddate)).setText(String.valueOf(rate.rate.ENDDATE));
-            ((TextView) holder.itemView.findViewById(R.id.tvmilktype)).setText(String.valueOf(rate.rate.MILKTYPE));
-            ((TextView) holder.itemView.findViewById(R.id.tvratetype)).setText(String.valueOf(rate.rate.RATETYPE));
+            ((TextView) holder.itemView.findViewById(R.id.tvmilktype)).setText(rate.rate.MILKTYPE);
+            ((TextView) holder.itemView.findViewById(R.id.tvratetype)).setText(rate.rate.RATETYPE);
             ((ImageView) holder.itemView.findViewById(R.id.ivedit)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

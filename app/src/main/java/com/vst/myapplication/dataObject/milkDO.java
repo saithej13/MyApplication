@@ -33,6 +33,8 @@ public class milkDO implements Serializable {
     public double AMOUNT;
     @SerializedName("CRDATE")
     public String CRDATE;
+    @SerializedName("BCODE")
+    public int BCODE;
     @SerializedName("PRINT")
     public String PRINT="";
     @SerializedName("ATTRIBUTE1")

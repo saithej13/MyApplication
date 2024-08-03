@@ -56,6 +56,9 @@ public interface Apiclient {
     @POST("getuser")
     Call<JsonObject> getuser(@Body JsonObject data);
 
+    @POST("adduser")
+    Call<JsonObject> adduser(@Body JsonObject data);
+
     @POST("GetTransList")
     Call<String> getTransListData(@Body RequestBody data);
 

@@ -94,6 +94,31 @@ public class CalendarUtils {
         Log.d("DashboardDAte",""+dateStr);
         return dateStr;
     }
+    public static String getlastweekDateforbarchart()
+    {
+        String dateStr = null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -6);
+        Date date = calendar.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_STD_PATTERN, Locale.ENGLISH);
+        dateStr = sdf.format(date);
+        return dateStr;
+//        String dateStr = null;
+//        Date date = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat(DATE_STD_PATTERN, Locale.ENGLISH);
+//        dateStr = sdf.format(date);
+//        Log.d("DashboardDAte",""+dateStr);
+//        return dateStr;
+    }
+    public static String getTodayDateforbarchart()
+    {
+        String dateStr = null;
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_STD_PATTERN, Locale.ENGLISH);
+        dateStr = sdf.format(date);
+        Log.d("DashboardDAte",""+dateStr);
+        return dateStr;
+    }
     public static String getDatePattern2()
     {
         String dateStr = null;

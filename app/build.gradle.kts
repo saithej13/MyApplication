@@ -73,7 +73,9 @@ dependencies {
     implementation ("com.razorpay:checkout:1.6.38")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.3.0")
+    implementation ("androidx.browser:browser:1.3.0")
 //    implementation ("org.codelibs:jodd-http:3.9.0")
+    implementation ("com.google.android.play:integrity:1.4.0")
 
 
 

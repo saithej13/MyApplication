@@ -38,6 +38,16 @@
                         android:layout_weight="1"
                         android:id="@+id/llmtype"
                         android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/textmilktype"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/Milk_Type"
+                            android:layout_marginEnd="@dimen/dp10"
+                            android:textColor="@color/app_color"
+                            app:fontFamily="@font/montserrat_semibold"
+                            android:textSize="@dimen/sp16"/>
                     <TextView
                         android:id="@+id/tvmilktype"
                         android:layout_width="0dp"
@@ -94,6 +104,16 @@
                     android:id="@+id/llratetype2"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/textratetype"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/Rate_Type"
+                        android:layout_marginEnd="@dimen/dp10"
+                        android:textColor="@color/app_color"
+                        app:fontFamily="@font/montserrat_semibold"
+                        android:textSize="@dimen/sp16"/>
+                    <TextView
                         android:id="@+id/tvratetype"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -108,7 +128,7 @@
                         android:layout_width="@dimen/dp20"
                         android:layout_height="@dimen/dp20"
                         android:src="@drawable/arrow_d"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.6"
                         />
                 </LinearLayout>
             </LinearLayout>

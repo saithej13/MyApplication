@@ -39,6 +39,8 @@ import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.UI.Login.LoginNew;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
+import com.vst.myapplication.Utils.MyApplicationNew;
+import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.ratedetailsDO;
 import com.vst.myapplication.databinding.DashboradfragmentBinding;
@@ -59,6 +61,7 @@ public class DashboardFragment extends BaseFragment {
     DashboradfragmentBinding binding;
     ProjectRepository repository;
     milkDO[] milkDOS;
+    Preference preference;
     String shift="M";
     HashMap<String, Map<String, String>> hashMapbarchart = new HashMap<>();
     String[] Qty;
@@ -66,6 +69,7 @@ public class DashboardFragment extends BaseFragment {
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.dashboradfragment, parent, false);
+        preference = new Preference(getContext());
         repository = new ProjectRepository();
         binding.setLifecycleOwner(viewLifecycleOwner);
         setupUI(inflater,parent,viewLifecycleOwner,savedInstanceState);
@@ -124,81 +128,84 @@ public class DashboardFragment extends BaseFragment {
         refreshData();
     }
 
-    public void refreshData(){
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("TDATE", CalendarUtils.getDatePattern3());
-        Log.d("datebylog",""+CalendarUtils.getDatePattern3());
-        jsonObject.addProperty("SHIFT",shift);
-        repository.getMData(getViewLifecycleOwner(),jsonObject).observe(this, new Observer<JsonObject>() {
-            @Override
-            public void onChanged(JsonObject jsonObject) {
-                if (jsonObject != null) {
-                    Log.d("TAG", jsonObject.toString());
-                    Gson gson = new Gson();
-                    milkDOS = gson.fromJson(jsonObject.getAsJsonArray("Data"), milkDO[].class);
-                    // rateDOs = gson.fromJson(jsonObject.toString(), rateDO[].class);
-                    if (milkDOS != null) {
-                        if(milkDOS!=null&&milkDOS.length>0) {
-                            double buffqty = 0, cowqty = 0,qty = 0, amt = 0, ltrfat = 0, ltrsnf = 0;
-                            for (int i = 0; i < milkDOS.length; i++) {
-                                qty += milkDOS[i].QUANTITY;
-                                if (milkDOS[i].MILKTYPE.equals("Buff")) {
-                                    buffqty += milkDOS[i].QUANTITY;
-                                } else if (milkDOS[i].MILKTYPE.equals("Cow")) {
-                                    cowqty += milkDOS[i].QUANTITY;
-                                }
-                                ltrfat += ((milkDOS[i].FAT * milkDOS[i].QUANTITY)/100);
+    public void refreshData() {
+
+        try {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("TDATE", CalendarUtils.getDatePattern3());
+            Log.d("datebylog", "" + CalendarUtils.getDatePattern3());
+            jsonObject.addProperty("SHIFT", shift);
+            jsonObject.addProperty("BCODE", preference.getIntFromPreference("BCODE", 0));
+            repository.getMData(getViewLifecycleOwner(), jsonObject).observe(MyApplicationNew.getLifecycleOwner(), new Observer<JsonObject>() {
+                @Override
+                public void onChanged(JsonObject jsonObject) {
+                    if (jsonObject != null) {
+                        Log.d("TAG", jsonObject.toString());
+                        Gson gson = new Gson();
+                        milkDOS = gson.fromJson(jsonObject.getAsJsonArray("Data"), milkDO[].class);
+                        // rateDOs = gson.fromJson(jsonObject.toString(), rateDO[].class);
+                        if (milkDOS != null) {
+                            if (milkDOS != null && milkDOS.length > 0) {
+                                double buffqty = 0, cowqty = 0, qty = 0, amt = 0, ltrfat = 0, ltrsnf = 0;
+                                for (int i = 0; i < milkDOS.length; i++) {
+                                    qty += milkDOS[i].QUANTITY;
+                                    if (milkDOS[i].MILKTYPE.equals("Buff")) {
+                                        buffqty += milkDOS[i].QUANTITY;
+                                    } else if (milkDOS[i].MILKTYPE.equals("Cow")) {
+                                        cowqty += milkDOS[i].QUANTITY;
+                                    }
+                                    ltrfat += ((milkDOS[i].FAT * milkDOS[i].QUANTITY) / 100);
 //                        ltrfat += ((mdata.get(i).getFat() * mdata.get(i).getQuantity()) / 100);
-                                ltrsnf += ((milkDOS[i].SNF * milkDOS[i].QUANTITY) / 100);
-                                amt += milkDOS[i].AMOUNT;
+                                    ltrsnf += ((milkDOS[i].SNF * milkDOS[i].QUANTITY) / 100);
+                                    amt += milkDOS[i].AMOUNT;
+                                }
+                                binding.txtcowqty.setText(String.format("%.1f", cowqty));
+                                binding.txtbuffqty.setText(String.format("%.1f", buffqty));
+                                binding.txttotalamt.setText(String.format("%.1f", amt));
+                                binding.txttotalqty.setText(String.format("%.1f", qty));
+                                binding.txtavgfat.setText(String.format("%.1f", (ltrfat / qty) * 100));
+                                binding.txtavgsnf.setText(String.format("%.1f", (ltrsnf / qty) * 100));
+                            } else {
+                                binding.txtcowqty.setText(String.valueOf(0));
+                                binding.txtbuffqty.setText(String.valueOf(0));
+                                binding.txttotalamt.setText(String.valueOf(0));
+                                binding.txttotalqty.setText(String.valueOf(0));
+                                binding.txtavgfat.setText(String.valueOf(0));
+                                binding.txtavgsnf.setText(String.valueOf(0));
                             }
-                            binding.txtcowqty.setText(String.format("%.1f",cowqty));
-                            binding.txtbuffqty.setText(String.format("%.1f",buffqty));
-                            binding.txttotalamt.setText(String.format("%.1f",amt));
-                            binding.txttotalqty.setText(String.format("%.1f",qty));
-                            binding.txtavgfat.setText(String.format("%.1f",(ltrfat / qty) * 100));
-                            binding.txtavgsnf.setText(String.format("%.1f",(ltrsnf / qty) * 100));
-                        }
-                        else {
-                            binding.txtcowqty.setText(String.valueOf(0));
-                            binding.txtbuffqty.setText(String.valueOf(0));
-                            binding.txttotalamt.setText(String.valueOf(0));
-                            binding.txttotalqty.setText(String.valueOf(0));
-                            binding.txtavgfat.setText(String.valueOf(0));
-                            binding.txtavgsnf.setText(String.valueOf(0));
                         }
                     }
                 }
-            }
-        });
-        JsonObject jsonObject2 = new JsonObject();
-        jsonObject2.addProperty("STARTDATE", "2024-07-22");
-        jsonObject2.addProperty("ENDDATE","2024-07-29");
-        repository.getMDatabarchart(getViewLifecycleOwner(),jsonObject2).observe(this, new Observer<JsonObject>() {
-            @Override
-            public void onChanged(JsonObject jsonObject) {
-                if (jsonObject != null) {
-                    Log.d("TAG", jsonObject.toString());
-                    Gson gson = new Gson();
-                    Log.d("forbarchart",""+jsonObject.getAsJsonArray("Data"));
-                    ArrayList<String> tdates=new ArrayList<>();
-                    ArrayList<Integer> growPercentage12=new ArrayList<>();
+            });
+            JsonObject jsonObject2 = new JsonObject();
+            jsonObject2.addProperty("STARTDATE", CalendarUtils.getlastweekDateforbarchart());
+            jsonObject2.addProperty("ENDDATE", CalendarUtils.getTodayDateforbarchart());
+            jsonObject2.addProperty("BCODE", preference.getIntFromPreference("BCODE", 0));
+            repository.getMDatabarchart(getViewLifecycleOwner(), jsonObject2).observe(MyApplicationNew.getLifecycleOwner(), new Observer<JsonObject>() {
+                @Override
+                public void onChanged(JsonObject jsonObject) {
+                    if (jsonObject != null) {
+                        Log.d("TAG", jsonObject.toString());
+                        Gson gson = new Gson();
+                        Log.d("forbarchart", "" + jsonObject.getAsJsonArray("Data"));
+                        ArrayList<String> tdates = new ArrayList<>();
+                        ArrayList<Integer> growPercentage12 = new ArrayList<>();
 
 //                    for(int i=0;i<jsonObject.getAsJsonArray("Data").size();i++){
 //                        tdates.add(jsonObject.get("tdate").toString());
 //                    }
-                    barEntries12.clear();
-                    growPercentage12.clear();
-                    barEntries123.clear();
+                        barEntries12.clear();
+                        growPercentage12.clear();
+                        barEntries123.clear();
                     growPercentage12.add(3);
-                    for (JsonElement jsonElement : jsonObject.getAsJsonArray("Data")) {
-                        JsonObject jsonObject1 = jsonElement.getAsJsonObject();
-                        String tdate = jsonObject1.get("tdate").getAsString();
-                        float qty = Float.parseFloat(jsonObject1.get("qty").getAsString());
-                        barEntries12.add(new BarEntry(1f, qty));
-                        barEntries123.add(new BarEntry(1f, (float) (qty-0.2)));
-                        tdates.add(tdate);
-                    }
+                        for (JsonElement jsonElement : jsonObject.getAsJsonArray("Data")) {
+                            JsonObject jsonObject1 = jsonElement.getAsJsonObject();
+                            String tdate = jsonObject1.get("tdate").getAsString();
+                            float qty = Float.parseFloat(jsonObject1.get("qty").getAsString());
+                            barEntries12.add(new BarEntry(1f, qty));
+                            barEntries123.add(new BarEntry(1f, (float) qty));
+                            tdates.add(tdate);
+                        }
 
 
 //                            double buffqty = 0, cowqty = 0,qty = 0, amt = 0, ltrfat = 0, ltrsnf = 0;
@@ -228,25 +235,28 @@ public class DashboardFragment extends BaseFragment {
 //                            binding.txtavgfat.setText(String.format("%.1f",(ltrfat / qty) * 100));
 ////                    binding.txtavgsnf.setText(String.format("%.1f",(ltrsnf)));
 //                            binding.txtavgsnf.setText(String.format("%.1f",(ltrsnf / qty) * 100));
-                            DoubleBarChart doubleBarChart=new DoubleBarChart(BarChart1,tdates,growPercentage12);
-                            doubleBarChart.setDetails1(barEntries12,"BM",Color.parseColor("#3ACA06"));
-                            doubleBarChart.setDetails2(barEntries123,"CM",Color.parseColor("#1F7102"));
-                            doubleBarChart.isValueSelected(true);
-                            doubleBarChart.setAboveImageEnable(true);
-                            doubleBarChart.setAboveTextColor(Color.BLACK);
-                            doubleBarChart.createBarChart();
-                        }
-                        else {
-                            binding.txtcowqty.setText(String.valueOf(0));
-                            binding.txtbuffqty.setText(String.valueOf(0));
-                            binding.txttotalamt.setText(String.valueOf(0));
-                            binding.txttotalqty.setText(String.valueOf(0));
-                            binding.txtavgfat.setText(String.valueOf(0));
-                            binding.txtavgsnf.setText(String.valueOf(0));
-                            BarChart1.setNoDataText("no Data");
-                        }
-            }
-        });
+                        DoubleBarChart doubleBarChart = new DoubleBarChart(BarChart1, tdates,growPercentage12);
+                        doubleBarChart.setDetails1(barEntries12, "BM", Color.parseColor("#3ACA06"));
+                        doubleBarChart.setDetails2(barEntries123, "CM", Color.parseColor("#1F7102"));
+                        doubleBarChart.isValueSelected(true);
+                        doubleBarChart.setAboveImageEnable(true);
+                        doubleBarChart.setAboveTextColor(Color.BLACK);
+                        doubleBarChart.createBarChart();
+                    } else {
+                        binding.txtcowqty.setText(String.valueOf(0));
+                        binding.txtbuffqty.setText(String.valueOf(0));
+                        binding.txttotalamt.setText(String.valueOf(0));
+                        binding.txttotalqty.setText(String.valueOf(0));
+                        binding.txtavgfat.setText(String.valueOf(0));
+                        binding.txtavgsnf.setText(String.valueOf(0));
+                        BarChart1.setNoDataText("no Data");
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
     public void refreshbarchartData(){
         JsonObject jsonObject = new JsonObject();

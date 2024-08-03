@@ -24,7 +24,6 @@ public class verifyotp_activity extends AppCompatActivity {
         binding.btnVerify.setOnClickListener(v -> {
             startActivity(new Intent(verifyotp_activity.this, newpassword_activity.class));
             finish();
-
         });
 //        binding.edtotp1.addTextChangedListener(new TextWatcher() {
 //            @Override

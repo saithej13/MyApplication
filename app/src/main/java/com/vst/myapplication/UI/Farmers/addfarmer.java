@@ -23,6 +23,7 @@ import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.cusotmer.customerVM;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.dataObject.customerDO;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.databinding.AddcustomersBinding;
@@ -39,9 +40,11 @@ public class addfarmer extends BaseFragment {
     int SLNO = 0;
     farmerDO[] data;
     famers_VM farmersVM;
+    Preference preference;
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.addfarmer, parent, false);
+        preference = new Preference(this.getContext());
         farmersVM = new ViewModelProvider(this ).get(famers_VM.class);
         repository = new ProjectRepository();
         roomrepo = new roomRepository();
@@ -80,7 +83,8 @@ public class addfarmer extends BaseFragment {
         {
             binding.title1.setText(getContext().getString(R.string.edit_farmer));
             if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
-                repository.getfarmerbyslno(SLNO).observe(this, new Observer<JsonObject>() {
+                int BCODE = preference.getIntFromPreference("BCODE",0);
+                repository.getfarmerbyslno(SLNO,BCODE).observe(this, new Observer<JsonObject>() {
                     @Override
                     public void onChanged(JsonObject jsonObject) {
                         if (jsonObject != null) {
@@ -112,7 +116,8 @@ public class addfarmer extends BaseFragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        int farmerid = new ProjectRepository().getNextFarmerId();
+                        int BCODE = preference.getIntFromPreference("BCODE",0);
+                        int farmerid = new ProjectRepository().getNextFarmerId(BCODE);
                             ((Activity) getContext()).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -138,6 +143,7 @@ public class addfarmer extends BaseFragment {
                     String mobileno = binding.etMobileno.getText().toString();
                     String milktype = binding.tvmilktype.getText().toString();
                     Boolean active = binding.tbactivestatus.isChecked();
+                    int BCODE = preference.getIntFromPreference("BCODE",0);
                     if (!TextUtils.isEmpty(farmercode) && !TextUtils.isEmpty(farmername) && !TextUtils.isEmpty(mobileno) && !TextUtils.isEmpty(milktype)) {
                         farmerDO farmerDo = new farmerDO();
                         farmerDo.SLNO = SLNO;
@@ -146,6 +152,7 @@ public class addfarmer extends BaseFragment {
                         farmerDo.ISACTIVE = active;
                         farmerDo.MILKTYPE = milktype;
                         farmerDo.MOBILENO = mobileno;
+                        farmerDo.BCODE = BCODE;
                         farmersVM.insertUpdateFarmer(farmerDo);
                         binding.etfarmercode.setText("");
                         binding.etfarmername.setText("");

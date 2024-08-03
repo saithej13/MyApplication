@@ -34,14 +34,14 @@ public class milkCollection_VM extends AndroidViewModel {
         JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         return repository.InsertMilk(jsonObject);
     }
-    public MutableLiveData<List<farmerDO>> getFarmerbycodeRoom(LifecycleOwner owner, int code){
-        return roomrepo.GetFarmerbycodeAsyncTask(owner,code);
+    public MutableLiveData<List<farmerDO>> getFarmerbycodeRoom(LifecycleOwner owner, int code,int BCODE){
+        return roomrepo.GetFarmerbycodeAsyncTask(owner,code,BCODE);
     }
     public MutableLiveData<List<rateDO>> getGetrates(String mtype, String tdate, double fat, double snf){
         return roomrepo.getratesdata(mtype,tdate,fat,snf);
     }
-    public MutableLiveData<List<milkDO>> getmilkdata(LifecycleOwner owner,String tdate, String shift){
-        return roomrepo.getmilkdata(owner,tdate,shift);
+    public MutableLiveData<List<milkDO>> getmilkdata(LifecycleOwner owner,String tdate, String shift,int BCODE){
+        return roomrepo.getmilkdata(owner,tdate,shift,BCODE);
     }
     public void insertMdataRoom(milkDO mdata){
         roomrepo.insertmilkdata(mdata);

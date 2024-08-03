@@ -95,6 +95,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.ViewHold
                         public void run() {
                             JsonObject jsonObject = new JsonObject();
                             jsonObject.addProperty("SLNO",farmer.SLNO);
+                            jsonObject.addProperty("BCODE",farmer.BCODE);
                             final boolean isDeletd = new ProjectRepository().deleteFarmerID(jsonObject);
                            if(isDeletd){
                                ((Activity) view.getContext()).runOnUiThread(new Runnable() {

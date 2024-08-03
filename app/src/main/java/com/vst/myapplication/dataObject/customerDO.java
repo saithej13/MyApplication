@@ -19,4 +19,6 @@ public class customerDO {
     public String MOBILENO="";
     @SerializedName("ISACTIVE")
     public boolean ISACTIVE;
+    @SerializedName("BCODE")
+    public int BCODE;
 }

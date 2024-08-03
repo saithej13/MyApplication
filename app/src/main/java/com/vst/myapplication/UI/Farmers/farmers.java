@@ -33,6 +33,7 @@ import com.vst.myapplication.UI.cusotmer.customerAdapter;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.databinding.FarmerEntryPopupBinding;
@@ -54,10 +55,12 @@ public class farmers extends BaseFragment implements FarmersAdapter.ItemClickLis
     FarmersAdapter farmersAdapter;
     FarmerEntryPopupBinding farmerEntrybinding;
     private ProjectRepository repository;
+    Preference preference;
     roomRepository roomrepo;
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.farmers, parent, false);
+        preference = new Preference(getContext());
         repository = new ProjectRepository();
         roomrepo = new roomRepository();
         farmersVM = new ViewModelProvider(this ).get(famers_VM.class);
@@ -96,7 +99,8 @@ public class farmers extends BaseFragment implements FarmersAdapter.ItemClickLis
 //        else {
             if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
 //            repository.getfarmers().observe(this, new Observer<JSONObject>() {
-                repository.getfarmers().observe(this, new Observer<JsonObject>() {
+                int BCODE = preference.getIntFromPreference("BCODE",0);
+                repository.getfarmers(BCODE).observe(this, new Observer<JsonObject>() {
                     @Override
                     public void onChanged(JsonObject jsonObject) {
                         if (jsonObject != null) {

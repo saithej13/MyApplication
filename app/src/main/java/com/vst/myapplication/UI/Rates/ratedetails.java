@@ -26,6 +26,8 @@ import com.vst.myapplication.Services.ProjectRepository;
 import com.vst.myapplication.UI.MCollection.milkCollectionAdapter;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
+import com.vst.myapplication.Utils.Preference;
+import com.vst.myapplication.Utils.StringUtils;
 import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.milkDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -47,11 +49,8 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
     private int selectedPosition=-1;
     boolean addRate=false;
     int SLNO = 0;
-    ImageView ivdropdownmilktype;
-    ImageView iveditrate;
-    ImageView ivdeleterate;
-    LinearLayout startdate;
-    LinearLayout enddate;
+    ImageView ivdropdownmilktype,ivdropdownratetype,iveditrate,ivdeleterate;
+    LinearLayout startdate,enddate;
     int mdate,mmonth,myear;
     private Dialog dialog;
     rates_VM ratesVm;
@@ -60,11 +59,13 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
     Vector<ratedetailsDO> vecratedetailsdo;
     ratedetailsAdapter ratedetailsadapter;
     RatesEntryPopup2Binding ratesEntryPopupBinding;
+    Preference preference;
 
 
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.ratesdetailedlist, parent, false);
+        preference = new Preference(getContext());
         binding.setLifecycleOwner(viewLifecycleOwner);
         ratesVm = new ViewModelProvider(this ).get(rates_VM.class);
         vecratedetailsdo = new Vector<ratedetailsDO>();
@@ -80,6 +81,8 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
         addRate = getArguments().getBoolean("addRate");
         SLNO = getArguments().getInt("SLNO");
         ivdropdownmilktype = binding.llOverView.dropdownmilktype;
+        ivdropdownratetype = binding.llOverView.dropdownratetype;
+
         iveditrate = binding.llOverView.ivedit;
         ivdeleterate = binding.llOverView.ivdelete;
         startdate = binding.llOverView.llStartDate;
@@ -90,13 +93,15 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
             ivdeleterate.setVisibility(View.GONE);
         }else {
             ivdropdownmilktype.setVisibility(View.GONE);
+            ivdropdownratetype.setVisibility(View.GONE);
             iveditrate.setVisibility(View.GONE);
             ivdeleterate.setVisibility(View.GONE);
         }
         if (rateDo != null) {
             binding.llOverView.tvstartdate.setText(rateDo.STARTDATE);
             binding.llOverView.tvenddate.setText(rateDo.ENDDATE);
-            binding.llOverView.tvmilktype.setText(rateDo.MILKTYPE);
+            binding.llOverView.tvmilktype.setText("Milk Type"+rateDo.MILKTYPE);
+            binding.llOverView.tvratetype.setText("Rate Type"+rateDo.RATETYPE);
             vecratedetailsdo.add(rateDo.ratedetailsDO);
             ratedetailsAdapter ratedetailsadapter = new ratedetailsAdapter(getContext(),vecratedetailsdo,getActivity(),this);
             binding.rcvRatedetails.setLayoutManager(new LinearLayoutManager(parent.getContext()));
@@ -161,7 +166,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
             public void onClick(View v) {
                 if (getContext() != null) {
                     final String[] arraySpinner = new String[]{
-                            "Cow", "Buff", "Both"
+                            "Cow", "Buff"
                     };
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Select an option");
@@ -204,6 +209,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                             rateDo.RATETYPE = binding.llOverView.tvratetype.getText().toString();
                             rateDo.STARTDATE = binding.llOverView.tvstartdate.getText().toString();
                             rateDo.ENDDATE = binding.llOverView.tvenddate.getText().toString();
+                            rateDo.BCODE = ""+preference.getIntFromPreference("BCODE",0);
                             RateAndDetails rateAndDetails = new RateAndDetails(rateDo, vecratedetailsdo);
                             for(int i=0;i<vecratedetailsdo.size();i++){
                                 Log.d("vecratedetails",""+vecratedetailsdo.get(i).RATE);
@@ -222,6 +228,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
                             rateDo.RATETYPE = binding.llOverView.tvratetype.getText().toString();
                             rateDo.STARTDATE = binding.llOverView.tvstartdate.getText().toString();
                             rateDo.ENDDATE = binding.llOverView.tvenddate.getText().toString();
+                            rateDo.BCODE = ""+preference.getIntFromPreference("BCODE",0);
                             RateAndDetails rateAndDetails = new RateAndDetails(rateDo, vecratedetailsdo);
                             if (!rateAndDetails.rateDetailsList.isEmpty()) {
                                 ratesVm.insertRate(rateAndDetails);
@@ -249,6 +256,7 @@ public class ratedetails extends BaseFragment implements ratedetailsAdapter.Item
             vecratedetailsdo.clear();
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("SLNO", SLNO);
+        jsonObject.addProperty("BCODE", preference.getIntFromPreference("BCODE",0));
         ratesVm.getRates(jsonObject).observe(this, new Observer<JsonObject>() {
             @Override
             public void onChanged(JsonObject jsonObject) {

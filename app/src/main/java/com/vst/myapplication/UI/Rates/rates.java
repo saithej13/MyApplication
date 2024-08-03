@@ -44,6 +44,7 @@ import com.vst.myapplication.UI.Login.Login;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.dataObject.RateAndDetails;
 import com.vst.myapplication.dataObject.farmerDO;
 import com.vst.myapplication.dataObject.rateDO;
@@ -70,6 +71,7 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
     RatesEntryPopupBinding ratesEntryPopupBinding;
     rates_VM ratesVm;
     int mdate,mmonth,myear;
+    Preference preference;
     RateAndDetails[] rateAndDetails;
     private ProjectRepository repository;
 
@@ -78,6 +80,7 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.rates, parent, false);
+        preference = new Preference(getContext());
         repository = new ProjectRepository();
         ratesVm = new ViewModelProvider(this ).get(rates_VM.class);
         binding.setLifecycleOwner(viewLifecycleOwner);
@@ -98,7 +101,8 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
 
         if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
 //            repository.getfarmers().observe(this, new Observer<JSONObject>() {
-            repository.getrates().observe(this, new Observer<JsonObject>() {
+            int BCODE = preference.getIntFromPreference("BCODE",0);
+            repository.getrates(BCODE).observe(this, new Observer<JsonObject>() {
                 @Override
                 public void onChanged(JsonObject jsonObject) {
                     if (jsonObject != null) {
@@ -125,7 +129,6 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
             binding.fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    getRate();
                     Bundle mBundle = new Bundle();
                     mBundle.putBoolean("addRate", true);
                     ratedetails ratedetail = new ratedetails();
@@ -137,130 +140,6 @@ public class rates extends BaseFragment implements RatesAdapter.ItemClickListene
                             .addToBackStack("")
                             .commitAllowingStateLoss();
 
-
-//                    if (dialog == null || !dialog.isShowing()) {
-//                        ratesEntryPopupBinding = DataBindingUtil.inflate(inflater, R.layout.rates_entry_popup, parent, false);
-//                        dialog = new Dialog(parent.getContext(), R.style.Dialog);
-//                        dialog.setContentView(ratesEntryPopupBinding.getRoot());
-//                        ratesEntryPopupBinding.tvFromDate.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                //R.style.DialogTheme,
-//                                final Calendar cal = Calendar.getInstance();
-//                                mdate = cal.get(Calendar.DATE);
-//                                mmonth = cal.get(Calendar.MONTH);
-//                                myear = cal.get(Calendar.YEAR);
-//                                new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-//                                    @Override
-//                                    public void onDateSet(DatePicker view, int monthOfYear, int month, int date) {
-//                                        String selDate = (monthOfYear + "-" + month + "-" + date);
-////                                    String selectedDate = CalendarUtils.getOrderSummaryDate(yearSel, monthOfYear, dayOfMonth);
-//                                        ratesEntryPopupBinding.tvFromDate.setText(CalendarUtils.getFormatedDatefromString(selDate));
-//                                    }
-//                                }, myear, mmonth, mdate).show();
-//                            }
-//                        });
-//                        ratesEntryPopupBinding.tvToDate.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                //R.style.DialogTheme,
-//                                final Calendar cal = Calendar.getInstance();
-//                                mdate = cal.get(Calendar.DATE);
-//                                mmonth = cal.get(Calendar.MONTH);
-//                                myear = cal.get(Calendar.YEAR);
-//                                new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-//                                    @Override
-//                                    public void onDateSet(DatePicker view, int monthOfYear, int month, int date) {
-//                                        String selDate = (monthOfYear + "-" + month + "-" + date);
-////                                    String selectedDate = CalendarUtils.getOrderSummaryDate(yearSel, monthOfYear, dayOfMonth);
-//                                        ratesEntryPopupBinding.tvToDate.setText(CalendarUtils.getFormatedDatefromString(selDate));
-//
-//                                    }
-//                                }, myear, mmonth, mdate).show();
-//                            }
-//                        });
-//                        ratesEntryPopupBinding.mtype.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                if (getContext() != null) {
-//                                    final String[] arraySpinner = new String[]{
-//                                            "Cow", "Buff", "Both"
-//                                    };
-//                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//                                    builder.setTitle("Select an option");
-//                                    builder.setItems(arraySpinner, new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(DialogInterface dialog, int which) {
-//                                            String selectedOption = arraySpinner[which];
-//                                            ratesEntryPopupBinding.mtype.setText(selectedOption);
-//                                        }
-//                                    });
-//                                    AlertDialog dialog = builder.create();
-//                                    dialog.show();
-//                                } else {
-//                                    Log.e("nothing phone3", "");
-//                                }
-//                            }
-//                        });
-//                        ratesEntryPopupBinding.close.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//
-//                                dialog.dismiss();
-//                            }
-//                        });
-//                        ratesEntryPopupBinding.btnOK.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                rateDO rateDo = new rateDO();
-//                                rateDo.STARTDATE= "2024-01-01";
-//                                rateDo.ENDDATE= "2024-12-31";
-//                                rateDo.MILKTYPE = "Cow";
-//                                rateDo.BCODE = "1";
-//                                Vector<rateDO> vecrateDO = new Vector<>();
-//                                vecrateDO.add(rateDo);
-//
-//                                ratedetailsDO ratedetailsDo = new ratedetailsDO();
-//                                ratedetailsDo.FATMIN = 3.0;
-//                                ratedetailsDo.FATMAX = 6.0;
-//                                ratedetailsDo.SNFMIN = 8.0;
-//                                ratedetailsDo.SNFMAX = 8.5;
-//                                ratedetailsDo.RATE = 320.0;
-//                                ratedetailsDO ratedetailsDo1 = new ratedetailsDO();
-//                                ratedetailsDo1.FATMIN = 2.5;
-//                                ratedetailsDo1.FATMAX = 2.9;
-//                                ratedetailsDo1.SNFMIN = 8.0;
-//                                ratedetailsDo1.SNFMAX = 8.5;
-//                                ratedetailsDo1.RATE = 200.0;
-//                                List<ratedetailsDO> ratedetailsList = new ArrayList<>();
-//                                ratedetailsList.add(ratedetailsDo1);
-//                                ratedetailsList.add(ratedetailsDo1);
-//                                RateAndDetails rateAndDetails = new RateAndDetails(rateDo,ratedetailsList);
-//                                ratesVm.insertRate(rateAndDetails);
-////                                if (!TextUtils.isEmpty(ratesEntryPopupBinding.tvFromDate.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.tvToDate.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.mtype.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etfatmin.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etfatmax.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etsnfmin.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etsnfmax.getText().toString()) && !TextUtils.isEmpty(ratesEntryPopupBinding.etRate.getText().toString())) {
-////                                    rateDO rateDo = new rateDO();
-////                                    rateDo.STARTDATE= ratesEntryPopupBinding.tvFromDate.getText().toString();
-////                                    rateDo.ENDDATE= ratesEntryPopupBinding.tvToDate.getText().toString();
-////                                    rateDo.MILKTYPE = ratesEntryPopupBinding.mtype.getText().toString();
-////                                    rateDo.FATMIN = Double.parseDouble(ratesEntryPopupBinding.etfatmin.getText().toString());
-////                                    rateDo.FATMAX = Double.parseDouble(ratesEntryPopupBinding.etfatmax.getText().toString());
-////                                    rateDo.SNFMIN = Double.parseDouble(ratesEntryPopupBinding.etsnfmin.getText().toString());
-////                                    rateDo.SNFMAX = Double.parseDouble(ratesEntryPopupBinding.etsnfmax.getText().toString());
-////                                    rateDo.RATE = Double.parseDouble(ratesEntryPopupBinding.etRate.getText().toString());
-////                                    ratesVm.insertRate(rateDo);
-////                                } else {
-////                                    Toast.makeText(getContext(), "please fill all the fields", Toast.LENGTH_SHORT).show();
-////                                }
-//                            }
-//                        });
-//                        ratesEntryPopupBinding.btnCancle.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                dialog.dismiss();
-//                            }
-//                        });
-//                        dialog.show();
-//                    }
                 }
             });
         }

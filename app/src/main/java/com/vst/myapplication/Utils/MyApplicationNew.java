@@ -19,6 +19,7 @@ public class MyApplicationNew extends MultiDexApplication{
     public static boolean IsLargeData = true;
 
     public static boolean RoomDB = false;
+    public static boolean isLoggedIn = false;
     public static MyApplicationNew instance;
     private static RoomService roomService;
 
@@ -67,4 +68,5 @@ public class MyApplicationNew extends MultiDexApplication{
     public static RoomService getRoomService() {
         return roomService;
     }
+
 }

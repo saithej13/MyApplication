@@ -202,5 +202,21 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
+
+
+        <!-- ProgressBar (hidden by default) -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_below="@+id/progressBar"
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 </layout>

@@ -66,10 +66,11 @@ public interface RoomService {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void UpdateRatesdetails(ratedetailsDO ratedetails);
 
-    @Query("UPDATE tblrates SET MILKTYPE=:milkType, STARTDATE=:startDate, ENDDATE=:endDate WHERE SLNO=:slno")
-    void updateRates(int slno, String milkType, String startDate, String endDate);
-    @Query("DELETE FROM tblratesdetails WHERE SLNO=:slno")
-    void deleteRateDetails(int slno);
+    @Query("UPDATE tblrates SET MILKTYPE=:milkType,RATETYPE=:ratetype, STARTDATE=:startDate, ENDDATE=:endDate,BCODE=:BCODE WHERE SLNO=:slno")
+    void updateRates(int slno, String milkType,String ratetype, String startDate, String endDate,String BCODE);
+
+    @Query("DELETE FROM tblratesdetails WHERE SLNO=:slno AND BCODE=:BCODE")
+    void deleteRateDetails(int slno,int BCODE);
 
     //Products
     @Insert
@@ -79,40 +80,40 @@ public interface RoomService {
     @Delete
     void deleteFarmer(farmerDO farmers);
 
-    @Query("SELECT * FROM tblfarmers")
-    LiveData<List<farmerDO>> getfarmers();
+    @Query("SELECT * FROM tblfarmers WHERE BCODE=:BCODE")
+    LiveData<List<farmerDO>> getfarmers(int BCODE);
 
     @Transaction
-    @Query("SELECT * FROM tblrates r inner join tblratesdetails rd on r.SLNO=rd.SLNO")
-    LiveData<List<RateAndDetails>> getrates();
+    @Query("SELECT * FROM tblrates r inner join tblratesdetails rd on r.SLNO=rd.SLNO WHERE r.BCODE=:BCODE AND rd.BCODE=:BCODE")
+    LiveData<List<RateAndDetails>> getrates(int BCODE);
 
     @Transaction
-    @Query("SELECT * FROM tblrates r inner join tblratesdetails rd on r.SLNO=rd.SLNO where r.SLNO=:slno")
-    LiveData<List<RateAndDetails>> getratesbyslno(String slno);
+    @Query("SELECT * FROM tblrates r inner join tblratesdetails rd on r.SLNO=rd.SLNO where r.SLNO=:slno AND r.BCODE=:BCODE AND rd.BCODE=:BCODE")
+    LiveData<List<RateAndDetails>> getratesbyslno(String slno,int BCODE);
 
     //    @Query("SELECT * FROM tblrates where MILKTYPE=:mtype and :tdate between STARTDATE and ENDDATE and :fat between FATMIN and FATMAX and :snf between SNFMIN and SNFMAX")
 //    LiveData<List<rateDO>> gettsrate(String mtype, String tdate, double fat, double snf);
     @Transaction
-    @Query("SELECT RD.RATE FROM tblrates R INNER JOIN tblratesdetails RD ON R.SLNO = RD.SLNO WHERE MILKTYPE=:MILKTYPE AND RATETYPE='Purchase' AND :TDATE BETWEEN R.STARTDATE AND R.ENDDATE AND :FAT BETWEEN RD.FATMIN AND RD.FATMAX AND :SNF BETWEEN RD.SNFMIN AND RD.SNFMAX LIMIT 1")
-    LiveData<Double> gettsrate(String MILKTYPE, String TDATE, double FAT, double SNF);
+    @Query("SELECT RD.RATE FROM tblrates R INNER JOIN tblratesdetails RD ON R.SLNO = RD.SLNO WHERE MILKTYPE=:MILKTYPE AND RATETYPE='Purchase' AND :TDATE BETWEEN R.STARTDATE AND R.ENDDATE AND :FAT BETWEEN RD.FATMIN AND RD.FATMAX AND :SNF BETWEEN RD.SNFMIN AND RD.SNFMAX AND R.BCODE=:BCODE AND RD.BCODE=:BCODE LIMIT 1")
+    LiveData<Double> gettsrate(String MILKTYPE, String TDATE, double FAT, double SNF,int BCODE);
 
     @Transaction
-    @Query("SELECT RD.RATE FROM tblrates R INNER JOIN tblratesdetails RD ON R.SLNO = RD.SLNO WHERE MILKTYPE=:MILKTYPE AND RATETYPE='Sale' AND :TDATE BETWEEN R.STARTDATE AND R.ENDDATE AND :FAT BETWEEN RD.FATMIN AND RD.FATMAX AND :SNF BETWEEN RD.SNFMIN AND RD.SNFMAX LIMIT 1")
-    LiveData<Double> gettssalerate(String MILKTYPE, String TDATE, double FAT, double SNF);
+    @Query("SELECT RD.RATE FROM tblrates R INNER JOIN tblratesdetails RD ON R.SLNO = RD.SLNO WHERE MILKTYPE=:MILKTYPE AND RATETYPE='Sale' AND :TDATE BETWEEN R.STARTDATE AND R.ENDDATE AND :FAT BETWEEN RD.FATMIN AND RD.FATMAX AND :SNF BETWEEN RD.SNFMIN AND RD.SNFMAX AND R.BCODE=:BCODE AND RD.BCODE=:BCODE LIMIT 1")
+    LiveData<Double> gettssalerate(String MILKTYPE, String TDATE, double FAT, double SNF,int BCODE);
 
-    @Query("SELECT * FROM tblfarmers WHERE FARMERID = :code")
-    LiveData<List<farmerDO>> getFarmerByCode(int code);
+    @Query("SELECT * FROM tblfarmers WHERE FARMERID = :code AND BCODE=:BCODE")
+    LiveData<List<farmerDO>> getFarmerByCode(int code,int BCODE);
 
-    @Query("SELECT * FROM tblfarmers WHERE SLNO = :SLNO")
-    LiveData<List<farmerDO>> getFarmerBySLNO(int SLNO);
+    @Query("SELECT * FROM tblfarmers WHERE SLNO = :SLNO AND BCODE=:BCODE")
+    LiveData<List<farmerDO>> getFarmerBySLNO(int SLNO,int BCODE);
 
-    @Query("SELECT * FROM tblmilkdata where TDATE=:tdate and SHIFT=:shift")
-    LiveData<List<milkDO>> getmilkdata(String tdate, String shift);
-    @Query("SELECT TDATE,SUM(QUANTITY) AS QTY FROM tblmilkdata WHERE TDATE BETWEEN :STARTDATE AND :ENDDATE GROUP BY TDATE")
-    LiveData<List<MilkDataSummary>> getmilkdataforbarchart(String STARTDATE, String ENDDATE);
+    @Query("SELECT * FROM tblmilkdata where TDATE=:tdate and SHIFT=:shift AND BCODE=:BCODE")
+    LiveData<List<milkDO>> getmilkdata(String tdate, String shift, int BCODE);
+    @Query("SELECT TDATE,SUM(QUANTITY) AS QTY FROM tblmilkdata WHERE TDATE BETWEEN :STARTDATE AND :ENDDATE AND BCODE=:BCODE GROUP BY TDATE ORDER BY TDATE DESC")
+    LiveData<List<MilkDataSummary>> getmilkdataforbarchart(String STARTDATE, String ENDDATE,int BCODE);
 
-    @Query("SELECT * FROM tblmilkdata where TDATE BETWEEN :STARTDATE AND :ENDDATE")
-    LiveData<List<milkDO>> getmilkdata2(String STARTDATE, String ENDDATE);
+    @Query("SELECT * FROM tblmilkdata where TDATE BETWEEN :STARTDATE AND :ENDDATE AND BCODE=:BCODE")
+    LiveData<List<milkDO>> getmilkdata2(String STARTDATE, String ENDDATE,int BCODE);
 
 //    @Query("SELECT * FROM tblrates where MILKTYPE=:mtype and :tdate between STARTDATE and ENDDATE and :fat between FATMIN and FATMAX and :snf between SNFMIN and SNFMAX")
 //    LiveData<List<rateDO>> gettsrate(String mtype, String tdate, double fat, double snf);
@@ -121,10 +122,10 @@ public interface RoomService {
 //    @Query("SELECT * FROM tblrates where MILKTYPE=:mtype and STARTDATE <=:ENDDATE AND ENDDATE >=:STARTDATE AND FATMIN<=:FATMAX AND FATMAX>=:FATMIN AND SNFMIN<=:SNFMAX AND SNFMAX>=:SNFMIN")
 //    LiveData<List<rateDO>> validaterate(String mtype, String STARTDATE,String ENDDATE,double FATMIN,double FATMAX,double SNFMIN,double SNFMAX);
 
-    @Query("SELECT * FROM tblfarmers where FARMERNAME like '%' || :firstname || '%'")
-    LiveData<List<farmerDO>> getFilteredFarmers(String firstname);
-    @Query("SELECT * FROM tblfarmers WHERE FARMERID = :code")
-    List<farmerDO> getfarmerbyid(int code);
+    @Query("SELECT * FROM tblfarmers where FARMERNAME like '%' || :firstname || '%' AND BCODE=:BCODE")
+    LiveData<List<farmerDO>> getFilteredFarmers(String firstname,int BCODE);
+    @Query("SELECT * FROM tblfarmers WHERE FARMERID = :code AND BCODE=:BCODE")
+    List<farmerDO> getfarmerbyid(int code,int BCODE);
 
 //    @Query("SELECT * FROM tblrates where MILKTYPE=:mtype and :fatmin between FATMIN and FATMAX and :fatmax between FATMIN and FATMAX")
 //    LiveData<List<rateDO>> validateFat(String mtype,double fatmin,double fatmax);
@@ -133,47 +134,47 @@ public interface RoomService {
 //    void updateProductAvlQty(String productid,double remqty);
 
 
-    @Query("SELECT * FROM tbladvances")
-    LiveData<List<advanceDO>> getadvances();
-    @Query("SELECT * FROM tbladvances where SLNO=:SLNO LIMIT 1")
-    LiveData<List<advanceDO>> getadvancesbyslno(int SLNO);
+    @Query("SELECT * FROM tbladvances WHERE BCODE=:BCODE")
+    LiveData<List<advanceDO>> getadvances(int BCODE);
+    @Query("SELECT * FROM tbladvances where SLNO=:SLNO AND BCODE=:BCODE LIMIT 1")
+    LiveData<List<advanceDO>> getadvancesbyslno(int SLNO,int BCODE);
 
-    @Query("SELECT * FROM tblcustomer")
-    LiveData<List<customerDO>> getcustomers();
-    @Query("SELECT * FROM tblcustomer WHERE SLNO=:SLNO LIMIT 1")
-    LiveData<List<customerDO>> getcustomerbyslno(int SLNO);
+    @Query("SELECT * FROM tblcustomer WHERE BCODE=:BCODE")
+    LiveData<List<customerDO>> getcustomers(int BCODE);
+    @Query("SELECT * FROM tblcustomer WHERE SLNO=:SLNO AND BCODE=:BCODE LIMIT 1")
+    LiveData<List<customerDO>> getcustomerbyslno(int SLNO,int BCODE);
 
-    @Query("DELETE FROM tblfarmers WHERE SLNO = :SLNO")
-    void deleteFarmerId(int SLNO);
+    @Query("DELETE FROM tblfarmers WHERE SLNO = :SLNO AND BCODE=:BCODE")
+    void deleteFarmerId(int SLNO,int BCODE);
 
-    @Query("DELETE FROM TBLCUSTOMER WHERE SLNO = :SLNO")
-    void deleteCustomerId(int SLNO);
+    @Query("DELETE FROM TBLCUSTOMER WHERE SLNO = :SLNO AND BCODE=:BCODE")
+    void deleteCustomerId(int SLNO,int BCODE);
 
-    @Query("SELECT FARMERID FROM TBLFARMERS WHERE SLNO = :SLNO")
-    int getFarmerIdBySlno(int SLNO);
+    @Query("SELECT FARMERID FROM TBLFARMERS WHERE SLNO = :SLNO AND BCODE=:BCODE")
+    int getFarmerIdBySlno(int SLNO,int BCODE);
 
-    @Query("SELECT CUSTOMERCODE FROM TBLCUSTOMER WHERE SLNO = :SLNO")
-    int getCustomerIdBySlno(int SLNO);
+    @Query("SELECT CUSTOMERCODE FROM TBLCUSTOMER WHERE SLNO = :SLNO AND BCODE=:BCODE")
+    int getCustomerIdBySlno(int SLNO, int BCODE);
 
-    @Query("SELECT COUNT(*) FROM TBLMILKDATA WHERE FARMERID = :FARMERID")
-    int countMilkpurchaseDataRecordsByFarmerId(int FARMERID);
+    @Query("SELECT COUNT(*) FROM TBLMILKDATA WHERE FARMERID = :FARMERID AND BCODE=:BCODE")
+    int countMilkpurchaseDataRecordsByFarmerId(int FARMERID,int BCODE);
 
-    @Query("SELECT COUNT(*) FROM TBLMILKSALEDATA WHERE CUSTOMERID = :CUSTOMERID")
-    int countMilksaleDataRecordsByFarmerId(int CUSTOMERID);
+    @Query("SELECT COUNT(*) FROM TBLMILKSALEDATA WHERE CUSTOMERID = :CUSTOMERID AND BCODE=:BCODE")
+    int countMilksaleDataRecordsByFarmerId(int CUSTOMERID,int BCODE);
 
-    @Query("SELECT IFNULL(MAX(FARMERID), 0) + 1 AS ID FROM tblfarmers")
-    int getNextFarmerId();
+    @Query("SELECT IFNULL(MAX(FARMERID), 0) + 1 AS ID FROM tblfarmers where BCODE=:BCODE")
+    int getNextFarmerId(int BCODE);
 
-    @Query("SELECT IFNULL(MAX(CUSTOMERCODE), 0) + 1 AS ID FROM tblcustomer")
-    int getNextCustomerId();
+    @Query("SELECT IFNULL(MAX(CUSTOMERCODE), 0) + 1 AS ID FROM tblcustomer where BCODE=:BCODE")
+    int getNextCustomerId(int BCODE);
 
 
-    @Query("UPDATE tbladvances SET TDATE=:TDATE,NAME=:NAME,CUSTOMERTYPE=:CUSTOMERTYPE,AMOUNT=:AMOUNT,REMARKS=:REMARKS WHERE ID=:ID AND SLNO=:SLNO")
-    void updateAdvance(String TDATE,String NAME,String CUSTOMERTYPE,String AMOUNT,String REMARKS,String ID,int SLNO);
+    @Query("UPDATE tbladvances SET TDATE=:TDATE,NAME=:NAME,CUSTOMERTYPE=:CUSTOMERTYPE,AMOUNT=:AMOUNT,REMARKS=:REMARKS WHERE ID=:ID AND SLNO=:SLNO AND BCODE=:BCODE")
+    void updateAdvance(String TDATE,String NAME,String CUSTOMERTYPE,String AMOUNT,String REMARKS,String ID,int BCODE,int SLNO);
 
-    @Query("UPDATE tblcustomer SET CUSTOMERCODE=:CUSTOMERCODE,CUSTOMERNAME=:CUSTOMERNAME,MOBILENO=:MOBILENO,ISACTIVE=:ISACTIVE WHERE  SLNO=:SLNO")
-    void updateCustomer(String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,boolean ISACTIVE,int SLNO);
+    @Query("UPDATE tblcustomer SET CUSTOMERCODE=:CUSTOMERCODE,CUSTOMERNAME=:CUSTOMERNAME,MOBILENO=:MOBILENO,ISACTIVE=:ISACTIVE WHERE  SLNO=:SLNO AND BCODE=:BCODE")
+    void updateCustomer(String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,boolean ISACTIVE,int SLNO,int BCODE);
 
-    @Query("UPDATE tblfarmers SET FARMERNAME=:FARMERNAME,MOBILENO=:MOBILENO,ISACTIVE=:ISACTIVE,MILKTYPE=:MILKTYPE WHERE FARMERID=:FARMERID AND SLNO =:SLNO")
-    void updateFarmer(String FARMERNAME,String MOBILENO,boolean ISACTIVE,String MILKTYPE,int FARMERID,int SLNO);
+    @Query("UPDATE tblfarmers SET FARMERNAME=:FARMERNAME,MOBILENO=:MOBILENO,ISACTIVE=:ISACTIVE,MILKTYPE=:MILKTYPE WHERE FARMERID=:FARMERID AND SLNO =:SLNO AND BCODE=:BCODE")
+    void updateFarmer(String FARMERNAME,String MOBILENO,boolean ISACTIVE,String MILKTYPE,int FARMERID,int BCODE,int SLNO);
 }

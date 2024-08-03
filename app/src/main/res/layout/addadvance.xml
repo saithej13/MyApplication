@@ -125,8 +125,8 @@
                         android:fontFamily="@font/montserrat_semibold"
                         android:textColor="@color/text_color1"
                         android:textSize="@dimen/text_size_small_12sp" />
-                    <TextView
-                        android:id="@+id/tvselectcustomer"
+                    <Spinner
+                        android:id="@+id/spselectcustomer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/size10"

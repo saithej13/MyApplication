@@ -23,4 +23,6 @@ public class advanceDO {
     public String AMOUNT="";
     @SerializedName("REMARKS")
     public String REMARKS="";
+    @SerializedName("BCODE")
+    public int BCODE;
 }

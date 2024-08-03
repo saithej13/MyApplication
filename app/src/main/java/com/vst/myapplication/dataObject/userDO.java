@@ -22,4 +22,6 @@ public class userDO implements Serializable {
     public int isactive;
     @SerializedName("role")
     public int role;
+    @SerializedName("BCODE")
+    public int BCODE;
 }

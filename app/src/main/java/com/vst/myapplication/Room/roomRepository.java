@@ -57,15 +57,15 @@ RoomService roomService;
     public void updateFarmer(farmerDO farmer){
         new updateFarmerAsyncTask(roomService).execute(farmer);
     }
-    public List<farmerDO> getfarmerbyid(String farmerCode) {
+    public List<farmerDO> getfarmerbyid(String farmerCode,int BCODE) {
         int code = Integer.parseInt(farmerCode);
-        return roomService.getfarmerbyid(code);
+        return roomService.getfarmerbyid(code,BCODE);
     }
-    public MutableLiveData<List<farmerDO>> getFarmersData(LifecycleOwner owner) {
+    public MutableLiveData<List<farmerDO>> getFarmersData(LifecycleOwner owner,int BCODE) {
         Log.d("URL", "GetFarmersFarmers Request-->");
         final MutableLiveData<List<farmerDO>> data = new MutableLiveData<>();
         try {
-            roomService.getfarmers().observe(owner, new Observer<List<farmerDO>>() {
+            roomService.getfarmers(BCODE).observe(owner, new Observer<List<farmerDO>>() {
                 @Override
                 public void onChanged(List<farmerDO> orderSummaries) {
                     data.setValue(orderSummaries);
@@ -92,11 +92,11 @@ RoomService roomService;
 //
 //        return data;
 //    }
-    public MutableLiveData<List<RateAndDetails>> getratesData(LifecycleOwner lifecycleOwner) {
+    public MutableLiveData<List<RateAndDetails>> getratesData(LifecycleOwner lifecycleOwner,int BCODE) {
         Log.d("URL", "GetFarmersFarmers Request-->");
         final MutableLiveData<List<RateAndDetails>> data = new MutableLiveData<>();
         try {
-            roomService.getrates().observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
+            roomService.getrates(BCODE).observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
                 @Override
                 public void onChanged(List<RateAndDetails> orderSummeries) {
                     data.setValue(orderSummeries);
@@ -123,11 +123,11 @@ RoomService roomService;
         return data;
     }
     //GetFarmerbycodeAsyncTask
-    public MutableLiveData<List<farmerDO>> GetFarmerbycodeAsyncTask(LifecycleOwner owner,int code) {
+    public MutableLiveData<List<farmerDO>> GetFarmerbycodeAsyncTask(LifecycleOwner owner,int code,int BCODE) {
         Log.d("URL", "GetFarmersFarmers Request-->" );
         final MutableLiveData<List<farmerDO>> data = new MutableLiveData<>();
         try {
-            roomService.getFarmerByCode(code).observe(owner, new Observer<List<farmerDO>>() {
+            roomService.getFarmerByCode(code,BCODE).observe(owner, new Observer<List<farmerDO>>() {
                 @Override
                 public void onChanged(List<farmerDO> farmers) {
                     data.setValue(farmers);
@@ -142,11 +142,11 @@ RoomService roomService;
         return data;
     }
 
-    public MutableLiveData<List<milkDO>> getmilkdata(LifecycleOwner owner, String tdate, String shift) {
+    public MutableLiveData<List<milkDO>> getmilkdata(LifecycleOwner owner, String tdate, String shift,int BCODE) {
         Log.d("URL", "GetMilkData Request--> tdate "+tdate+" shift "+shift );
         final MutableLiveData<List<milkDO>> data = new MutableLiveData<>();
 try {
-    roomService.getmilkdata(tdate, shift).observe(owner, new Observer<List<milkDO>>() {
+    roomService.getmilkdata(tdate, shift,BCODE).observe(owner, new Observer<List<milkDO>>() {
         @Override
         public void onChanged(List<milkDO> orderSummeries) {
             data.setValue(orderSummeries);
@@ -255,6 +255,7 @@ try {
                         continue;
                     }
                     rateDetails.SLNO = (int) slNo;
+                    rateDetails.BCODE = Integer.parseInt(rateAndDetails.rate.BCODE);
                     roomService.insertRatesdetails(rateDetails);
                 }
             } catch (Exception e) {
@@ -282,8 +283,8 @@ try {
                     return null;
                 }
 //            int slno, String milkType, String startDate, String endDate
-                roomService.updateRates(rateAndDetails.rate.SLNO, rateAndDetails.rate.MILKTYPE, rateAndDetails.rate.STARTDATE, rateAndDetails.rate.ENDDATE);
-                roomService.deleteRateDetails(rateAndDetails.rate.SLNO);
+                roomService.updateRates(rateAndDetails.rate.SLNO, rateAndDetails.rate.MILKTYPE,rateAndDetails.rate.RATETYPE, rateAndDetails.rate.STARTDATE, rateAndDetails.rate.ENDDATE,rateAndDetails.rate.BCODE);
+                roomService.deleteRateDetails(rateAndDetails.rate.SLNO, Integer.parseInt(rateAndDetails.rate.BCODE));
                 if (rateAndDetails.rateDetailsList == null) {
                     Log.e("UpdateRatesAsyncTask", "rateAndDetails.rateDetailsList is null");
                     return null;
@@ -294,6 +295,7 @@ try {
                         continue;
                     }
                     rateDetails.SLNO = rateAndDetails.rate.SLNO;
+                    rateDetails.BCODE = Integer.parseInt(rateAndDetails.rate.BCODE);
                     roomService.insertRatesdetails(rateDetails);
                 }
             } catch (Exception e) {
@@ -316,7 +318,7 @@ try {
                     return null;
                 }
 //            String TDATE,String NAME,String CUSTOMERTYPE,String AMOUNT,String REMARKS,String ID,int SLNO
-                roomService.updateAdvance(advance.TDATE, advance.NAME, advance.CUSTOMERTYPE, advance.AMOUNT, advance.REMARKS, advance.ID, advance.SLNO);
+                roomService.updateAdvance(advance.TDATE, advance.NAME, advance.CUSTOMERTYPE, advance.AMOUNT, advance.REMARKS, advance.ID,advance.BCODE, advance.SLNO);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -353,7 +355,7 @@ try {
                     return null;
                 }
 //            String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,String ISACTIVE,int SLNO
-                roomService.updateCustomer(customer.CUSTOMERCODE, customer.CUSTOMERNAME, customer.MOBILENO, customer.ISACTIVE, customer.SLNO);
+                roomService.updateCustomer(customer.CUSTOMERCODE, customer.CUSTOMERNAME, customer.MOBILENO, customer.ISACTIVE, customer.SLNO,customer.BCODE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -375,7 +377,7 @@ try {
                     return null;
                 }
 //            String CUSTOMERCODE,String CUSTOMERNAME,String MOBILENO,String ISACTIVE,int SLNO
-                roomService.updateFarmer(farmer.FARMERNAME, farmer.MOBILENO, farmer.ISACTIVE, farmer.MILKTYPE, farmer.FARMERID, farmer.SLNO);
+                roomService.updateFarmer(farmer.FARMERNAME, farmer.MOBILENO, farmer.ISACTIVE, farmer.MILKTYPE, farmer.FARMERID,farmer.BCODE, farmer.SLNO);
             } catch (Exception e) {
                 e.printStackTrace();
             }

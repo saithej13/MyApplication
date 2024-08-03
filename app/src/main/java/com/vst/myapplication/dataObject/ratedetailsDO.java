@@ -22,4 +22,6 @@ public class ratedetailsDO {
     public double SNFMAX;
     @SerializedName("RATE")
     public double RATE;
+    @SerializedName("BCODE")
+    public int BCODE;
 }

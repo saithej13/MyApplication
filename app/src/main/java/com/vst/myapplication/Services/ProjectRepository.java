@@ -113,10 +113,10 @@ public class ProjectRepository {
         return data;
     }
 
-    public MutableLiveData<JsonObject> getfarmers() {
+    public MutableLiveData<JsonObject> getfarmers(int BCODE) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if (MyApplicationNew.RoomDB) {
-            roomService.getfarmers().observe(lifecycleOwner,new Observer<List<farmerDO>>() {
+            roomService.getfarmers(BCODE).observe(lifecycleOwner,new Observer<List<farmerDO>>() {
                 @Override
                 public void onChanged(List<farmerDO> farmerdo) {
 //                    JsonObject jsonObject = new JsonObject();
@@ -167,11 +167,13 @@ public class ProjectRepository {
             String TDATE = payload.get("TDATE").getAsString();
             Double FAT = payload.get("FAT").getAsDouble();
             Double SNF = payload.get("SNF").getAsDouble();
+            int BCODE = payload.get("BCODE").getAsInt();
             Log.d("MILKTYPE",""+MILKTYPE);
             Log.d("TDATE",""+TDATE);
             Log.d("FAT",""+FAT);
             Log.d("SNF",""+SNF);
-            roomService.gettsrate(MILKTYPE,TDATE,FAT,SNF).observe(lifecycleOwner, new Observer<Double>() {
+            Log.d("BCODE",""+BCODE);
+            roomService.gettsrate(MILKTYPE,TDATE,FAT,SNF,BCODE).observe(lifecycleOwner, new Observer<Double>() {
                 @Override
                 public void onChanged(Double aDouble) {
                     Gson gson = new Gson();
@@ -208,10 +210,10 @@ public class ProjectRepository {
         return data;
     }
 //  #Rates
-public MutableLiveData<JsonObject> getrates() {
+public MutableLiveData<JsonObject> getrates(int BCODE) {
     final MutableLiveData<JsonObject> data = new MutableLiveData<>();
     if(MyApplicationNew.RoomDB){
-        roomService.getrates().observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
+        roomService.getrates(BCODE).observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
             @Override
             public void onChanged(List<RateAndDetails> rateDOS) {
                 Gson gson = new Gson();
@@ -231,6 +233,7 @@ public MutableLiveData<JsonObject> getrates() {
                             rateAndDetails.rate = new rateDO();
                             rateAndDetails.rate.ENDDATE = rate.get("ENDDATE").getAsString();
                             rateAndDetails.rate.MILKTYPE = rate.get("MILKTYPE").getAsString();
+                            rateAndDetails.rate.RATETYPE = rate.get("RATETYPE").getAsString();
                             rateAndDetails.rate.SLNO = slno;
                             rateAndDetails.rate.STARTDATE = rate.get("STARTDATE").getAsString();
                             rateAndDetails.rateDetailsList = new ArrayList<>();
@@ -305,7 +308,8 @@ public MutableLiveData<JsonObject> getrates() {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB){
             String SLNO = payload.get("SLNO").getAsString();
-            roomService.getratesbyslno(SLNO).observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
+            int BCODE = payload.get("BCODE").getAsInt();
+            roomService.getratesbyslno(SLNO,BCODE).observe(lifecycleOwner, new Observer<List<RateAndDetails>>() {
                 @Override
                 public void onChanged(List<RateAndDetails> rateDOS) {
                     Gson gson = new Gson();
@@ -406,7 +410,8 @@ public MutableLiveData<JsonObject> getrates() {
         if(MyApplicationNew.RoomDB){
             String TDATE = payload.get("TDATE").getAsString();
             String SHIFT = payload.get("SHIFT").getAsString();
-            roomService.getmilkdata(TDATE,SHIFT).observe(owner,new Observer<List<milkDO>>() {
+            int BCODE = payload.get("BCODE").getAsInt();
+            roomService.getmilkdata(TDATE,SHIFT,BCODE).observe(owner,new Observer<List<milkDO>>() {
                 @Override
                 public void onChanged(List<milkDO> orderSummeries) {
                     Gson gson = new Gson();
@@ -466,8 +471,9 @@ public MutableLiveData<JsonObject> getrates() {
         if(MyApplicationNew.RoomDB){
             String STARTDATE = payload.get("STARTDATE").getAsString();
             String ENDDATE = payload.get("ENDDATE").getAsString();
+            int BCODE = payload.get("BCODE").getAsInt();
             Log.d("datebar",""+STARTDATE);
-            roomService.getmilkdataforbarchart(STARTDATE,ENDDATE).observe(owner,new Observer<List<MilkDataSummary>>() {
+            roomService.getmilkdataforbarchart(STARTDATE,ENDDATE,BCODE).observe(owner,new Observer<List<MilkDataSummary>>() {
                 @Override
                 public void onChanged(List<MilkDataSummary> orderSummeries) {
                     Gson gson = new Gson();
@@ -528,7 +534,8 @@ public MutableLiveData<JsonObject> getrates() {
         if(MyApplicationNew.RoomDB){
             String STARTDATE = payload.get("STARTDATE").getAsString();
             String ENDDATE = payload.get("ENDDATE").getAsString();
-            roomService.getmilkdata2(STARTDATE,ENDDATE).observe(owner,new Observer<List<milkDO>>() {
+            int BCODE = payload.get("BCODE").getAsInt();
+            roomService.getmilkdata2(STARTDATE,ENDDATE,BCODE).observe(owner,new Observer<List<milkDO>>() {
                 @Override
                 public void onChanged(List<milkDO> orderSummeries) {
                     Gson gson = new Gson();
@@ -554,22 +561,47 @@ public MutableLiveData<JsonObject> getrates() {
 
     public MutableLiveData<JsonObject> getUser(JsonObject payload) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+            Log.d("payload",""+payload);
             apiClient.getuser(payload).enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    Log.d("Log Response", "" + response.body());
+                    Log.d("Log Response code", "" + response.code());
                     if (response.isSuccessful()) {
                         JsonObject jsonObject = response.body();
-                        Log.d("Log Response", "" + response.body());
                         data.setValue(jsonObject);
                     }
                 }
-
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
-                    data.setValue(null);
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("code",500);
+                    jsonObject.addProperty("error","Server is down or unreachable. Please try again later.");
+                    data.setValue(jsonObject);
                 }
             });
+
+        return data;
+    }
+    public MutableLiveData<JsonObject> adduser(JsonObject payload) {
+        final MutableLiveData<JsonObject> data = new MutableLiveData<>();
+        Log.d("payload",""+payload);
+        apiClient.adduser(payload).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("Log Response", "" + response.body());
+                Log.d("Log Response code", "" + response.code());
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    data.setValue(jsonObject);
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("Log", "getFarmerbycode payload Failed-->" + t.getMessage());
+                data.setValue(null);
+            }
+        });
 
         return data;
     }
@@ -595,10 +627,10 @@ public MutableLiveData<JsonObject> getrates() {
         return data;
     }
     /* #Advances */
-    public MutableLiveData<JsonObject> getAdvances() {
+    public MutableLiveData<JsonObject> getAdvances(int BCODE) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB) {
-            roomService.getadvances().observe(lifecycleOwner, new Observer<List<advanceDO>>() {
+            roomService.getadvances(BCODE).observe(lifecycleOwner, new Observer<List<advanceDO>>() {
                 @Override
                 public void onChanged(List<advanceDO> advanceDOS) {
                     Gson gson = new Gson();
@@ -621,10 +653,10 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return data;
     }
-    public MutableLiveData<JsonObject> getAdvancesbyslno(int SLNO) {
+    public MutableLiveData<JsonObject> getAdvancesbyslno(int SLNO,int BCODE) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB) {
-            roomService.getadvancesbyslno(SLNO).observe(lifecycleOwner, new Observer<List<advanceDO>>() {
+            roomService.getadvancesbyslno(SLNO,BCODE).observe(lifecycleOwner, new Observer<List<advanceDO>>() {
                 @Override
                 public void onChanged(List<advanceDO> advanceDOS) {
                     Gson gson = new Gson();
@@ -647,10 +679,10 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return data;
     }
-    public MutableLiveData<JsonObject> getcustomers() {
+    public MutableLiveData<JsonObject> getcustomers(int BCODE) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB) {
-            roomService.getcustomers().observe(lifecycleOwner, new Observer<List<customerDO>>() {
+            roomService.getcustomers(BCODE).observe(lifecycleOwner, new Observer<List<customerDO>>() {
                 @Override
                 public void onChanged(List<customerDO> customerDOS) {
                     Gson gson = new Gson();
@@ -673,10 +705,10 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return data;
     }
-    public MutableLiveData<JsonObject> getcustomerbyslno(int SLNO) {
+    public MutableLiveData<JsonObject> getcustomerbyslno(int SLNO,int BCODE) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB) {
-            roomService.getcustomerbyslno(SLNO).observe(lifecycleOwner, new Observer<List<customerDO>>() {
+            roomService.getcustomerbyslno(SLNO,BCODE).observe(lifecycleOwner, new Observer<List<customerDO>>() {
                 @Override
                 public void onChanged(List<customerDO> customerDOS) {
                     Gson gson = new Gson();
@@ -699,10 +731,10 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return data;
     }
-    public MutableLiveData<JsonObject> getfarmerbyslno(int SLNO) {
+    public MutableLiveData<JsonObject> getfarmerbyslno(int SLNO,int BCODE) {
         final MutableLiveData<JsonObject> data = new MutableLiveData<>();
         if(MyApplicationNew.RoomDB) {
-            roomService.getFarmerBySLNO(SLNO).observe(lifecycleOwner, new Observer<List<farmerDO>>() {
+            roomService.getFarmerBySLNO(SLNO,BCODE).observe(lifecycleOwner, new Observer<List<farmerDO>>() {
                 @Override
                 public void onChanged(List<farmerDO> farmerDOS) {
                     Gson gson = new Gson();
@@ -728,16 +760,17 @@ public MutableLiveData<JsonObject> getrates() {
     public boolean deleteFarmerID(JsonObject payload) {
         try {
             int SLNO = payload.get("SLNO").getAsInt();
+            int BCODE = payload.get("BCODE").getAsInt();
             if (MyApplicationNew.RoomDB) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        int farmerId = roomService.getFarmerIdBySlno(SLNO);
-                        int milkDataCount = roomService.countMilkpurchaseDataRecordsByFarmerId(farmerId);
+                        int farmerId = roomService.getFarmerIdBySlno(SLNO,BCODE);
+                        int milkDataCount = roomService.countMilkpurchaseDataRecordsByFarmerId(farmerId,BCODE);
                         if (milkDataCount > 0) {
                             Log.d("error","error");
                         } else {
-                            roomService.deleteFarmerId(SLNO);
+                            roomService.deleteFarmerId(SLNO,BCODE);
                         }
 
                     }
@@ -755,17 +788,18 @@ public MutableLiveData<JsonObject> getrates() {
     public boolean deleteCustomerID(JsonObject payload) {
         try {
             int SLNO = payload.get("SLNO").getAsInt();
+            int BCODE = payload.get("BCODE").getAsInt();
             if (MyApplicationNew.RoomDB) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        int cusotmerId = roomService.getCustomerIdBySlno(SLNO);
-                        int salecount = roomService.countMilksaleDataRecordsByFarmerId(cusotmerId);
+                        int cusotmerId = roomService.getCustomerIdBySlno(SLNO,BCODE);
+                        int salecount = roomService.countMilksaleDataRecordsByFarmerId(cusotmerId,BCODE);
                         //salecount
                         if (salecount > 0) {
                             Log.d("error","error");
                         } else {
-                            roomService.deleteCustomerId(SLNO);
+                            roomService.deleteCustomerId(SLNO,BCODE);
                         }
                     }
                 }).start();
@@ -779,11 +813,11 @@ public MutableLiveData<JsonObject> getrates() {
             return false;
         }
     }
-    public int getNextFarmerId() {
+    public int getNextFarmerId(int BCODE) {
         final int[] farmerid = {0};
         try {
             if (MyApplicationNew.RoomDB) {
-                farmerid[0] = roomService.getNextFarmerId();
+                farmerid[0] = roomService.getNextFarmerId(BCODE);
                 Log.d("farmerid", "" + farmerid[0]);
             } else {
                 //API
@@ -793,11 +827,11 @@ public MutableLiveData<JsonObject> getrates() {
         }
         return farmerid[0];
     }
-    public int getNextCustomerId() {
+    public int getNextCustomerId(int BCODE) {
         final int[] cusotmerid = {0};
         try {
             if (MyApplicationNew.RoomDB) {
-                cusotmerid[0] = roomService.getNextCustomerId();
+                cusotmerid[0] = roomService.getNextCustomerId(BCODE);
             } else {
                 //API
             }
@@ -819,6 +853,7 @@ public MutableLiveData<JsonObject> getrates() {
             advance.CUSTOMERTYPE = payload.get("CUSTOMERTYPE").getAsString();
             advance.AMOUNT = payload.get("AMOUNT").getAsString();
             advance.REMARKS = payload.get("REMARKS").getAsString();
+            advance.BCODE = payload.get("BCODE").getAsInt();
             advance.SLNO = SLNO;
             if(SLNO==0)
             {
@@ -847,6 +882,7 @@ public MutableLiveData<JsonObject> getrates() {
             customer.MOBILENO = payload.get("MOBILENO").getAsString();
             customer.ISACTIVE = payload.get("ISACTIVE").getAsBoolean();
             customer.SLNO = SLNO;
+            customer.BCODE = payload.get("BCODE").getAsInt();
             if(SLNO==0)
             {
                 roomrepo.insertCustomer(customer);
@@ -875,6 +911,7 @@ public MutableLiveData<JsonObject> getrates() {
             farmer.MOBILENO = payload.get("MOBILENO").getAsString();
             farmer.ISACTIVE = Boolean.parseBoolean(payload.get("ISACTIVE").getAsString());
             farmer.MILKTYPE = payload.get("MILKTYPE").getAsString();
+            farmer.BCODE = payload.get("BCODE").getAsInt();
             if(SLNO==0)
             {
                 roomrepo.insertfarmers(farmer);

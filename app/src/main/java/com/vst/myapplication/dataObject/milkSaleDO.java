@@ -33,4 +33,6 @@ public class milkSaleDO {
         public double AMOUNT;
         @SerializedName("CRDATE")
         public String CRDATE;
+        @SerializedName("BCODE")
+        public int BCODE;
 }

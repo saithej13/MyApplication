@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +41,7 @@ import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.ImagePrintDocumentAdapter;
 import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.Utils.Settings;
 import com.vst.myapplication.Utils.StringUtils;
 import com.vst.myapplication.dataObject.RateAndDetails;
@@ -70,7 +72,7 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
 
     milkDO[] milkDOS;
 //    rateDO[] rateDOs;
-
+    Preference preference;
     ProjectRepository repository;
     roomRepository roomrepo;
     public static String prnt="";
@@ -78,6 +80,7 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.mcollection, parent, false);
+        preference = new Preference(getContext());
         repository = new ProjectRepository();
         milkCollectionVm = new ViewModelProvider(this ).get(milkCollection_VM.class);
         binding.setLifecycleOwner(viewLifecycleOwner);
@@ -129,7 +132,8 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(!binding.farmerid.getText().toString().isEmpty()&&TextUtils.isDigitsOnly(binding.farmerid.getText())) {
-                        milkCollectionVm.getFarmerbycodeRoom(getViewLifecycleOwner(),Integer.parseInt(binding.farmerid.getText().toString())).observe(getViewLifecycleOwner(), new Observer<List<farmerDO>>() {
+                        int BCODE = preference.getIntFromPreference("BCODE",0);
+                        milkCollectionVm.getFarmerbycodeRoom(getViewLifecycleOwner(),Integer.parseInt(binding.farmerid.getText().toString()),BCODE).observe(getViewLifecycleOwner(), new Observer<List<farmerDO>>() {
                             @Override
                             public void onChanged(List<farmerDO> tblfarmers) {
                                 if (!tblfarmers.isEmpty()) {
@@ -232,6 +236,7 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                             milkDo.SNF = Double.parseDouble(binding.msnf.getText().toString());
                             milkDo.RATE = Double.parseDouble(binding.rate.getText().toString());
                             milkDo.AMOUNT = Double.parseDouble(binding.amt.getText().toString());
+                            milkDo.BCODE = preference.getIntFromPreference("BCODE",0);
                             milkCollectionVm.insertMdataRoom(milkDo);
                             clearfields();
                             refreshData();
@@ -379,6 +384,7 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                             milkDo.SNF = Double.parseDouble(binding.msnf.getText().toString());
                             milkDo.RATE = Double.parseDouble(binding.rate.getText().toString());
                             milkDo.AMOUNT = Double.parseDouble(binding.amt.getText().toString());
+                            milkDo.BCODE = preference.getIntFromPreference("BCODE",0);
                             milkCollectionVm.insertMdata(milkDo);
                             clearfields();
                             refreshData();
@@ -460,6 +466,7 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("TDATE", CalendarUtils.getFormatedDatefromString3(binding.textdate.getText().toString()));
             jsonObject.addProperty("SHIFT", binding.textshiftm.getText().toString());
+            jsonObject.addProperty("BCODE", preference.getIntFromPreference("BCODE",0));
             repository.getMData(getViewLifecycleOwner(),jsonObject).observe(this, new Observer<JsonObject>() {
                 @Override
                 public void onChanged(JsonObject jsonObject) {
@@ -547,6 +554,7 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                     jsonObject1.addProperty("TDATE", CalendarUtils.convertDateToFormattedString(binding.textdate.getText().toString()));
                     jsonObject1.addProperty("FAT", fat);
                     jsonObject1.addProperty("SNF", snf);
+                    jsonObject1.addProperty("BCODE", preference.getIntFromPreference("BCODE",0));
                     repository.getTSrate(jsonObject1).observe(this, new Observer<JsonObject>() {
                         @Override
                         public void onChanged(JsonObject jsonObject) {
@@ -705,7 +713,9 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                 bmp.recycle();
         }
         return BitmapFactory.decodeFile(file.getAbsolutePath());
+        //future belongs to everyone
     }
+
     public static Bitmap getPrintSummaryslip(milkDO mdata){
 
         File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/PrinterTest");
@@ -715,7 +725,6 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
         int salesHeight = 1, freeGoodsHeight = 1, damageHeight = 1;
             n = generator.nextInt(n);
         n = generator.nextInt((200 - 100) + 1) + 100;
-//        String fname = "Image-" + n + ".jpg";
         String fname = "Image-" + 100 + ".jpg";
         File file = new File(myDir, fname);
         if (file.exists()) file.delete();
@@ -726,11 +735,12 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
             int width = 400;
             int height = 500 + ((salesHeight + freeGoodsHeight + damageHeight) *30);
             bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            // NEWLY ADDED CODE STARTS HERE [
             Canvas canvas = new Canvas(bmp);
             Paint paintBG = new Paint();
+            canvas.drawRect(5,5,390,520,getPaintObjbody(8));
             paintBG.setColor(Color.WHITE);
             canvas.drawRect(0, 0, width, height, paintBG);
+            canvas.drawRect(10, 10, 385, 515, paintBG);
             int het1 = 40;
             String[] as1 = null;
             String[] as2 = null;
@@ -740,6 +750,12 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
             String rightalign = "%1$12.12s";
             //30 CHARACTERS FOR THE TEXTSIZE 28
             // WIDTH START FROM 10 TO 380
+//            String companyName = " ***   Company Name1234   *** ";
+//            int strheadlen = companyName.length();
+//            int strHeaderPos = (110 - companyName.length()) / 2;
+//            String formateTitle = "%1$-" + strHeaderPos + "." + strHeaderPos + "s %2$-" + strheadlen + "." + strheadlen + "s \r\n";
+//            String str = String.format(formateTitle, "", "" + companyName.toUpperCase());
+//            canvas.drawText(str,5,5,getPaintObjHeaderNew(22));
             Header = new String[]{" ***   Company Name1234   *** ","BRANCH NAME","VILLAGE","ADDRESS","CONTACT","---------------------------------------"};
             if (Header != null) {
                 for (int i = 0; i < Header.length; i++) {
@@ -747,6 +763,9 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                     Log.d("width"+i,""+((width/2)-(Header[i].length())));
 //                    float  f1 = (190/Header[i].length());
                     canvas.drawText(Header[i], (float) ((width/2)-(Header[i].length())*6.5),Headerh1, getPaintObjHeaderNew(28));
+//                    width = 200 - getlength(as1[i].trim(), getPaintObjHeader());
+//                    canvas.drawText(Header[i],width,Headerh1, getPaintObjHeaderNew(28));
+//                    canvas.drawText(Header[i], (float) ((width/2)-(Header[i].length())*6.5),Headerh1, getPaintObjHeaderNew(28));
                     Headerh1 += 30;
                 }
             }
@@ -769,6 +788,7 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
                     "" + mdata.AMOUNT
             };
 //            as1  = getInner();
+
 
             int h1 = 20+Headerh1;
             if (as1 != null) {
@@ -843,6 +863,22 @@ public class milkCollection extends BaseFragment implements milkCollectionAdapte
         paint.setStrokeWidth(1); // Text Size
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         paint.setTextSize(textsize);
+        return paint;
+    }
+    private static int getlength(String finalVal, Paint paint) {
+        Rect result = new Rect();
+        paint.getTextBounds(finalVal, 0, finalVal.length(), result);
+        Log.d("WIDTH        :", String.valueOf(result.width()));
+        Log.d("HEIGHT       :", String.valueOf(result.height()));
+        return StringUtils.getInt(String.valueOf(result.width()));
+    }
+    private static Paint getPaintObjHeader() {
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK); // Text Color
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        paint.setStrokeWidth(12); // Text Size
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+        paint.setTextSize(20);
         return paint;
     }
 

@@ -23,6 +23,7 @@ import com.vst.myapplication.UI.Advance.advancesAdapter;
 import com.vst.myapplication.UI.Rates.RatesAdapter;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.dataObject.advanceDO;
 import com.vst.myapplication.dataObject.customerDO;
 import com.vst.myapplication.dataObject.farmerDO;
@@ -35,9 +36,11 @@ public class customer extends BaseFragment implements customerAdapter.ItemClickL
     private ProjectRepository repository;
     customerAdapter cadapter;
     customerDO[] data;
+    Preference preference;
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.customer, parent, false);
+        preference = new Preference(getContext());
         repository = new ProjectRepository();
         roomrepo = new roomRepository();
         binding.setLifecycleOwner(viewLifecycleOwner);
@@ -48,7 +51,8 @@ public class customer extends BaseFragment implements customerAdapter.ItemClickL
     }
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
-            repository.getcustomers().observe(this, new Observer<JsonObject>() {
+            int BCODE = preference.getIntFromPreference("BCODE",0);
+            repository.getcustomers(BCODE).observe(this, new Observer<JsonObject>() {
                 @Override
                 public void onChanged(JsonObject jsonObject) {
                     if (jsonObject != null) {

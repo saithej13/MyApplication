@@ -102,8 +102,10 @@ public class ratedetailsAdapter extends RecyclerView.Adapter<ratedetailsAdapter.
                 public void onClick(View v) {
 //                    Log.d("AdapterPosition",""+holder.getAdapterPosition());
 //                    if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
-                    mData.remove(position);
-                    notifyItemRemoved(position);
+                    if(mData!=null && mData.size()>0){
+                        mData.remove(position);
+                        notifyItemRemoved(position);
+                    }
                 }
             });
         }

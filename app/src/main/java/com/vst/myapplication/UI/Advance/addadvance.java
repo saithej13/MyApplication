@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 
 import androidx.databinding.DataBindingUtil;
@@ -25,6 +27,7 @@ import com.vst.myapplication.UI.Rates.rates_VM;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.Utils.StringUtils;
 import com.vst.myapplication.dataObject.advanceDO;
 import com.vst.myapplication.dataObject.customerDO;
@@ -34,6 +37,7 @@ import com.vst.myapplication.databinding.AddadvanceBinding;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -47,12 +51,15 @@ public class addadvance extends BaseFragment {
     boolean edit=false;
     advanceDO[] data;
     farmerDO[] farmerDOs;
-    customerDO[] customerDo;
+    customerDO[] customerDos;
     List<farmerDO> farmerList = new ArrayList<>();
     List<customerDO> customerList = new ArrayList<>();
+    String custId="",custName="";
+    Preference preference;
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.addadvance, parent, false);
+        preference = new Preference(getContext());
         advancesV_M = new ViewModelProvider(this ).get(advancesVM.class);
         repository = new ProjectRepository();
         roomrepo = new roomRepository();
@@ -63,10 +70,11 @@ public class addadvance extends BaseFragment {
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         edit = getArguments().getBoolean("edit");
         SLNO = getArguments().getInt("SLNO");
+        int BCODE = preference.getIntFromPreference("BCODE",0);
         if(edit)
         {
             if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
-                repository.getAdvances().observe(this, new Observer<JsonObject>() {
+                repository.getAdvances(BCODE).observe(this, new Observer<JsonObject>() {
                     @Override
                     public void onChanged(JsonObject jsonObject) {
                         if (jsonObject != null) {
@@ -79,7 +87,7 @@ public class addadvance extends BaseFragment {
                                     binding.etamount.setText(data[0].AMOUNT);
                                     binding.tvSelectDate.setText(data[0].TDATE);
                                     binding.tvselectcustomertype.setText(data[0].CUSTOMERTYPE);
-                                    binding.tvselectcustomer.setText(data[0].NAME);
+//                                    binding.tvselectcustomer.setText(data[0].NAME);
                                 } else {
                                     data = new advanceDO[]{};
                                 }
@@ -122,50 +130,98 @@ public class addadvance extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                Log.d("charseq",""+charSequence);
+                if(charSequence.toString().equalsIgnoreCase("Farmer")){
+                    //get farmers and bind in list
+                    repository.getfarmers(BCODE).observe(getViewLifecycleOwner(), new Observer<JsonObject>() {
+                        @Override
+                        public void onChanged(JsonObject jsonObject) {
+                            Gson gson = new Gson();
+                            farmerDOs = gson.fromJson(jsonObject.getAsJsonArray("Data"), farmerDO[].class);
+                            List<farmerDO> farmerDOsList = Arrays.asList(farmerDOs);
+                            List<String> customersItemList= new ArrayList<>();
+                            for(farmerDO lis:farmerDOsList) {
+                                customersItemList.add(lis.FARMERID+"~"+lis.FARMERNAME);
+                            }
+                            customersItemList.add(0,"--Select Farmer--");
+                            if(!farmerDOsList.isEmpty()) {
+                                ArrayAdapter ordertype1 = new ArrayAdapter(getContext(), R.layout.custom_spinnerdropdown, customersItemList);
+                                binding.spselectcustomer.setAdapter(ordertype1);
+                            }
+                        }
+                    });
+                }
+                else if(charSequence.toString().equalsIgnoreCase("Customer")){
+                    //get farmers and bind in list
+                    repository.getcustomers(BCODE).observe(getViewLifecycleOwner(), new Observer<JsonObject>() {
+                        @Override
+                        public void onChanged(JsonObject jsonObject) {
+                            Gson gson = new Gson();
+                            customerDos = gson.fromJson(jsonObject.getAsJsonArray("Data"), customerDO[].class);
+                            List<customerDO> customerDOSList = Arrays.asList(customerDos);
+                            List<String> customersItemList= new ArrayList<>();
+                            for(customerDO lis:customerDOSList) {
+                                customersItemList.add(lis.CUSTOMERCODE+"~"+lis.CUSTOMERNAME);
+                            }
+                            customersItemList.add(0,"--Select Customer--");
+                            if(!customerDOSList.isEmpty()) {
+                                ArrayAdapter ordertype1 = new ArrayAdapter(getContext(), R.layout.custom_spinnerdropdown, customersItemList);
+                                binding.spselectcustomer.setAdapter(ordertype1);
+                            }
+                        }
+                    });
+                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(binding.tvselectcustomertype.getText().equals("Farmer")){
-                    //get farmers and bind in list
-                    repository.getfarmers().observe(getViewLifecycleOwner(), new Observer<JsonObject>() {
-                        @Override
-                        public void onChanged(JsonObject jsonObject) {
 
-                        }
-                    });
-                }
-                else{
-                    //get customers and bind in list
-                }
             }
         });
-        final String[] selectcustomer = {"Farmer", "Customer"};
-        binding.tvselectcustomer.setOnClickListener(new View.OnClickListener() {
+//        final String[] selectcustomer = {"Farmer", "Customer"};
+        binding.spselectcustomer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                setDropDown(view, binding.tvselectcustomer, selectcustomer);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String selectedItem= binding.customers.getSelectedItem().toString();
+                String selectedItem= binding.spselectcustomer.getSelectedItem().toString();
+                if(!selectedItem.equalsIgnoreCase("--Select Customer--")){
+                    String[] split= selectedItem.split("~");
+                    custId= split[0];
+                    Log.d("split[0]",""+split[0]);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
+//        binding.tvselectcustomer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                setDropDown(view, binding.tvselectcustomer, selectcustomer);
+//            }
+//        });
         binding.tvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String customer = binding.tvselectcustomer.getText().toString();
+//                String customer = binding.tvselectcustomer.getText().toString();
+                String customer = custId;
                 String Custtype = binding.tvselectcustomertype.getText().toString();
                 String date = binding.tvSelectDate.getText().toString();
                 String amount = binding.etamount.getText().toString();
                 String remarks = binding.etremarks.getText().toString();
-                if(!customer.isEmpty()&&!date.isEmpty()&&!amount.isEmpty()){
+                if(!customer.isEmpty() && !date.isEmpty() && !amount.isEmpty()){
                     //Insert
                     advanceDO advance = new advanceDO();
                     advance.SLNO = SLNO;
-                    advance.ID = "1";
+                    advance.ID = customer;
                     advance.TDATE = date;
                     advance.NAME = customer;
                     advance.CUSTOMERTYPE = Custtype;
                     advance.AMOUNT = amount;
                     advance.REMARKS = remarks;
+                    advance.BCODE = preference.getIntFromPreference("BCODE",0);
                     advancesV_M.insertAdvance(advance);
                     showCustomDialog(getContext(),"Success","Advance Details Saved","OK",null,"success");
                     //farmersVM.insertFarmer(farmerDo);

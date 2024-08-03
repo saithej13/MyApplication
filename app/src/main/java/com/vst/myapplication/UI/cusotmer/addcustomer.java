@@ -22,6 +22,7 @@ import com.vst.myapplication.UI.Advance.advancesVM;
 import com.vst.myapplication.Utils.BaseFragment;
 import com.vst.myapplication.Utils.CalendarUtils;
 import com.vst.myapplication.Utils.NetworkUtils;
+import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.dataObject.advanceDO;
 import com.vst.myapplication.dataObject.customerDO;
 import com.vst.myapplication.databinding.AddadvanceBinding;
@@ -39,10 +40,12 @@ public class addcustomer extends BaseFragment {
     boolean edit=false;
     int SLNO = 0;
     customerDO[] data;
+    Preference preference;
     customerVM customerV_M;
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState, LifecycleOwner viewLifecycleOwner) {
         binding = DataBindingUtil.inflate(inflater, R.layout.addcustomers, parent, false);
+        preference = new Preference(getContext());
         customerV_M = new ViewModelProvider(this ).get(customerVM.class);
         repository = new ProjectRepository();
         roomrepo = new roomRepository();
@@ -54,10 +57,11 @@ public class addcustomer extends BaseFragment {
     private void setupUI(LayoutInflater inflater, ViewGroup parent, LifecycleOwner viewLifecycleOwner) {
         edit = getArguments().getBoolean("edit");
         SLNO = getArguments().getInt("SLNO");
+        int BCODE = preference.getIntFromPreference("BCODE",0);
         if(edit)
         {
             if (NetworkUtils.isNetworkAvailable(parent.getContext())) {
-                repository.getcustomerbyslno(SLNO).observe(this, new Observer<JsonObject>() {
+                repository.getcustomerbyslno(SLNO,BCODE).observe(this, new Observer<JsonObject>() {
                     @Override
                     public void onChanged(JsonObject jsonObject) {
                         if (jsonObject != null) {
@@ -84,7 +88,8 @@ public class addcustomer extends BaseFragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        int customerId = repository.getNextCustomerId();
+                        int BCODE = preference.getIntFromPreference("BCODE",0);
+                        int customerId = repository.getNextCustomerId(BCODE);
                         binding.etCustomercode.setText(customerId + "");
                     }
                 }).start();
@@ -99,6 +104,7 @@ public class addcustomer extends BaseFragment {
                 String customername = binding.etCustomerName.getText().toString();
                 String mobileno = binding.etMobileno.getText().toString();
                 Boolean active = binding.tbcustomeractivestatus.isChecked();
+                int BCODE = preference.getIntFromPreference("BCODE",0);
                 if(!customercode.isEmpty()&&!customername.isEmpty()&&!mobileno.isEmpty()){
                     //Insert
                     customerDO customer = new customerDO();
@@ -107,6 +113,7 @@ public class addcustomer extends BaseFragment {
                     customer.CUSTOMERNAME = customername;
                     customer.MOBILENO = mobileno;
                     customer.ISACTIVE = active;
+                    customer.BCODE = BCODE;
                     customerV_M.insertUpdateCustomer(customer);
                     showCustomDialog(getContext(),"Success","Customer Details Saved","OK",null,"success");
                     //farmersVM.insertFarmer(farmerDo);

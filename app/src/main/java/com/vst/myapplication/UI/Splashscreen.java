@@ -28,17 +28,33 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vst.myapplication.MainActivity;
 import com.vst.myapplication.R;
 import com.vst.myapplication.UI.Login.LoginNew;
 import com.vst.myapplication.UI.Register.register_notice_activity;
 import com.vst.myapplication.UI.onboarding.onboarding;
+import com.vst.myapplication.Utils.MyApplicationNew;
 import com.vst.myapplication.Utils.Preference;
 import com.vst.myapplication.databinding.SplashscreenBinding;
 import com.vst.myapplication.Utils.AppConstants;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.AbstractHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -46,6 +62,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import okhttp3.OkHttpClient;
 
 public class Splashscreen extends AppCompatActivity {
     SplashscreenBinding binding;
@@ -77,7 +95,7 @@ public class Splashscreen extends AppCompatActivity {
 //        });
         try {
             version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-
+            getbaseurl();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -119,9 +137,15 @@ public class Splashscreen extends AppCompatActivity {
                     startActivity(intent1);
                     finish();
                 } else {
-                    Intent intent1 = new Intent(Splashscreen.this, LoginNew.class);
-                    startActivity(intent1);
-                    finish();
+                    if(preference.getbooleanFromPreference("ISLOGGEDIN",false)){
+                        startActivity(new Intent(Splashscreen.this, MainActivity.class));
+                        finish();
+                    }
+                    else {
+                        Intent intent1 = new Intent(Splashscreen.this, LoginNew.class);
+                        startActivity(intent1);
+                        finish();
+                    }
                 }
             } else {
 //                updateApp();
@@ -347,6 +371,44 @@ public class Splashscreen extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+    private void getbaseurl(){
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                    HttpClient httpclient = new DefaultHttpClient();
+//            ((AbstractHttpClient) httpclient).getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+                    HttpGet httpGet = new HttpGet(AppConstants.GIT_URL);
+                    HttpResponse response = null;
+                        response = httpclient.execute(httpGet);
+                    HttpEntity entity = response.getEntity();
+                    if (entity != null) {
+                        String s = EntityUtils.toString(entity);
+                        Gson gson = new Gson();
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject = gson.fromJson(s, JsonObject.class);
+                        if(jsonObject.get("IP_ServerStatus").getAsBoolean())
+                        {
+//                            AppConstants.BASE_URL = "http://45.117.66.100:8080/api/";
+                            AppConstants.BASE_URL = jsonObject.get("BASE_URL").getAsString();
+                        }
+                        else {
+                            MyApplicationNew.RoomDB=false;
+                        }
+                        Log.d("response", "" + s);
+                        Log.d("BASE_URL", "" + AppConstants.BASE_URL);
+//            return EntityUtils.toString(entity);
+                    }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }).start();
+        } catch (Exception e) {
+            Log.e("NTLMAuthTask", "Error during NTLM authentication", e);
         }
     }
 }

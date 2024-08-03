@@ -7,9 +7,9 @@ public class MilkDataSummary {
     public String tdate;
 
     @ColumnInfo(name = "QTY")
-    public int qty;
+    public double qty;
 
-    public MilkDataSummary(String tdate, int qty) {
+    public MilkDataSummary(String tdate, double qty) {
         this.tdate = tdate;
         this.qty = qty;
     }

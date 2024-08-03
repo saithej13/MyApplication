@@ -20,6 +20,7 @@ public class newpassword_activity  extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.newpassword);
 
         binding.btnSave.setOnClickListener(v -> {
+
             startActivity(new Intent(newpassword_activity.this, LoginNew.class));
             finish();
         });
