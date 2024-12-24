@@ -2,4 +2,5 @@
 "IP_ServerStatus":"true",
 "server_ip":"45.117.66.100",
 "BASE_URL":"http://45.117.66.100:8080/api/"
+"":""
 }
