@@ -1,6 +1,8 @@
 {
-"IP_ServerStatus":"true",
+"IP_ServerStatus":"false",
 "server_ip":"45.117.66.100",
 "BASE_URL":"http://45.117.66.100:8080/api/",
-"Application":"MilkCollectionApplication"
+"Application":"MilkCollectionApplication",
+"AppVersion":"1.0.0",
+"ApkFilePath":""
 }
