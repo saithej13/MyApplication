@@ -3,7 +3,7 @@
 "server_ip":"45.117.66.100",
 "BASE_URL":"http://45.117.66.100:8080/api/",
 "Application":"MilkCollectionApplication",
-"AppVersion":"1.0.01",
+"AppVersion":"1.0.010",
 "ApkFilePath":"",
 "knotes":"MilkApplication"
 }
